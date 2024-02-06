@@ -1,11 +1,11 @@
 <h2>Selected Jurors {{ selected.length }}</h2>
-<div class="container" cdkDropList id="selected-jurors" [cdkDropListConnectedTo]="['selected-jurors']" [cdkDropListData]="selected" (cdkDropListDropped)="drop($event)">
-  <app-jury-card *ngFor="let juror of selected" cdkDrag [juror]="juror"></app-jury-card>
+<div class="container" cdkDropList id="selected-jurors" [cdkDropListConnectedTo]="['selected-jurors', 'juror-pool']" [cdkDropListData]="selected" (cdkDropListDropped)="drop($event)">
+  <app-jury-card *ngFor="let juror of selected" cdkDrag [juror]="juror" (clicked)="jurorClicked($event)"></app-jury-card>
 </div>
 
 <h2>Juror Pool {{ pool.length }}</h2>
-<div class="container" cdkDropList id="juror-pool" [cdkDropListConnectedTo]="['juror-pool']" [cdkDropListData]="pool" (cdkDropListDropped)="drop($event)">
-  <app-jury-card *ngFor="let juror of pool" cdkDrag [juror]="juror"></app-jury-card>
+<div class="container" cdkDropList id="juror-pool" [cdkDropListConnectedTo]="['selected-jurors', 'juror-pool']" [cdkDropListData]="pool" (cdkDropListDropped)="drop($event)">
+  <app-jury-card *ngFor="let juror of pool" cdkDrag [juror]="juror" (clicked)="jurorClicked($event)"></app-jury-card>
 </div>
 
 <!-- <h2>Rejected</h2> -->

@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>Juror</h2>
+<mat-dialog-content>
+    <p>{{ juror.firstName }} {{ juror.lastName }}</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button (click)="close()">Close</button>
+    <button mat-button [mat-dialog-close]="juror" cdkFocusInitial>Ok</button>
+</mat-dialog-actions>

@@ -1,26 +1,32 @@
+import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { faker } from '@faker-js/faker';
+import { Juror } from './models/juror';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { Juror } from './models/juror';
-import { faker } from '@faker-js/faker';
-import { JuryCardComponent } from './jury-card/jury-card.component';
+import { JurorCardComponent } from './juror-card/juror-card.component';
+import { JurorEditComponent } from './juror-edit/juror-edit.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, DragDropModule, JuryCardComponent],
+  imports: [CommonModule, RouterOutlet, DragDropModule, JurorCardComponent],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
   title = 'jury-select';
-  pool: Juror[] = []
-  selected: Juror[] = []
-  rejected: Juror[] = []
+  pool: Juror[] = [];
+  selected: Juror[] = [];
+  rejected: Juror[] = [];
 
-  constructor() {
+  constructor(public dialog: MatDialog) {
     this.fakeData();
   }
 
@@ -36,18 +42,28 @@ export class AppComponent {
   generateJuror(): Juror {
     return <Juror>{
       firstName: faker.person.firstName(),
-      lastName: faker.person.lastName()
+      lastName: faker.person.lastName(),
     };
   }
 
+  jurorClicked(juror: Juror) {
+    console.log('juror clicked', juror);
+    const dialogRef = this.dialog.open(JurorEditComponent, { data: { juror } });
+    dialogRef.afterClosed().subscribe((res) => {
+      console.log('Dialog closed', res);
+    });
+  }
+
   drop(event: CdkDragDrop<Juror[]>) {
-    console.log(event.previousContainer, ' ', event.container);
     if (event.previousContainer === event.container) {
-      console.log('reorder ', event);
       // Reorder items within the same list
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
     } else {
-      console.log('transfer ', event);
+      // TODO: Move juror to end of list
       // Move items between lists
       transferArrayItem(
         event.previousContainer.data,

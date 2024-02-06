@@ -1,11 +1,89 @@
-<h2>Selected Jurors {{ selected.length }}</h2>
-<div class="container" cdkDropList id="selected-jurors" [cdkDropListConnectedTo]="['selected-jurors', 'juror-pool']" [cdkDropListData]="selected" (cdkDropListDropped)="drop($event)">
-  <app-jury-card *ngFor="let juror of selected" cdkDrag [juror]="juror" (clicked)="jurorClicked($event)"></app-jury-card>
+<header class="mode-selector">
+  @for (m of modes; track m;) {
+  <button
+    class="mode-button"
+    [class.active-mode]="m === mode"
+    (click)="changeMode(m)"
+  >
+    {{ m }}
+  </button>
+  }
+</header>
+
+<div class="container">
+  <h2>Selected Jurors {{ selected.length }}</h2>
+
+  <div
+    id="selected-jurors"
+    class="juror-list"
+    cdkDropList
+    cdkDropListOrientation="horizontal"
+    [cdkDropListData]="selected"
+    [cdkDropListConnectedTo]="[
+      'selected-jurors',
+      'juror-pool',
+      'not-selected-jurors'
+    ]"
+    (cdkDropListDropped)="drop($event)"
+  >
+    @for (juror of selected; track juror) {
+    <app-jury-card
+      cdkDrag
+      [juror]="juror"
+      (clicked)="jurorClicked($event)"
+    ></app-jury-card>
+    }
+  </div>
 </div>
 
-<h2>Juror Pool {{ pool.length }}</h2>
-<div class="container" cdkDropList id="juror-pool" [cdkDropListConnectedTo]="['selected-jurors', 'juror-pool']" [cdkDropListData]="pool" (cdkDropListDropped)="drop($event)">
-  <app-jury-card *ngFor="let juror of pool" cdkDrag [juror]="juror" (clicked)="jurorClicked($event)"></app-jury-card>
+<div class="container" *ngIf="mode == 'Selection'">
+  <h2>Jurors Pool {{ pool.length }}</h2>
+
+  <div
+    id="juror-pool"
+    class="juror-list"
+    cdkDropList
+    cdkDropListOrientation="horizontal"
+    [cdkDropListData]="pool"
+    [cdkDropListConnectedTo]="[
+      'selected-jurors',
+      'juror-pool',
+      'not-selected-jurors'
+    ]"
+    (cdkDropListDropped)="drop($event)"
+  >
+    @for (juror of pool; track juror) {
+    <app-jury-card
+      cdkDrag
+      [juror]="juror"
+      (clicked)="jurorClicked($event)"
+    ></app-jury-card>
+    }
+  </div>
 </div>
 
-<!-- <h2>Rejected</h2> -->
+<div class="container" *ngIf="mode == 'Selection'">
+  <h2><mat-icon fontIcon="delete"></mat-icon></h2>
+
+  <div
+    id="not-selected-jurors"
+    class="juror-list"
+    cdkDropList
+    cdkDropListOrientation="horizontal"
+    [cdkDropListData]="notSelected"
+    [cdkDropListConnectedTo]="[
+      'selected-jurors',
+      'juror-pool',
+      'not-selected-jurors'
+    ]"
+    (cdkDropListDropped)="drop($event)"
+  >
+    @for (juror of notSelected; track juror) {
+    <app-jury-card
+      cdkDrag
+      [juror]="juror"
+      (clicked)="jurorClicked($event)"
+    ></app-jury-card>
+    }
+  </div>
+</div>

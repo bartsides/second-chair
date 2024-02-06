@@ -1,8 +1,24 @@
 <h2 mat-dialog-title>Juror</h2>
 <mat-dialog-content>
-    <p>{{ juror.firstName }} {{ juror.lastName }}</p>
+  <div>
+    <p>First Name</p>
+    <mat-form-field>
+      <input matInput [(ngModel)]="juror.firstName" />
+    </mat-form-field>
+  </div>
+  <div>
+    <p>Last Name</p>
+    <mat-form-field>
+      <input matInput [(ngModel)]="juror.lastName" />
+    </mat-form-field>
+  </div>
+  <div>
+    <p>Notes</p>
+    <mat-form-field class="notes">
+      <textarea matInput [(ngModel)]="juror.notes"></textarea>
+    </mat-form-field>
+  </div>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-button (click)="close()">Close</button>
-    <button mat-button [mat-dialog-close]="juror" cdkFocusInitial>Ok</button>
+  <button mat-button (click)="close()">Close</button>
 </mat-dialog-actions>

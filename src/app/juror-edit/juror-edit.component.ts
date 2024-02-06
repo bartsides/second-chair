@@ -1,15 +1,18 @@
-import { Component, Inject } from '@angular/core';
-import { Juror } from '../models/juror';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
+import { Component, Inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import {
-  MatDialogTitle,
-  MatDialogContent,
+  MAT_DIALOG_DATA,
   MatDialogActions,
   MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle,
 } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { Juror } from '../models/juror';
 
 interface DialogData {
   juror: Juror;
@@ -20,15 +23,23 @@ interface DialogData {
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     MatButtonModule,
     MatFormFieldModule,
+    MatInputModule,
     MatDialogTitle,
     MatDialogContent,
     MatDialogActions,
     MatDialogClose,
   ],
   templateUrl: './juror-edit.component.html',
-  styles: ``,
+  styles: `
+    .notes { width: 100%; }
+    textarea { 
+      width: 100%;
+      min-height: 200px;
+    }
+  `,
 })
 export class JurorEditComponent {
   juror: Juror;

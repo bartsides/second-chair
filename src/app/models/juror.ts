@@ -1,6 +1,7 @@
 export interface Juror {
   firstName: string;
   lastName: string;
-  prefer: boolean;
+  stoplight: string;
   notes: string;
+  number: number;
 }

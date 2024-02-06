@@ -14,11 +14,6 @@ import { JurorCardComponent } from './juror-card/juror-card.component';
 import { JurorEditComponent } from './juror-edit/juror-edit.component';
 import { Juror } from './models/juror';
 
-enum Mode {
-  Selection,
-  Trial,
-}
-
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -66,13 +61,7 @@ export class AppComponent {
   }
 
   jurorClicked(juror: Juror) {
-    this.selectedJuror = juror;
-    const dialogRef = this.dialog.open(JurorEditComponent, { data: { juror } });
-    dialogRef.afterClosed().subscribe((res) => {
-      console.log('Dialog closed', res);
-      if (res !== undefined) this.selectedJuror = res;
-      console.log(this.selectedJuror, res);
-    });
+    this.dialog.open(JurorEditComponent, { data: { juror }, minWidth: '70%' });
   }
 
   drop(event: CdkDragDrop<Juror[]>) {

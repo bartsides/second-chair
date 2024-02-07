@@ -1,4 +1,5 @@
 <h2 mat-dialog-title>Juror</h2>
+
 <mat-dialog-content>
   <div>
     <p>First Name</p>
@@ -18,7 +19,31 @@
       <textarea matInput [(ngModel)]="juror.notes"></textarea>
     </mat-form-field>
   </div>
+  <div class="stoplight-container">
+    <div
+      class="circle red"
+      [class.circle-selected]="juror.stoplight == 'red'"
+      (click)="juror.stoplight = 'red'"
+    >
+      <div></div>
+    </div>
+    <div
+      class="circle yellow"
+      [class.circle-selected]="juror.stoplight == 'yellow'"
+      (click)="juror.stoplight = 'yellow'"
+    >
+      <div></div>
+    </div>
+    <div
+      class="circle green"
+      [class.circle-selected]="juror.stoplight == 'green'"
+      (click)="juror.stoplight = 'green'"
+    >
+      <div></div>
+    </div>
+  </div>
 </mat-dialog-content>
+
 <mat-dialog-actions>
   <button mat-button (click)="close()">Close</button>
 </mat-dialog-actions>

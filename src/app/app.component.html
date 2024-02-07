@@ -36,7 +36,8 @@
   </div>
 </div>
 
-<div class="container" *ngIf="mode == 'Selection'">
+@if (mode == 'Selection') {
+<div class="container">
   <h2>Jurors Pool {{ pool.length }}</h2>
 
   <div
@@ -62,7 +63,7 @@
   </div>
 </div>
 
-<div class="container" *ngIf="mode == 'Selection'">
+<div class="container">
   <h2><mat-icon fontIcon="delete"></mat-icon></h2>
 
   <div
@@ -87,3 +88,4 @@
     }
   </div>
 </div>
+}

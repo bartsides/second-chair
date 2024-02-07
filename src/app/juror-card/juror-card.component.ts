@@ -10,7 +10,7 @@ import { Juror } from '../models/juror';
 @Component({
   selector: 'app-jury-card',
   standalone: true,
-  template: ` <p>{{ juror.firstName }} {{ juror.lastName }}</p> `,
+  templateUrl: './juror-card.component.html',
   styleUrl: './juror-card.component.scss',
 })
 export class JurorCardComponent {

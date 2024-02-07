@@ -7,9 +7,8 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 10px;
   min-width: 100%;
-  min-height: var(--card-size);
+  min-height: calc( var(--card-size) + var(--card-margin) );
   border: solid 1px #ccc;
   border-radius: 4px;
   background-color: aqua;

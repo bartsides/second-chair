@@ -33,13 +33,7 @@ interface DialogData {
     MatDialogClose,
   ],
   templateUrl: './juror-edit.component.html',
-  styles: `
-    .notes { width: 100%; }
-    textarea { 
-      width: 100%;
-      min-height: 200px;
-    }
-  `,
+  styleUrl: './juror-edit.component.scss',
 })
 export class JurorEditComponent {
   juror: Juror;

@@ -4,11 +4,9 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterOutlet } from '@angular/router';
 import { faker } from '@faker-js/faker';
 import { JurorCardComponent } from './juror-card/juror-card.component';
 import { JurorEditComponent } from './juror-edit/juror-edit.component';
@@ -17,13 +15,7 @@ import { Juror } from './models/juror';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterOutlet,
-    DragDropModule,
-    JurorCardComponent,
-    MatIconModule,
-  ],
+  imports: [DragDropModule, JurorCardComponent, MatIconModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
@@ -34,7 +26,6 @@ export class AppComponent {
   pool: Juror[] = [];
   selected: Juror[] = [];
   notSelected: Juror[] = [];
-  selectedJuror: Juror;
 
   constructor(public dialog: MatDialog) {
     this.fakeData();
@@ -53,6 +44,7 @@ export class AppComponent {
     return <Juror>{
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
+      stoplight: 'yellow',
     };
   }
 
@@ -65,8 +57,6 @@ export class AppComponent {
   }
 
   drop(event: CdkDragDrop<Juror[]>) {
-    console.log(event);
-
     if (event.previousContainer === event.container) {
       // Reorder items within the same list
       if (event.container.id == 'selected-jurors') return;

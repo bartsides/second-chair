@@ -32,11 +32,8 @@ export class AppComponent {
   }
 
   fakeData() {
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < 8; i++) {
       this.pool.push(this.generateJuror());
-    }
-    for (var i = 0; i < 4; i++) {
-      this.selected.push(this.generateJuror());
     }
   }
 
@@ -64,11 +61,9 @@ export class AppComponent {
       moveItemInArray(event.container.data, event.previousIndex, 0);
     } else {
       // Move items between lists
-      var index = event.container.data.length;
-      if (event.container.id == 'juror-pool') {
-        index = 0;
-      } else if (event.container.id == 'selected-jurors') {
-        // TODO: Set juror number
+      var index = 0;
+      if (event.container.id == 'selected-jurors') {
+        index = event.container.data.length;
       }
       transferArrayItem(
         event.previousContainer.data,
@@ -76,6 +71,20 @@ export class AppComponent {
         event.previousIndex,
         index
       );
+
+      this.resetJurorNumbers();
+    }
+  }
+
+  private resetJurorNumbers() {
+    for (var i = 0; i < this.selected.length; i++) {
+      this.selected[i].number = i + 1;
+    }
+    for (var juror of this.pool) {
+      juror.number = 0;
+    }
+    for (var juror of this.notSelected) {
+      juror.number = 0;
     }
   }
 }

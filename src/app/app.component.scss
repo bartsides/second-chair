@@ -1,5 +1,8 @@
+@use "@angular/material" as mat;
+@import "../variables";
+
 .container {
-  min-width: 100%;
+  min-width: 90%;
   margin: 10px;
 }
 
@@ -8,10 +11,9 @@
   flex-direction: row;
   flex-wrap: wrap;
   min-width: 100%;
-  min-height: calc( var(--card-size) + var(--card-margin) );
-  border: solid 1px #ccc;
+  min-height: calc(var(--card-size) + var(--card-margin) * 2);
+  border: solid 1px mat.get-theme-color($dark-theme, primary, default);
   border-radius: 4px;
-  background-color: aqua;
 }
 
 .mode-selector {
@@ -26,9 +28,10 @@
   margin: 0 10px;
   padding: 10px;
   color: inherit;
+  cursor: pointer;
 }
 
 .active-mode {
-  border-bottom: 1px solid;
+  border-bottom: 1px solid mat.get-theme-color($dark-theme, primary, default);
   font-weight: 600;
 }

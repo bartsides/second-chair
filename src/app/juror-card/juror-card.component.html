@@ -1,17 +1,25 @@
-@if (juror.stoplight) {
-<div class="stoplight-container">
-  <div
-    class="circle"
-    [class.red]="juror.stoplight == 'red'"
-    [class.yellow]="juror.stoplight == 'yellow'"
-    [class.green]="juror.stoplight == 'green'"
-  >
-    <div></div>
-  </div>
-</div>
-}
+<mat-card matRipple>
+  <mat-card-content>
+    @if (juror.number > 0) {
+    <div class="juror-number">
+      <h4>{{ juror.number }}</h4>
+    </div>
+    } @if (juror.stoplight) {
+    <div class="stoplight-container">
+      <div
+        class="circle"
+        [class.red]="juror.stoplight == 'red'"
+        [class.yellow]="juror.stoplight == 'yellow'"
+        [class.green]="juror.stoplight == 'green'"
+      >
+        <div></div>
+      </div>
+    </div>
+    }
 
-<div class="card-content">
-  <p>{{ juror.firstName }}</p>
-  <p>{{ juror.lastName }}</p>
-</div>
+    <div class="card-content">
+      <p>{{ juror.firstName }}</p>
+      <p>{{ juror.lastName }}</p>
+    </div>
+  </mat-card-content>
+</mat-card>

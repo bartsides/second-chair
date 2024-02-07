@@ -1,13 +1,16 @@
 <header class="mode-selector">
-  @for (m of modes; track m;) {
-  <button
-    class="mode-button"
-    [class.active-mode]="m === mode"
-    (click)="changeMode(m)"
-  >
-    {{ m }}
-  </button>
-  }
+  <mat-button-toggle-group name="mode-selector-toggle-group" [value]="mode">
+    @for (m of modes; track m;) {
+    <mat-button-toggle
+      class="mode-button"
+      [class.active-mode]="m === mode"
+      (click)="changeMode(m)"
+      [value]="m"
+    >
+      {{ m }}
+    </mat-button-toggle>
+    }
+  </mat-button-toggle-group>
 </header>
 
 <div class="container">

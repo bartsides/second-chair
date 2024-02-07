@@ -22,16 +22,6 @@
   justify-content: center;
 }
 
-.mode-button {
-  background: transparent;
-  border: 0;
-  margin: 0 10px;
-  padding: 10px;
-  color: inherit;
-  cursor: pointer;
-}
-
 .active-mode {
   border-bottom: 1px solid mat.get-theme-color($dark-theme, primary, default);
-  font-weight: 600;
 }

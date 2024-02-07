@@ -5,6 +5,7 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { Component } from '@angular/core';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { faker } from '@faker-js/faker';
@@ -15,7 +16,12 @@ import { Juror } from './models/juror';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [DragDropModule, JurorCardComponent, MatIconModule],
+  imports: [
+    DragDropModule,
+    JurorCardComponent,
+    MatButtonToggleModule,
+    MatIconModule,
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })

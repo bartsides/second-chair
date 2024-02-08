@@ -4,7 +4,8 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { Component } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, Inject } from '@angular/core';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,8 +33,14 @@ export class AppComponent {
   pool: Juror[] = [];
   selected: Juror[] = [];
   notSelected: Juror[] = [];
+  themes: string[] = ['dark-theme', 'light-theme'];
+  useDarkTheme = true;
 
-  constructor(public dialog: MatDialog) {
+  constructor(
+    public dialog: MatDialog,
+    @Inject(DOCUMENT) private document: Document
+  ) {
+    this.setTheme(this.themes[0]);
     this.fakeData();
   }
 
@@ -77,7 +84,6 @@ export class AppComponent {
         event.previousIndex,
         index
       );
-
       this.resetJurorNumbers();
     }
   }
@@ -92,5 +98,13 @@ export class AppComponent {
     for (var juror of this.notSelected) {
       juror.number = 0;
     }
+  }
+
+  setTheme(theme: string) {
+    this.useDarkTheme = theme == this.themes[0];
+    this.document.body.classList.add(theme);
+    this.document.body.classList.remove(
+      this.useDarkTheme ? this.themes[1] : this.themes[0]
+    );
   }
 }

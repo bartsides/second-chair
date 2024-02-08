@@ -1,4 +1,4 @@
-<header class="mode-selector">
+<div class="mode-selector">
   <mat-button-toggle-group name="mode-selector-toggle-group" [value]="mode">
     @for (m of modes; track m;) {
     <mat-button-toggle
@@ -11,7 +11,18 @@
     </mat-button-toggle>
     }
   </mat-button-toggle-group>
-</header>
+  <div class="dark-mode-container">
+    @if (useDarkTheme) {
+    <button matButton class="light-mode-button" (click)="setTheme(themes[1])">
+      <img src="assets/light-mode.svg" />
+    </button>
+    } @else {
+    <button matButton class="dark-mode-button" (click)="setTheme(themes[0])">
+      <img src="assets/dark-mode.svg" />
+    </button>
+    }
+  </div>
+</div>
 
 <div class="container">
   <h2>Selected Jurors {{ selected.length }}</h2>

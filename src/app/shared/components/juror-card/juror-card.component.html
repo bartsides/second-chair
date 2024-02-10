@@ -4,8 +4,9 @@
     <div class="juror-number">
       <h4>{{ juror.number }}</h4>
     </div>
-    } @if (juror.stoplight) {
+    }
     <div class="stoplight-container">
+      @if (juror.stoplight) {
       <div
         class="circle"
         [class.red]="juror.stoplight == 'red'"
@@ -14,8 +15,8 @@
       >
         <div></div>
       </div>
+      }
     </div>
-    }
 
     <div class="card-content">
       <p>{{ juror.firstName }}</p>

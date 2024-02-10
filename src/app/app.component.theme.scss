@@ -1,14 +1,7 @@
 @use "@angular/material" as mat;
+@use "jury-selection/jury-selection.component.theme" as jurySelection;
 
 @mixin color($theme) {
-  .juror-list {
-    border: solid 1px mat.get-theme-color($theme, primary, default);
-  }
-
-  .active-mode {
-    border-bottom: 1px solid mat.get-theme-color($theme, primary, default);
-  }
-
   .clear-data-button {
     background-color: mat.get-theme-color($theme, warn, default);
   }
@@ -18,4 +11,6 @@
   @if mat.theme-has($theme, color) {
     @include color($theme);
   }
+
+  @include jurySelection.theme($theme);
 }

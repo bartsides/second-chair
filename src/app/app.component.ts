@@ -1,103 +1,30 @@
-import {
-  CdkDragDrop,
-  DragDropModule,
-  moveItemInArray,
-  transferArrayItem,
-} from '@angular/cdk/drag-drop';
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject } from '@angular/core';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatDialog } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { faker } from '@faker-js/faker';
-import { JurorCardComponent } from './juror-card/juror-card.component';
-import { JurorEditComponent } from './juror-edit/juror-edit.component';
-import { Juror } from './models/juror';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    DragDropModule,
-    JurorCardComponent,
-    MatButtonToggleModule,
+    RouterModule,
+    MatButtonModule,
     MatIconModule,
+    MatMenuModule,
+    MatToolbarModule,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'jury-select';
-  modes = ['Selection', 'Trial'];
-  mode = this.modes[0];
-  pool: Juror[] = [];
-  selected: Juror[] = [];
-  notSelected: Juror[] = [];
   themes: string[] = ['dark-theme', 'light-theme'];
   useDarkTheme = true;
 
-  constructor(
-    public dialog: MatDialog,
-    @Inject(DOCUMENT) private document: Document
-  ) {
+  constructor(@Inject(DOCUMENT) private document: Document) {
     this.setTheme(this.themes[0]);
-    this.fakeData();
-  }
-
-  fakeData() {
-    for (var i = 0; i < 8; i++) {
-      this.pool.push(this.generateJuror());
-    }
-  }
-
-  generateJuror(): Juror {
-    return <Juror>{
-      firstName: faker.person.firstName(),
-      lastName: faker.person.lastName(),
-      stoplight: 'yellow',
-    };
-  }
-
-  changeMode(mode: string) {
-    this.mode = mode;
-  }
-
-  jurorClicked(juror: Juror) {
-    this.dialog.open(JurorEditComponent, { data: { juror }, minWidth: '70%' });
-  }
-
-  drop(event: CdkDragDrop<Juror[]>) {
-    if (event.previousContainer === event.container) {
-      // Reorder items within the same list
-      if (event.container.id == 'selected-jurors') return;
-      // Move to front
-      moveItemInArray(event.container.data, event.previousIndex, 0);
-    } else {
-      // Move items between lists
-      var index = 0;
-      if (event.container.id == 'selected-jurors') {
-        index = event.container.data.length;
-      }
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        index
-      );
-      this.resetJurorNumbers();
-    }
-  }
-
-  private resetJurorNumbers() {
-    for (var i = 0; i < this.selected.length; i++) {
-      this.selected[i].number = i + 1;
-    }
-    for (var juror of this.pool) {
-      juror.number = 0;
-    }
-    for (var juror of this.notSelected) {
-      juror.number = 0;
-    }
   }
 
   setTheme(theme: string) {
@@ -106,5 +33,9 @@ export class AppComponent {
     this.document.body.classList.remove(
       this.useDarkTheme ? this.themes[1] : this.themes[0]
     );
+  }
+
+  clearData() {
+    // TODO: Clear data
   }
 }

@@ -1,105 +1,46 @@
-<div class="mode-selector">
-  <mat-button-toggle-group name="mode-selector-toggle-group" [value]="mode">
-    @for (m of modes; track m;) {
-    <mat-button-toggle
-      class="mode-button"
-      [class.active-mode]="m === mode"
-      (click)="changeMode(m)"
-      [value]="m"
-    >
-      {{ m }}
-    </mat-button-toggle>
-    }
-  </mat-button-toggle-group>
-  <div class="dark-mode-container">
-    @if (useDarkTheme) {
-    <button matButton class="light-mode-button" (click)="setTheme(themes[1])">
-      <img src="assets/light-mode.svg" />
+<mat-menu #menu="matMenu">
+  <button mat-menu-item routerLink="jury-selection">
+    <mat-icon>person_add</mat-icon>
+    <span>Jury Selection</span>
+  </button>
+  @if (useDarkTheme) {
+  <button mat-menu-item (click)="setTheme(themes[1])" class="light-mode-button">
+    <mat-icon>light_mode</mat-icon>
+    <span>Light mode</span>
+  </button>
+  } @else {
+  <button mat-menu-item (click)="setTheme(themes[0])" class="dark-mode-button">
+    <mat-icon>dark_mode</mat-icon>
+    <span>Dark mode</span>
+  </button>
+  } @if (useDarkTheme) {
+  <button
+    mat-menu-item
+    (click)="clearData()"
+    class="clear-data-button dark-clear-data-button"
+  >
+    <mat-icon>delete</mat-icon>
+    <span>Clear data</span>
+  </button>
+  } @else {
+  <button
+    mat-menu-item
+    (click)="clearData()"
+    class="clear-data-button light-clear-data-button"
+  >
+    <mat-icon>delete</mat-icon>
+    <span>Clear data</span>
+  </button>
+  }
+</mat-menu>
+
+<mat-toolbar color="primary">
+  <div class="left">
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>menu</mat-icon>
     </button>
-    } @else {
-    <button matButton class="dark-mode-button" (click)="setTheme(themes[0])">
-      <img src="assets/dark-mode.svg" />
-    </button>
-    }
+    <span>Second Chair</span>
   </div>
-</div>
+</mat-toolbar>
 
-<div class="container">
-  <h2>Selected Jurors {{ selected.length }}</h2>
-
-  <div
-    id="selected-jurors"
-    class="juror-list"
-    cdkDropList
-    cdkDropListOrientation="horizontal"
-    [cdkDropListData]="selected"
-    [cdkDropListConnectedTo]="[
-      'selected-jurors',
-      'juror-pool',
-      'not-selected-jurors'
-    ]"
-    (cdkDropListDropped)="drop($event)"
-  >
-    @for (juror of selected; track juror) {
-    <app-jury-card
-      cdkDrag
-      [juror]="juror"
-      (clicked)="jurorClicked($event)"
-    ></app-jury-card>
-    }
-  </div>
-</div>
-
-@if (mode == 'Selection') {
-<div class="container">
-  <h2>Jurors Pool {{ pool.length }}</h2>
-
-  <div
-    id="juror-pool"
-    class="juror-list"
-    cdkDropList
-    cdkDropListOrientation="horizontal"
-    [cdkDropListData]="pool"
-    [cdkDropListConnectedTo]="[
-      'selected-jurors',
-      'juror-pool',
-      'not-selected-jurors'
-    ]"
-    (cdkDropListDropped)="drop($event)"
-  >
-    @for (juror of pool; track juror) {
-    <app-jury-card
-      cdkDrag
-      [juror]="juror"
-      (clicked)="jurorClicked($event)"
-    ></app-jury-card>
-    }
-  </div>
-</div>
-
-<div class="container">
-  <h2><mat-icon fontIcon="delete"></mat-icon></h2>
-
-  <div
-    id="not-selected-jurors"
-    class="juror-list"
-    cdkDropList
-    cdkDropListOrientation="horizontal"
-    [cdkDropListData]="notSelected"
-    [cdkDropListConnectedTo]="[
-      'selected-jurors',
-      'juror-pool',
-      'not-selected-jurors'
-    ]"
-    (cdkDropListDropped)="drop($event)"
-  >
-    @for (juror of notSelected; track juror) {
-    <app-jury-card
-      cdkDrag
-      [juror]="juror"
-      (clicked)="jurorClicked($event)"
-    ></app-jury-card>
-    }
-  </div>
-</div>
-}
+<router-outlet></router-outlet>

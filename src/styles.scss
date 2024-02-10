@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @use "@angular/material" as mat;
-@use "./app/app.theme" as app;
+@use "./app/app.component.theme" as app;
 @include mat.core();
 @import "variables";
 
@@ -9,6 +9,7 @@ $dark-theme: mat.define-dark-theme(
     color: (
       primary: mat.define-palette(mat.$pink-palette),
       accent: mat.define-palette(mat.$blue-grey-palette),
+      warn: mat.define-palette(mat.$red-palette, 700),
     ),
     // Only include `typography` and `density` in the default dark theme.
     typography: mat.define-typography-config(),
@@ -21,17 +22,19 @@ $light-theme: mat.define-light-theme(
     color: (
       primary: mat.define-palette(mat.$indigo-palette),
       accent: mat.define-palette(mat.$pink-palette),
+      warn: mat.define-palette(mat.$red-palette, 700),
     ),
   )
 );
 
+@include mat.all-component-themes($light-theme);
+
 .dark-theme {
-  @include mat.all-component-themes($dark-theme);
+  @include mat.all-component-colors($dark-theme);
   @include app.theme($dark-theme);
 }
 
 .light-theme {
-  @include mat.all-component-themes($light-theme);
   @include app.theme($light-theme);
 }
 

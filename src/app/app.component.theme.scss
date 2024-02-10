@@ -8,6 +8,10 @@
   .active-mode {
     border-bottom: 1px solid mat.get-theme-color($theme, primary, default);
   }
+
+  .clear-data-button {
+    background-color: mat.get-theme-color($theme, warn, default);
+  }
 }
 
 @mixin theme($theme) {

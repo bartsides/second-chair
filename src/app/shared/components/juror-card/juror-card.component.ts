@@ -14,7 +14,7 @@ export class JurorCardComponent {
   @Input({ required: true }) juror: Juror;
   @Output() clicked = new EventEmitter<Juror>();
 
-  onClick() {
+  click() {
     this.clicked.emit(this.juror);
   }
 }

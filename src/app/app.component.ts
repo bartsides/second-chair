@@ -24,7 +24,18 @@ export class AppComponent {
   useDarkTheme = true;
 
   constructor(@Inject(DOCUMENT) private document: Document) {
-    this.setTheme(this.themes[0]);
+    this.setThemeByUserPreference();
+    window
+      .matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', (e) => {
+        this.setThemeByUserPreference();
+      });
+  }
+
+  private setThemeByUserPreference() {
+    var darkMode =
+      !window.matchMedia || window.matchMedia('(prefers-color-scheme: dark)');
+    this.setTheme(this.themes[darkMode ? 0 : 1]);
   }
 
   setTheme(theme: string) {

@@ -1,13 +1,7 @@
-import {
-  Component,
-  EventEmitter,
-  HostListener,
-  Input,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatRippleModule } from '@angular/material/core';
-import { Juror } from '../models/juror';
+import { Juror } from '../../models/juror';
 
 @Component({
   selector: 'app-jury-card',
@@ -20,7 +14,7 @@ export class JurorCardComponent {
   @Input({ required: true }) juror: Juror;
   @Output() clicked = new EventEmitter<Juror>();
 
-  @HostListener('click') onClick() {
+  onClick() {
     this.clicked.emit(this.juror);
   }
 }

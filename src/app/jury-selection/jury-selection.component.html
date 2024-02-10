@@ -1,3 +1,47 @@
+<div class="strike-tracker-bar">
+  <div class="plaintiff-strike-tracker">
+    <button mat-button class="strike-button" (click)="addPlaintiffStrike(-1)">
+      -
+    </button>
+    @for(strike of createRange(plaintiffStrikes); track plaintiffStrikes) {
+    <mat-icon>radio_button_checked</mat-icon>
+    } @for(strike of createRange(totalStrikes - plaintiffStrikes); track
+    plaintiffStrikes) {
+    <mat-icon>radio_button_unchecked</mat-icon>
+    }
+    <button mat-button class="strike-button" (click)="addPlaintiffStrike()">
+      +
+    </button>
+    <span class="tracker-label">π</span>
+  </div>
+  <div class="center-strike-tracker">
+    <button mat-button class="strike-button" (click)="addTotalStrike(-1)">
+      -
+    </button>
+    <span class="tracker-label">Strikes</span>
+    <button mat-button class="strike-button" (click)="addTotalStrike()">
+      +
+    </button>
+  </div>
+  <div class="defendant-strike-tracker">
+    <button mat-button class="strike-button" (click)="addDefendantStrike(-1)">
+      -
+    </button>
+    @for(strike of createRange(defendantStrikes); track defendantStrikes) {
+    <mat-icon>radio_button_checked</mat-icon>
+    } @for(strike of createRange(totalStrikes - defendantStrikes); track
+    defendantStrikes) {
+    <mat-icon>radio_button_unchecked</mat-icon>
+    }
+    <button mat-button class="strike-button" (click)="addDefendantStrike()">
+      +
+    </button>
+    <span class="tracker-label">Δ</span>
+  </div>
+</div>
+
+<mat-divider class="strike-tracker-divider"></mat-divider>
+
 <div class="container">
   <h2>Jury Box</h2>
 

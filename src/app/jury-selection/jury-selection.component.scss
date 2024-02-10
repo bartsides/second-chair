@@ -1,3 +1,27 @@
+.strike-tracker-bar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.plaintiff-strike-tracker,
+.center-strike-tracker,
+.defendant-strike-tracker {
+  display: flex;
+  align-items: center;
+}
+
+.defendant-strike-tracker {
+  flex-direction: row-reverse;
+}
+
+.tracker-label {
+  font-size: 24px;
+}
+
+.strike-button {
+  font-size: 24px;
+}
+
 .container {
   min-width: 90%;
   margin: 10px;

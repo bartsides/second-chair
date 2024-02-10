@@ -12,7 +12,7 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Juror } from '../models/juror';
+import { Juror } from '../../models/juror';
 
 interface DialogData {
   juror: Juror;

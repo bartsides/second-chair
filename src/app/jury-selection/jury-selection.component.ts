@@ -8,11 +8,12 @@ import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { faker } from '@faker-js/faker';
-import { JurorCardComponent } from '../juror-card/juror-card.component';
-import { JurorEditComponent } from '../juror-edit/juror-edit.component';
-import { Juror } from '../models/juror';
+import { JurorCardComponent } from '../shared/components/juror-card/juror-card.component';
+import { JurorEditComponent } from '../shared/components/juror-edit/juror-edit.component';
+import { Juror } from '../shared/models/juror';
 import { ResizableDirective } from '../shared/resizable.directive';
 
 @Component({
@@ -22,6 +23,7 @@ import { ResizableDirective } from '../shared/resizable.directive';
     DragDropModule,
     MatButtonModule,
     MatButtonToggleModule,
+    MatDividerModule,
     MatIconModule,
     JurorCardComponent,
     ResizableDirective,
@@ -30,6 +32,9 @@ import { ResizableDirective } from '../shared/resizable.directive';
   styleUrl: './jury-selection.component.scss',
 })
 export class JurySelectionComponent {
+  totalStrikes = 3;
+  plaintiffStrikes = 0;
+  defendantStrikes = 0;
   pool: Juror[] = [];
   selected: Juror[] = [];
   notSelected: Juror[] = [];
@@ -49,6 +54,36 @@ export class JurySelectionComponent {
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
     };
+  }
+
+  createRange(num: number) {
+    return new Array(num).fill(0).map((n, index) => index + 1);
+  }
+
+  addTotalStrike(amount: number = 1) {
+    // Minimum of 1 and don't allow lower than other strikes
+    this.totalStrikes = Math.max(
+      this.totalStrikes + amount,
+      1,
+      this.defendantStrikes,
+      this.plaintiffStrikes
+    );
+  }
+
+  addDefendantStrike(amount: number = 1) {
+    // Set within 0 and total strikes
+    this.defendantStrikes = Math.min(
+      Math.max(this.defendantStrikes + amount, 0),
+      this.totalStrikes
+    );
+  }
+
+  addPlaintiffStrike(amount: number = 1) {
+    // Set within 0 and total strikes
+    this.plaintiffStrikes = Math.min(
+      Math.max(this.plaintiffStrikes + amount, 0),
+      this.totalStrikes
+    );
   }
 
   jurorClicked(juror: Juror) {

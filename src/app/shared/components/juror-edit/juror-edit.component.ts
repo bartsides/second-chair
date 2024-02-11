@@ -16,6 +16,7 @@ import { Juror } from '../../models/juror';
 
 interface DialogData {
   juror: Juror;
+  addMode: boolean;
 }
 
 @Component({
@@ -37,15 +38,17 @@ interface DialogData {
 })
 export class JurorEditComponent {
   juror: Juror;
+  addMode = false;
 
   constructor(
     public dialogRef: MatDialogRef<JurorEditComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) {
     this.juror = data.juror;
+    if (data.addMode) this.addMode = true;
   }
 
   close() {
-    this.dialogRef.close();
+    this.dialogRef.close(this.juror);
   }
 }

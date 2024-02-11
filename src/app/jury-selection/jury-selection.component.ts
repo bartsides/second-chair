@@ -84,6 +84,19 @@ export class JurySelectionComponent {
     );
   }
 
+  addJuror() {
+    var juror: Juror = <Juror>{};
+    var dialogRef = this.dialog.open(JurorEditComponent, {
+      data: { juror, addMode: true },
+      minWidth: '70%',
+    });
+    dialogRef.afterClosed().subscribe((res) => {
+      if (res && (res.firstName || res.lastName)) {
+        this.pool.push(res);
+      }
+    });
+  }
+
   jurorClicked(juror: Juror) {
     this.dialog.open(JurorEditComponent, { data: { juror }, minWidth: '70%' });
   }

@@ -41,11 +41,11 @@
 </div>
 
 <div class="container">
-  <h2>Jury Box</h2>
+  <h1>Jury Box</h1>
 
   <div
     id="selected-jurors"
-    class="juror-list"
+    class="jury-list"
     cdkDropList
     cdkDropListOrientation="horizontal"
     [cdkDropListData]="selected"
@@ -56,7 +56,7 @@
     ]"
     (cdkDropListDropped)="drop($event)"
   >
-    @for (juror of selected; track juror) {
+    @for (juror of selected; track selected) {
     <app-jury-card
       cdkDrag
       [juror]="juror"
@@ -67,11 +67,14 @@
 </div>
 
 <div class="container">
-  <h2>Jury Pool</h2>
+  <div class="jury-pool-header">
+    <h1>Jury Pool</h1>
+    <button mat-button (click)="addJuror()" class="strike-button">+</button>
+  </div>
 
   <div
     id="juror-pool"
-    class="juror-list"
+    class="jury-list"
     cdkDropList
     cdkDropListOrientation="horizontal"
     [cdkDropListData]="pool"
@@ -82,22 +85,25 @@
     ]"
     (cdkDropListDropped)="drop($event)"
   >
-    @for (juror of pool; track juror) {
+    @for (juror of pool; track pool) {
     <app-jury-card
       cdkDrag
       [juror]="juror"
       (clicked)="jurorClicked($event)"
     ></app-jury-card>
     }
+    <button class="add-juror-card-button" (click)="addJuror()">
+      <mat-icon>add</mat-icon>
+    </button>
   </div>
 </div>
 
 <div class="container">
-  <h2><mat-icon>delete</mat-icon></h2>
+  <h1><mat-icon>delete</mat-icon></h1>
 
   <div
     id="not-selected-jurors"
-    class="juror-list"
+    class="jury-list"
     cdkDropList
     cdkDropListOrientation="horizontal"
     [cdkDropListData]="notSelected"
@@ -108,7 +114,7 @@
     ]"
     (cdkDropListDropped)="drop($event)"
   >
-    @for (juror of notSelected; track juror) {
+    @for (juror of notSelected; track notSelected) {
     <app-jury-card
       cdkDrag
       [juror]="juror"

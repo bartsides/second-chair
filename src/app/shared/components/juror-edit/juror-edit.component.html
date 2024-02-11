@@ -45,5 +45,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-button (click)="close()">Close</button>
+  <button mat-button (click)="close()">
+    @if (addMode) {Add} @else {Close}
+  </button>
 </mat-dialog-actions>

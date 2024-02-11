@@ -5,8 +5,8 @@
     border: solid 1px mat.get-theme-color($theme, primary, default);
   }
 
-  .strike-tracker-divider {
-    border-top-color: mat.get-theme-color($theme, primary, default);
+  .strike-tracker-bar {
+    border-bottom: solid 1px mat.get-theme-color($theme, primary, default);
   }
 }
 

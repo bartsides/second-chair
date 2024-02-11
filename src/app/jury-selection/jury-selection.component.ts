@@ -8,7 +8,6 @@ import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
-import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { faker } from '@faker-js/faker';
 import { JurorCardComponent } from '../shared/components/juror-card/juror-card.component';
@@ -23,7 +22,6 @@ import { ResizableDirective } from '../shared/resizable.directive';
     DragDropModule,
     MatButtonModule,
     MatButtonToggleModule,
-    MatDividerModule,
     MatIconModule,
     JurorCardComponent,
     ResizableDirective,
@@ -91,6 +89,7 @@ export class JurySelectionComponent {
   }
 
   drop(event: CdkDragDrop<Juror[]>) {
+    // TODO: Fix bug where if multiple rows of jurors, selecting the second card actually selected the third
     if (event.previousContainer === event.container) {
       // Reorder items within the same list
       if (event.container.id == 'selected-jurors') return;
@@ -108,8 +107,6 @@ export class JurySelectionComponent {
         event.previousIndex,
         index
       );
-      var juror = event.container.data[index];
-      console.log('juror', event, juror);
       this.resetJurorNumbers();
     }
   }

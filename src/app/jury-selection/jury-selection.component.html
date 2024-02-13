@@ -1,12 +1,15 @@
+<button mat-button (click)="fakeData()">Fake Data</button>
+
 <div class="strike-tracker-bar">
   <div class="plaintiff-strike-tracker">
     <button mat-button class="strike-button" (click)="addPlaintiffStrike(-1)">
       -
     </button>
-    @for(strike of createRange(plaintiffStrikes); track plaintiffStrikes) {
+    @for(strike of createRange(data.plaintiffStrikes); track
+    data.plaintiffStrikes) {
     <mat-icon>radio_button_checked</mat-icon>
-    } @for(strike of createRange(totalStrikes - plaintiffStrikes); track
-    plaintiffStrikes) {
+    } @for(strike of createRange(data.totalStrikes - data.plaintiffStrikes);
+    track data.plaintiffStrikes) {
     <mat-icon>radio_button_unchecked</mat-icon>
     }
     <button mat-button class="strike-button" (click)="addPlaintiffStrike()">
@@ -27,10 +30,11 @@
     <button mat-button class="strike-button" (click)="addDefendantStrike(-1)">
       -
     </button>
-    @for(strike of createRange(defendantStrikes); track defendantStrikes) {
+    @for(strike of createRange(data.defendantStrikes); track
+    data.defendantStrikes) {
     <mat-icon>radio_button_checked</mat-icon>
-    } @for(strike of createRange(totalStrikes - defendantStrikes); track
-    defendantStrikes) {
+    } @for(strike of createRange(data.totalStrikes - data.defendantStrikes);
+    track data.defendantStrikes) {
     <mat-icon>radio_button_unchecked</mat-icon>
     }
     <button mat-button class="strike-button" (click)="addDefendantStrike()">
@@ -48,7 +52,7 @@
     class="jury-list"
     cdkDropList
     cdkDropListOrientation="horizontal"
-    [cdkDropListData]="selected"
+    [cdkDropListData]="data.selected"
     [cdkDropListConnectedTo]="[
       'selected-jurors',
       'juror-pool',
@@ -56,7 +60,7 @@
     ]"
     (cdkDropListDropped)="drop($event)"
   >
-    @for (juror of selected; track selected) {
+    @for (juror of data.selected; track data.selected) {
     <app-jury-card
       cdkDrag
       [juror]="juror"
@@ -77,7 +81,7 @@
     class="jury-list"
     cdkDropList
     cdkDropListOrientation="horizontal"
-    [cdkDropListData]="pool"
+    [cdkDropListData]="data.pool"
     [cdkDropListConnectedTo]="[
       'selected-jurors',
       'juror-pool',
@@ -85,7 +89,7 @@
     ]"
     (cdkDropListDropped)="drop($event)"
   >
-    @for (juror of pool; track pool) {
+    @for (juror of data.pool; track data.pool) {
     <app-jury-card
       cdkDrag
       [juror]="juror"
@@ -106,7 +110,7 @@
     class="jury-list"
     cdkDropList
     cdkDropListOrientation="horizontal"
-    [cdkDropListData]="notSelected"
+    [cdkDropListData]="data.notSelected"
     [cdkDropListConnectedTo]="[
       'selected-jurors',
       'juror-pool',
@@ -114,7 +118,7 @@
     ]"
     (cdkDropListDropped)="drop($event)"
   >
-    @for (juror of notSelected; track notSelected) {
+    @for (juror of data.notSelected; track data.notSelected) {
     <app-jury-card
       cdkDrag
       [juror]="juror"

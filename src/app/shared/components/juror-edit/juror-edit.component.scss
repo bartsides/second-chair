@@ -2,6 +2,10 @@
   width: 100%;
 }
 
+mat-form-field {
+  min-width: 400px;
+}
+
 textarea {
   width: 100%;
   min-height: 200px;

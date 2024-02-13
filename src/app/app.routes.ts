@@ -3,5 +3,6 @@ import { JurySelectionComponent } from './jury-selection/jury-selection.componen
 
 export const routes: Routes = [
   { path: '', component: JurySelectionComponent },
+  { path: 'refresh', component: JurySelectionComponent },
   { path: 'jury-selection', component: JurySelectionComponent },
 ];

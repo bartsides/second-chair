@@ -12,8 +12,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { faker } from '@faker-js/faker';
 import { JurorCardComponent } from '../shared/components/juror-card/juror-card.component';
 import { JurorEditComponent } from '../shared/components/juror-edit/juror-edit.component';
+import { LocalStorageKeys } from '../shared/config/local-storage-keys';
 import { Juror } from '../shared/models/juror';
+import { JurySelectionData } from '../shared/models/jury-selection-data';
 import { ResizableDirective } from '../shared/resizable.directive';
+import { StorageService } from '../shared/services/storage.service';
 
 @Component({
   selector: 'app-jury-selection',
@@ -30,20 +33,30 @@ import { ResizableDirective } from '../shared/resizable.directive';
   styleUrl: './jury-selection.component.scss',
 })
 export class JurySelectionComponent {
-  totalStrikes = 3;
-  plaintiffStrikes = 0;
-  defendantStrikes = 0;
-  pool: Juror[] = [];
-  selected: Juror[] = [];
-  notSelected: Juror[] = [];
+  data: JurySelectionData = new JurySelectionData();
 
-  constructor(public dialog: MatDialog) {
-    this.fakeData();
+  constructor(
+    public dialog: MatDialog,
+    public $StorageService: StorageService
+  ) {
+    this.loadData();
+  }
+
+  private loadData() {
+    var data = this.$StorageService.getData(LocalStorageKeys.jurySelection);
+    if (data) this.data = JSON.parse(data);
+  }
+
+  private saveData() {
+    this.$StorageService.saveData(
+      LocalStorageKeys.jurySelection,
+      JSON.stringify(this.data)
+    );
   }
 
   fakeData() {
     for (var i = 0; i < 8; i++) {
-      this.pool.push(this.generateJuror());
+      this.data.pool.push(this.generateJuror());
     }
   }
 
@@ -60,28 +73,31 @@ export class JurySelectionComponent {
 
   addTotalStrike(amount: number = 1) {
     // Minimum of 1 and don't allow lower than other strikes
-    this.totalStrikes = Math.max(
-      this.totalStrikes + amount,
+    this.data.totalStrikes = Math.max(
+      this.data.totalStrikes + amount,
       1,
-      this.defendantStrikes,
-      this.plaintiffStrikes
+      this.data.defendantStrikes,
+      this.data.plaintiffStrikes
     );
+    this.saveData();
   }
 
   addDefendantStrike(amount: number = 1) {
     // Set within 0 and total strikes
-    this.defendantStrikes = Math.min(
-      Math.max(this.defendantStrikes + amount, 0),
-      this.totalStrikes
+    this.data.defendantStrikes = Math.min(
+      Math.max(this.data.defendantStrikes + amount, 0),
+      this.data.totalStrikes
     );
+    this.saveData();
   }
 
   addPlaintiffStrike(amount: number = 1) {
     // Set within 0 and total strikes
-    this.plaintiffStrikes = Math.min(
-      Math.max(this.plaintiffStrikes + amount, 0),
-      this.totalStrikes
+    this.data.plaintiffStrikes = Math.min(
+      Math.max(this.data.plaintiffStrikes + amount, 0),
+      this.data.totalStrikes
     );
+    this.saveData();
   }
 
   addJuror() {
@@ -92,13 +108,16 @@ export class JurySelectionComponent {
     });
     dialogRef.afterClosed().subscribe((res) => {
       if (res && (res.firstName || res.lastName)) {
-        this.pool.push(res);
+        this.data.pool.push(res);
+        this.saveData();
       }
     });
   }
 
   jurorClicked(juror: Juror) {
-    this.dialog.open(JurorEditComponent, { data: { juror }, minWidth: '70%' });
+    this.dialog.open(JurorEditComponent, {
+      data: { juror },
+    });
   }
 
   drop(event: CdkDragDrop<Juror[]>) {
@@ -122,16 +141,17 @@ export class JurySelectionComponent {
       );
       this.resetJurorNumbers();
     }
+    this.saveData();
   }
 
   private resetJurorNumbers() {
-    for (var i = 0; i < this.selected.length; i++) {
-      this.selected[i].number = i + 1;
+    for (var i = 0; i < this.data.selected.length; i++) {
+      this.data.selected[i].number = i + 1;
     }
-    for (var juror of this.pool) {
+    for (var juror of this.data.pool) {
       juror.number = 0;
     }
-    for (var juror of this.notSelected) {
+    for (var juror of this.data.notSelected) {
       juror.number = 0;
     }
   }

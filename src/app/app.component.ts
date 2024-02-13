@@ -1,10 +1,13 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
+import { StorageService } from './shared/services/storage.service';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +26,12 @@ export class AppComponent {
   themes: string[] = ['dark-theme', 'light-theme'];
   useDarkTheme = true;
 
-  constructor(@Inject(DOCUMENT) private document: Document) {
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    private $StorageService: StorageService,
+    private router: Router,
+    public dialog: MatDialog
+  ) {
     this.setThemeByUserPreference();
     window
       .matchMedia('(prefers-color-scheme: dark)')
@@ -47,6 +55,21 @@ export class AppComponent {
   }
 
   clearData() {
-    // TODO: Clear data
+    var dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Clear all data',
+        message: 'Are you sure you want to clear all data?',
+      },
+    });
+    dialogRef.afterClosed().subscribe((res) => {
+      console.log(res);
+      if (res === 'Yes') {
+        this.$StorageService.clearData();
+        var url = this.router.url;
+        this.router
+          .navigateByUrl('refresh', { skipLocationChange: true })
+          .then(() => this.router.navigateByUrl(url));
+      }
+    });
   }
 }

@@ -7,7 +7,7 @@ import {
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { faker } from '@faker-js/faker';
 import { JurorCardComponent } from '../shared/components/juror-card/juror-card.component';
@@ -102,10 +102,7 @@ export class JurySelectionComponent {
 
   addJuror() {
     var juror: Juror = <Juror>{};
-    var dialogRef = this.dialog.open(JurorEditComponent, {
-      data: { juror, addMode: true },
-      minWidth: '70%',
-    });
+    var dialogRef = this.openEditDialog(juror, true);
     dialogRef.afterClosed().subscribe((res) => {
       if (res && (res.firstName || res.lastName)) {
         this.data.pool.push(res);
@@ -115,19 +112,33 @@ export class JurySelectionComponent {
   }
 
   jurorClicked(juror: Juror) {
-    this.dialog.open(JurorEditComponent, {
-      data: { juror },
+    this.openEditDialog(juror);
+  }
+
+  private openEditDialog(
+    juror: Juror,
+    addMode: boolean = false
+  ): MatDialogRef<JurorEditComponent, any> {
+    return this.dialog.open(JurorEditComponent, {
+      data: { juror, addMode: addMode },
+      minWidth: '70%',
     });
   }
 
   drop(event: CdkDragDrop<Juror[]>) {
-    // TODO: Fix bug where if multiple rows of jurors, selecting the second card actually selected the third
     if (event.previousContainer === event.container) {
       // Reorder items within the same list
       if (event.container.id == 'selected-jurors') return;
       // Move to front
       moveItemInArray(event.container.data, event.previousIndex, 0);
     } else {
+      var previousIndex = 0;
+      for (var i = 0; i < event.previousContainer.data.length; i++) {
+        if (event.previousContainer.data[i] == event.item.data) {
+          previousIndex = i;
+          break;
+        }
+      }
       // Move items between lists
       var index = 0;
       if (event.container.id == 'selected-jurors') {
@@ -136,7 +147,7 @@ export class JurySelectionComponent {
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
-        event.previousIndex,
+        previousIndex,
         index
       );
       this.resetJurorNumbers();

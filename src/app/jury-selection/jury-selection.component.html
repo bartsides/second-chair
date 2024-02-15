@@ -1,3 +1,4 @@
+<!-- TODO: Remove fake data button -->
 <button mat-button (click)="fakeData()">Fake Data</button>
 
 <div class="strike-tracker-bar">
@@ -26,6 +27,7 @@
       +
     </button>
   </div>
+
   <div class="defendant-strike-tracker">
     <button mat-button class="strike-button" (click)="addDefendantStrike(-1)">
       -
@@ -44,7 +46,7 @@
   </div>
 </div>
 
-<div class="container">
+<div class="jury-list-container">
   <h1>Jury Box</h1>
 
   <div
@@ -63,6 +65,7 @@
     @for (juror of data.selected; track data.selected) {
     <app-jury-card
       cdkDrag
+      [cdkDragData]="juror"
       [juror]="juror"
       (clicked)="jurorClicked($event)"
     ></app-jury-card>
@@ -70,7 +73,7 @@
   </div>
 </div>
 
-<div class="container">
+<div class="jury-list-container">
   <div class="jury-pool-header">
     <h1>Jury Pool</h1>
     <button mat-button (click)="addJuror()" class="strike-button">+</button>
@@ -92,6 +95,7 @@
     @for (juror of data.pool; track data.pool) {
     <app-jury-card
       cdkDrag
+      [cdkDragData]="juror"
       [juror]="juror"
       (clicked)="jurorClicked($event)"
     ></app-jury-card>
@@ -102,7 +106,7 @@
   </div>
 </div>
 
-<div class="container">
+<div class="jury-list-container">
   <h1><mat-icon>delete</mat-icon></h1>
 
   <div
@@ -121,6 +125,7 @@
     @for (juror of data.notSelected; track data.notSelected) {
     <app-jury-card
       cdkDrag
+      [cdkDragData]="juror"
       [juror]="juror"
       (clicked)="jurorClicked($event)"
     ></app-jury-card>

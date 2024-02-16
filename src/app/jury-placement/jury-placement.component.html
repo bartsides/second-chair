@@ -1,0 +1,25 @@
+<mat-toolbar class="second-toolbar">
+  <button mat-button routerLink="/jury-selection" class="jury-selection-button">
+    <span>
+      <mat-icon>chevron_left</mat-icon>
+      <span>Jury Selection</span>
+    </span>
+  </button>
+  <button mat-button (click)="resetJurorPositions()">Reset Positions</button>
+</mat-toolbar>
+
+@for (juror of data.selected.reverse(); track data.selected) {
+<div
+  class="dragable-juror"
+  cdkDrag
+  [cdkDragData]="juror"
+  (cdkDragStarted)="dragStarted()"
+  (cdkDragEnded)="dragEnded($event)"
+  [cdkDragFreeDragPosition]="juror.position"
+>
+  <app-jury-card
+    [juror]="juror"
+    (clicked)="jurorClicked(juror)"
+  ></app-jury-card>
+</div>
+}

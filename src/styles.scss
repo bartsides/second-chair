@@ -63,3 +63,17 @@ body {
 .green {
   background-color: green;
 }
+
+mat-toolbar {
+  z-index: 999;
+  span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.second-toolbar {
+  display: flex;
+  justify-content: right;
+}

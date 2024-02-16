@@ -19,7 +19,8 @@ $dark-mode-size: 30px;
 }
 
 mat-toolbar {
-  position: relative;
+  position: sticky;
+  top: 0;
   display: flex;
   justify-content: space-between;
 
@@ -45,4 +46,9 @@ mat-toolbar {
   mat-icon {
     color: #ffffff;
   }
+}
+
+.title-icon {
+  margin-right: 16px;
+  transform: scale(1.3);
 }

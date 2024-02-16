@@ -1,9 +1,10 @@
 <mat-menu #menu="matMenu">
-  <button mat-menu-item routerLink="jury-selection">
-    <mat-icon>person_add</mat-icon>
-    <span>Jury Selection</span>
+  @for (navOption of navOptions; track navOptions) {
+  <button mat-menu-item [routerLink]="navOption.route">
+    <mat-icon>{{ navOption.icon }}</mat-icon>
+    <span>{{ navOption.title }}</span>
   </button>
-  @if (useDarkTheme) {
+  } @if (useDarkTheme) {
   <button mat-menu-item (click)="setTheme(themes[1])" class="light-mode-button">
     <mat-icon>light_mode</mat-icon>
     <span>Light mode</span>
@@ -41,6 +42,12 @@
     </button>
     <span>Second Chair</span>
   </div>
+  @if (navOption) {
+  <div class="right">
+    <mat-icon class="title-icon">{{ navOption.icon }}</mat-icon>
+    <span>{{ navOption.title }}</span>
+  </div>
+  }
 </mat-toolbar>
 
 <router-outlet></router-outlet>

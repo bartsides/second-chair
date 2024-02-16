@@ -1,3 +1,3 @@
 export const LocalStorageKeys = {
-  jurySelection: 'jurySelection',
+  jury: 'jury',
 };

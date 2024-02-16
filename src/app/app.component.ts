@@ -1,12 +1,19 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Router, RouterModule } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterModule,
+} from '@angular/router';
+import { Subject, Subscription, filter, takeUntil } from 'rxjs';
 import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
+import { NavOption, NavOptions } from './shared/config/nav-options';
 import { StorageService } from './shared/services/storage.service';
 
 @Component({
@@ -22,14 +29,19 @@ import { StorageService } from './shared/services/storage.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
   themes: string[] = ['dark-theme', 'light-theme'];
   useDarkTheme = true;
+  notifier$ = new Subject();
+  routerTitleSub: Subscription;
+  navOption: NavOption | undefined;
+  navOptions = NavOptions;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private $StorageService: StorageService,
     private router: Router,
+    public activatedRoute: ActivatedRoute,
     public dialog: MatDialog
   ) {
     this.setThemeByUserPreference();
@@ -38,6 +50,45 @@ export class AppComponent {
       .addEventListener('change', (e) => {
         this.setThemeByUserPreference();
       });
+  }
+
+  ngOnInit(): void {
+    this.router.events
+      .pipe(
+        takeUntil(this.notifier$),
+        filter((e) => e instanceof NavigationEnd)
+      )
+      .subscribe(() => {
+        var route = this.getChild(this.activatedRoute);
+        if (this.routerTitleSub) this.routerTitleSub.unsubscribe();
+        this.routerTitleSub = route.title
+          .pipe(takeUntil(this.notifier$))
+          .subscribe((t) => {
+            if (t) {
+              for (var navOption of this.navOptions) {
+                if (navOption.title == t) {
+                  this.navOption = navOption;
+                  break;
+                }
+              }
+            } else {
+              this.navOption = undefined;
+            }
+          });
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.notifier$.next(undefined);
+    this.notifier$.complete();
+  }
+
+  getChild(activatedRoute: ActivatedRoute): ActivatedRoute {
+    if (activatedRoute.firstChild) {
+      return this.getChild(activatedRoute.firstChild);
+    } else {
+      return activatedRoute;
+    }
   }
 
   private setThemeByUserPreference() {

@@ -1,5 +1,13 @@
-<!-- TODO: Remove fake data button -->
-<button mat-button (click)="fakeData()">Fake Data</button>
+<mat-toolbar class="second-toolbar">
+  <!-- TODO: Remove fake data button -->
+  <button mat-button (click)="fakeData()">Fake Data</button>
+  <button mat-button routerLink="/jury-placement" class="jury-placement-button">
+    <span>
+      <span>Jury Placement</span>
+      <mat-icon>chevron_right</mat-icon>
+    </span>
+  </button>
+</mat-toolbar>
 
 <div class="strike-tracker-bar">
   <div class="plaintiff-strike-tracker">
@@ -63,12 +71,12 @@
     (cdkDropListDropped)="drop($event)"
   >
     @for (juror of data.selected; track data.selected) {
-    <app-jury-card
-      cdkDrag
-      [cdkDragData]="juror"
-      [juror]="juror"
-      (clicked)="jurorClicked($event)"
-    ></app-jury-card>
+    <div cdkDrag [cdkDragData]="juror" (cdkDragStarted)="dragStarted()">
+      <app-jury-card
+        [juror]="juror"
+        (clicked)="jurorClicked($event)"
+      ></app-jury-card>
+    </div>
     }
   </div>
 </div>

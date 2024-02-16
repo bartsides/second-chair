@@ -9,12 +9,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { RouterModule } from '@angular/router';
 import { faker } from '@faker-js/faker';
 import { JurorCardComponent } from '../shared/components/juror-card/juror-card.component';
 import { JurorEditComponent } from '../shared/components/juror-edit/juror-edit.component';
 import { LocalStorageKeys } from '../shared/config/local-storage-keys';
 import { Juror } from '../shared/models/juror';
-import { JurySelectionData } from '../shared/models/jury-selection-data';
+import { JuryData } from '../shared/models/jury-data';
 import { ResizableDirective } from '../shared/resizable.directive';
 import { StorageService } from '../shared/services/storage.service';
 
@@ -26,14 +28,17 @@ import { StorageService } from '../shared/services/storage.service';
     MatButtonModule,
     MatButtonToggleModule,
     MatIconModule,
+    MatToolbarModule,
     JurorCardComponent,
     ResizableDirective,
+    RouterModule,
   ],
   templateUrl: './jury-selection.component.html',
   styleUrl: './jury-selection.component.scss',
 })
 export class JurySelectionComponent {
-  data: JurySelectionData = new JurySelectionData();
+  private dragging: boolean;
+  data: JuryData = new JuryData();
 
   constructor(
     public dialog: MatDialog,
@@ -43,13 +48,13 @@ export class JurySelectionComponent {
   }
 
   private loadData() {
-    var data = this.$StorageService.getData(LocalStorageKeys.jurySelection);
+    var data = this.$StorageService.getData(LocalStorageKeys.jury);
     if (data) this.data = JSON.parse(data);
   }
 
   private saveData() {
     this.$StorageService.saveData(
-      LocalStorageKeys.jurySelection,
+      LocalStorageKeys.jury,
       JSON.stringify(this.data)
     );
   }
@@ -103,7 +108,7 @@ export class JurySelectionComponent {
   addJuror() {
     var juror: Juror = <Juror>{};
     var dialogRef = this.openEditDialog(juror, true);
-    dialogRef.afterClosed().subscribe((res) => {
+    dialogRef.afterClosed().subscribe((res: Juror) => {
       if (res && (res.firstName || res.lastName)) {
         this.data.pool.push(res);
         this.saveData();
@@ -111,8 +116,19 @@ export class JurySelectionComponent {
     });
   }
 
+  dragStarted() {
+    this.dragging = true;
+  }
+
   jurorClicked(juror: Juror) {
-    this.openEditDialog(juror);
+    if (this.dragging) {
+      this.dragging = false;
+      return;
+    }
+    var dialogRef = this.openEditDialog(juror);
+    dialogRef.afterClosed().subscribe(() => {
+      this.saveData();
+    });
   }
 
   private openEditDialog(

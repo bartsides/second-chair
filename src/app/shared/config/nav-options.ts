@@ -15,6 +15,11 @@ var NavOptions: NavOption[] = [
     icon: 'group',
     route: '/jury-placement',
   },
+  {
+    title: 'Evidence',
+    icon: 'article',
+    route: '/evidence',
+  },
 ];
 
 export { NavOptions };

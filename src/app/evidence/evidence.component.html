@@ -1,0 +1,24 @@
+<div class="evidence-lists-container">
+  <div class="plaintiff-evidence-container">
+    <h1 class="evidence-title mat-headline-2">π</h1>
+    <button mat-button>+</button>
+    <div class="evidence-list">
+      @for (evidence of plaintiffEvidence; track plaintiffEvidence) {
+      <div class="evidence">
+        {{ evidence }}
+      </div>
+      }
+    </div>
+  </div>
+  <div class="defendant-evidence-container">
+    <h1 class="evidence-title mat-headline-2">Δ</h1>
+    <button mat-button>+</button>
+    <div class="evidence-list">
+      @for (evidence of defendantEvidence; track defendantEvidence) {
+      <div class="evidence">
+        {{ evidence }}
+      </div>
+      }
+    </div>
+  </div>
+</div>

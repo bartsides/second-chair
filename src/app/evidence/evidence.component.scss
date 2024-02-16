@@ -1,0 +1,51 @@
+.evidence-lists-container {
+  width: 100%;
+  max-height: 95%;
+  display: flex;
+}
+
+.plaintiff-evidence-container,
+.defendant-evidence-container {
+  width: 50%;
+}
+
+.plaintiff-evidence-container {
+  margin-left: 10%;
+  margin-right: 2%;
+}
+
+.defendant-evidence-container {
+  margin-right: 10%;
+  margin-left: 2%;
+}
+
+.evidence-title {
+  width: 100%;
+  margin: auto;
+  text-align: center;
+}
+
+.evidence-list {
+  min-height: 50%;
+  max-height: 80%;
+  min-width: 30%;
+  border: solid 1px #ccc;
+  border-radius: 4px;
+  overflow: hidden;
+  display: block;
+  overflow-y: scroll;
+}
+
+.evidence {
+  padding: 20px 10px;
+  border-bottom: solid 1px #ccc;
+  color: rgba(0, 0, 0, 0.87);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: pointer;
+  background: white;
+  font-size: 14px;
+}

@@ -148,6 +148,9 @@ export class JurySelectionComponent {
       // Move to front
       moveItemInArray(event.container.data, event.previousIndex, 0);
     } else {
+      // Move items between lists
+
+      // Manually find index as wrapped drag and drop lists produce off results
       var previousIndex = 0;
       for (var i = 0; i < event.previousContainer.data.length; i++) {
         if (event.previousContainer.data[i] == event.item.data) {
@@ -155,10 +158,15 @@ export class JurySelectionComponent {
           break;
         }
       }
-      // Move items between lists
+
       var index = 0;
-      if (event.container.id == 'selected-jurors') {
+      var juror = event.previousContainer.data[previousIndex];
+      var movingToSelected = event.container.id == 'selected-jurors';
+      if (movingToSelected) {
         index = event.container.data.length;
+        juror.number = this.getNextJurorNumber();
+      } else {
+        juror.number = 0;
       }
       transferArrayItem(
         event.previousContainer.data,
@@ -166,20 +174,23 @@ export class JurySelectionComponent {
         previousIndex,
         index
       );
-      this.resetJurorNumbers();
+      if (movingToSelected) {
+        this.data.selected.sort((a, b) => a.number - b.number);
+      }
     }
     this.saveData();
   }
 
-  private resetJurorNumbers() {
-    for (var i = 0; i < this.data.selected.length; i++) {
-      this.data.selected[i].number = i + 1;
+  private getNextJurorNumber(): number {
+    var jurorNumber = 1;
+
+    for (var juror of this.data.selected) {
+      if (juror.number > jurorNumber) {
+        return jurorNumber;
+      }
+      jurorNumber++;
     }
-    for (var juror of this.data.pool) {
-      juror.number = 0;
-    }
-    for (var juror of this.data.notSelected) {
-      juror.number = 0;
-    }
+
+    return jurorNumber;
   }
 }

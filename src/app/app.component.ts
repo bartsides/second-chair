@@ -13,7 +13,9 @@ import {
 } from '@angular/router';
 import { Subject, Subscription, filter, takeUntil } from 'rxjs';
 import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
-import { NavOption, NavOptions } from './shared/config/nav-options';
+import { Steps } from './shared/config/steps';
+import { CurrentStep } from './shared/models/current-step';
+import { StepService } from './shared/services/step.service';
 import { StorageService } from './shared/services/storage.service';
 
 @Component({
@@ -34,12 +36,14 @@ export class AppComponent implements OnInit, OnDestroy {
   useDarkTheme = true;
   notifier$ = new Subject();
   routerTitleSub: Subscription;
-  navOption: NavOption | undefined;
-  navOptions = NavOptions;
+
+  steps = Steps;
+  currentStep: CurrentStep;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private $StorageService: StorageService,
+    private $StepService: StepService,
     private router: Router,
     public activatedRoute: ActivatedRoute,
     public dialog: MatDialog
@@ -47,7 +51,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.setThemeByUserPreference();
     window
       .matchMedia('(prefers-color-scheme: dark)')
-      .addEventListener('change', (e) => {
+      .addEventListener('change', () => {
         this.setThemeByUserPreference();
       });
   }
@@ -64,16 +68,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.routerTitleSub = route.title
           .pipe(takeUntil(this.notifier$))
           .subscribe((t) => {
-            if (t) {
-              for (var navOption of this.navOptions) {
-                if (navOption.title == t) {
-                  this.navOption = navOption;
-                  break;
-                }
-              }
-            } else {
-              this.navOption = undefined;
-            }
+            this.currentStep = this.$StepService.getCurrentStep(t);
           });
       });
   }

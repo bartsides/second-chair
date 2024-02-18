@@ -1,10 +1,6 @@
-export interface NavOption {
-  title: string;
-  icon: string;
-  route: string;
-}
+import { Step } from '../models/step';
 
-var NavOptions: NavOption[] = [
+var Steps: Step[] = [
   {
     title: 'Jury Selection',
     icon: 'person_add',
@@ -22,4 +18,4 @@ var NavOptions: NavOption[] = [
   },
 ];
 
-export { NavOptions };
+export { Steps };

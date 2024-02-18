@@ -1,8 +1,8 @@
 <mat-menu #menu="matMenu">
-  @for (navOption of navOptions; track navOptions) {
-  <button mat-menu-item [routerLink]="navOption.route">
-    <mat-icon>{{ navOption.icon }}</mat-icon>
-    <span>{{ navOption.title }}</span>
+  @for (step of steps; track steps) {
+  <button mat-menu-item [routerLink]="step.route">
+    <mat-icon>{{ step.icon }}</mat-icon>
+    <span>{{ step.title }}</span>
   </button>
   } @if (useDarkTheme) {
   <button mat-menu-item (click)="setTheme(themes[1])" class="light-mode-button">
@@ -42,10 +42,10 @@
     </button>
     <span>Second Chair</span>
   </div>
-  @if (navOption) {
+  @if (currentStep.current) {
   <div class="right">
-    <mat-icon class="title-icon">{{ navOption.icon }}</mat-icon>
-    <span>{{ navOption.title }}</span>
+    <mat-icon class="title-icon">{{ currentStep.current.icon }}</mat-icon>
+    <span>{{ currentStep.current.title }}</span>
   </div>
   }
 </mat-toolbar>

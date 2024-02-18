@@ -4,20 +4,23 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { faker } from '@faker-js/faker';
+import { Subject, takeUntil } from 'rxjs';
 import { JurorCardComponent } from '../shared/components/juror-card/juror-card.component';
 import { JurorEditComponent } from '../shared/components/juror-edit/juror-edit.component';
 import { LocalStorageKeys } from '../shared/config/local-storage-keys';
+import { CurrentStep } from '../shared/models/current-step';
 import { Juror } from '../shared/models/juror';
 import { JuryData } from '../shared/models/jury-data';
 import { ResizableDirective } from '../shared/resizable.directive';
+import { StepService } from '../shared/services/step.service';
 import { StorageService } from '../shared/services/storage.service';
 
 @Component({
@@ -36,15 +39,31 @@ import { StorageService } from '../shared/services/storage.service';
   templateUrl: './jury-selection.component.html',
   styleUrl: './jury-selection.component.scss',
 })
-export class JurySelectionComponent {
+export class JurySelectionComponent implements OnInit, OnDestroy {
   private dragging: boolean;
   data: JuryData = new JuryData();
+  currentStep: CurrentStep;
+  notifier$ = new Subject();
 
   constructor(
+    private activatedRoute: ActivatedRoute,
     public dialog: MatDialog,
-    public $StorageService: StorageService
-  ) {
+    public $StorageService: StorageService,
+    public $StepService: StepService
+  ) {}
+
+  ngOnInit(): void {
+    this.activatedRoute.title
+      .pipe(takeUntil(this.notifier$))
+      .subscribe(
+        (t) => (this.currentStep = this.$StepService.getCurrentStep(t))
+      );
     this.loadData();
+  }
+
+  ngOnDestroy(): void {
+    this.notifier$.next(undefined);
+    this.notifier$.complete();
   }
 
   private loadData() {

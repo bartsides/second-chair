@@ -5,7 +5,7 @@ import * as CryptoJS from 'crypto-js';
   providedIn: 'root',
 })
 export class StorageService {
-  // TODO: Move key to config
+  // TODO: Move key to config or make unique per account
   private key = '641072897349741';
 
   public saveData(key: string, value: string) {

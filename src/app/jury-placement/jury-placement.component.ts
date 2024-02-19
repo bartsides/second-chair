@@ -89,6 +89,7 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
   }
 
   dragEnded(event: CdkDragEnd) {
+    if (event.event.type == 'touchend') this.dragging = false;
     var juror = event.source.data as Juror;
     juror.position.x += event.distance.x;
     juror.position.y += event.distance.y;
@@ -103,8 +104,8 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
   }
 
   roundToGrid(num: number): number {
-    var low = num - (Math.abs(num) % this.stickyGridSize);
-    var high = low + this.stickyGridSize;
+    var low = Math.max(0, num - (Math.abs(num) % this.stickyGridSize));
+    var high = Math.max(0, low + this.stickyGridSize);
     if (num - low > high - num) return high;
     return low;
   }

@@ -1,4 +1,7 @@
 @use "@angular/material" as mat;
+@use "shared/components/exhibit-card/exhibit-card.component.theme" as
+  exhibitCard;
+@use "evidence/evidence.component.theme" as evidence;
 @use "jury-selection/jury-selection.component.theme" as jurySelection;
 
 @mixin color($theme) {
@@ -36,6 +39,8 @@
     @include color($theme);
   }
 
+  @include exhibitCard.theme($theme);
+  @include evidence.theme($theme);
   @include jurySelection.theme($theme);
 }
 

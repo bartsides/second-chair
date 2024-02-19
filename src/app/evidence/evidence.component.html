@@ -6,10 +6,11 @@
     <h1 class="evidence-title mat-headline-2">π</h1>
     <button mat-button>+</button>
     <div class="evidence-list">
-      @for (evidence of plaintiffEvidence; track plaintiffEvidence) {
-      <div class="evidence">
-        {{ evidence }}
-      </div>
+      @for (exhibit of plaintiffEvidence; track plaintiffEvidence) {
+      <app-exhibit-card
+        [exhibit]="exhibit"
+        (clicked)="exhibitClicked($event)"
+      ></app-exhibit-card>
       }
     </div>
   </div>
@@ -17,10 +18,11 @@
     <h1 class="evidence-title mat-headline-2">Δ</h1>
     <button mat-button>+</button>
     <div class="evidence-list">
-      @for (evidence of defendantEvidence; track defendantEvidence) {
-      <div class="evidence">
-        {{ evidence }}
-      </div>
+      @for (exhibit of defendantEvidence; track defendantEvidence) {
+      <app-exhibit-card
+        [exhibit]="exhibit"
+        (clicked)="exhibitClicked($event)"
+      ></app-exhibit-card>
       }
     </div>
   </div>

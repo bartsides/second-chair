@@ -42,10 +42,10 @@
     </button>
     <span>Second Chair</span>
   </div>
-  @if (currentStep.current) {
+  @if (currentStep?.current) {
   <div class="right">
-    <mat-icon class="title-icon">{{ currentStep.current.icon }}</mat-icon>
-    <span>{{ currentStep.current.title }}</span>
+    <mat-icon class="title-icon">{{ currentStep?.current?.icon }}</mat-icon>
+    <span>{{ currentStep?.current?.title }}</span>
   </div>
   }
 </mat-toolbar>

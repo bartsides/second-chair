@@ -17,7 +17,7 @@ import { StepService } from '../../services/step.service';
 export class SecondToolbarComponent implements OnInit {
   @Input({ required: true }) activatedRoute: ActivatedRoute;
   @Input({ required: true }) subject: Subject<unknown>;
-  currentStep: CurrentStep;
+  currentStep: CurrentStep | undefined;
 
   constructor(private $StepService: StepService) {}
 

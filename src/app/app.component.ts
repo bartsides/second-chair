@@ -38,7 +38,7 @@ export class AppComponent implements OnInit, OnDestroy {
   routerTitleSub: Subscription;
 
   steps = Steps;
-  currentStep: CurrentStep;
+  currentStep: CurrentStep | undefined;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -67,9 +67,9 @@ export class AppComponent implements OnInit, OnDestroy {
         if (this.routerTitleSub) this.routerTitleSub.unsubscribe();
         this.routerTitleSub = route.title
           .pipe(takeUntil(this.notifier$))
-          .subscribe((t) => {
-            this.currentStep = this.$StepService.getCurrentStep(t);
-          });
+          .subscribe(
+            (t) => (this.currentStep = this.$StepService.getCurrentStep(t))
+          );
       });
   }
 
@@ -108,7 +108,6 @@ export class AppComponent implements OnInit, OnDestroy {
       },
     });
     dialogRef.afterClosed().subscribe((res) => {
-      console.log(res);
       if (res === 'Yes') {
         this.$StorageService.clearData();
         var url = this.router.url;

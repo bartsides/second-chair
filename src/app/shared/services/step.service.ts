@@ -5,14 +5,9 @@ import { CurrentStep } from '../models/current-step';
 @Injectable({ providedIn: 'root' })
 export class StepService {
   private steps = Steps;
-  private defaultResult = {
-    previous: undefined,
-    current: undefined,
-    next: undefined,
-  };
 
-  getCurrentStep(stepTitle: string | undefined): CurrentStep {
-    if (!stepTitle) return this.defaultResult;
+  getCurrentStep(stepTitle: string | undefined): CurrentStep | undefined {
+    if (!stepTitle) return undefined;
 
     for (var i = 0; i < this.steps.length; i++) {
       var step = this.steps[i];
@@ -27,6 +22,6 @@ export class StepService {
       }
     }
 
-    return this.defaultResult;
+    return undefined;
   }
 }

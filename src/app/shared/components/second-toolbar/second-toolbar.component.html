@@ -1,21 +1,25 @@
 <mat-toolbar class="second-toolbar">
-  @if (currentStep.previous) {
+  @if (currentStep?.previous) {
   <button
     mat-button
-    [routerLink]="currentStep.previous.route"
+    [routerLink]="currentStep?.previous?.route"
     class="step-button"
   >
     <span>
       <mat-icon>chevron_left</mat-icon>
-      <span>{{ currentStep.previous.title }}</span>
+      <span>{{ currentStep?.previous?.title }}</span>
     </span>
   </button>
   }
   <ng-content></ng-content>
-  @if (currentStep.next) {
-  <button mat-button [routerLink]="currentStep.next.route" class="step-button">
+  @if (currentStep?.next) {
+  <button
+    mat-button
+    [routerLink]="currentStep?.next?.route"
+    class="step-button"
+  >
     <span>
-      <span>{{ currentStep.next.title }}</span>
+      <span>{{ currentStep?.next?.title }}</span>
       <mat-icon>chevron_right</mat-icon>
     </span>
   </button>

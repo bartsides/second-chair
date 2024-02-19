@@ -12,15 +12,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { faker } from '@faker-js/faker';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 import { JurorCardComponent } from '../shared/components/juror-card/juror-card.component';
 import { JurorEditComponent } from '../shared/components/juror-edit/juror-edit.component';
+import { SecondToolbarComponent } from '../shared/components/second-toolbar/second-toolbar.component';
 import { LocalStorageKeys } from '../shared/config/local-storage-keys';
-import { CurrentStep } from '../shared/models/current-step';
 import { Juror } from '../shared/models/juror';
 import { JuryData } from '../shared/models/jury-data';
 import { ResizableDirective } from '../shared/resizable.directive';
-import { StepService } from '../shared/services/step.service';
 import { StorageService } from '../shared/services/storage.service';
 
 @Component({
@@ -28,13 +27,14 @@ import { StorageService } from '../shared/services/storage.service';
   standalone: true,
   imports: [
     DragDropModule,
+    JurorCardComponent,
     MatButtonModule,
     MatButtonToggleModule,
     MatIconModule,
     MatToolbarModule,
-    JurorCardComponent,
     ResizableDirective,
     RouterModule,
+    SecondToolbarComponent,
   ],
   templateUrl: './jury-selection.component.html',
   styleUrl: './jury-selection.component.scss',
@@ -42,22 +42,15 @@ import { StorageService } from '../shared/services/storage.service';
 export class JurySelectionComponent implements OnInit, OnDestroy {
   private dragging: boolean;
   data: JuryData = new JuryData();
-  currentStep: CurrentStep;
   notifier$ = new Subject();
 
   constructor(
-    private activatedRoute: ActivatedRoute,
+    public activatedRoute: ActivatedRoute,
     public dialog: MatDialog,
-    public $StorageService: StorageService,
-    public $StepService: StepService
+    public $StorageService: StorageService
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.title
-      .pipe(takeUntil(this.notifier$))
-      .subscribe(
-        (t) => (this.currentStep = this.$StepService.getCurrentStep(t))
-      );
     this.loadData();
   }
 

@@ -1,31 +1,6 @@
-<mat-toolbar class="second-toolbar">
-  @if (currentStep.previous) {
-  <button
-    mat-button
-    [routerLink]="currentStep.previous.route"
-    class="previous-step-button"
-  >
-    <span>
-      <span>{{ currentStep.previous.title }}</span>
-      <mat-icon>chevron_left</mat-icon>
-    </span>
-  </button>
-  }
-  <!-- TODO: Remove fake data button -->
+<app-second-toolbar [activatedRoute]="activatedRoute" [subject]="notifier$">
   <button mat-button (click)="fakeData()">Fake Data</button>
-  @if (currentStep.next) {
-  <button
-    mat-button
-    [routerLink]="currentStep.next.route"
-    class="next-step-button"
-  >
-    <span>
-      <span>{{ currentStep.next.title }}</span>
-      <mat-icon>chevron_right</mat-icon>
-    </span>
-  </button>
-  }
-</mat-toolbar>
+</app-second-toolbar>
 
 <div class="strike-tracker-bar">
   <div class="plaintiff-strike-tracker">

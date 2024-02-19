@@ -1,12 +1,14 @@
 import { CdkDrag, CdkDragEnd } from '@angular/cdk/drag-drop';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { Subject } from 'rxjs';
 import { JurorCardComponent } from '../shared/components/juror-card/juror-card.component';
 import { JurorEditComponent } from '../shared/components/juror-edit/juror-edit.component';
+import { SecondToolbarComponent } from '../shared/components/second-toolbar/second-toolbar.component';
 import { LocalStorageKeys } from '../shared/config/local-storage-keys';
 import { Juror } from '../shared/models/juror';
 import { JuryData } from '../shared/models/jury-data';
@@ -22,19 +24,29 @@ import { StorageService } from '../shared/services/storage.service';
     MatIconModule,
     MatToolbarModule,
     RouterModule,
+    SecondToolbarComponent,
   ],
   templateUrl: './jury-placement.component.html',
   styleUrl: './jury-placement.component.scss',
 })
-export class JuryPlacementComponent {
+export class JuryPlacementComponent implements OnInit, OnDestroy {
   data: JuryData = new JuryData();
+  notifier$ = new Subject();
   private dragging: boolean;
 
   constructor(
+    public activatedRoute: ActivatedRoute,
     public dialog: MatDialog,
     public $StorageService: StorageService
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.loadData();
+  }
+
+  ngOnDestroy(): void {
+    this.notifier$.next(undefined);
+    this.notifier$.complete();
   }
 
   private loadData() {

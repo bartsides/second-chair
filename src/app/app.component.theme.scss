@@ -38,3 +38,17 @@
 
   @include jurySelection.theme($theme);
 }
+
+@mixin dark($theme) {
+  .hatched-bg {
+    background-image: url("/assets/cross-white.png");
+    transition: all 4s ease-in-out;
+  }
+}
+
+@mixin light($theme) {
+  .hatched-bg {
+    background-image: url("/assets/cross.png");
+    transition: all 4s ease-in-out;
+  }
+}

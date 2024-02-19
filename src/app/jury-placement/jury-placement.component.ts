@@ -32,7 +32,7 @@ import { StorageService } from '../shared/services/storage.service';
 export class JuryPlacementComponent implements OnInit, OnDestroy {
   data: JuryData = new JuryData();
   notifier$ = new Subject();
-  private dragging: boolean;
+  dragging: boolean;
   private stickyGridSize = 25;
 
   constructor(

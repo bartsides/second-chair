@@ -2,19 +2,21 @@
   <button mat-button (click)="resetJurorPositions()">Reset Positions</button>
 </app-second-toolbar>
 
-<!-- reverse list so first juror is on top -->
-@for (juror of data.selected.reverse(); track data.selected) {
-<div
-  class="dragable-juror"
-  cdkDrag
-  [cdkDragData]="juror"
-  (cdkDragStarted)="dragStarted()"
-  (cdkDragEnded)="dragEnded($event)"
-  [cdkDragFreeDragPosition]="juror.position"
->
-  <app-jury-card
-    [juror]="juror"
-    (clicked)="jurorClicked(juror)"
-  ></app-jury-card>
+<div class="jury-placement-container" [class.hatched-bg]="dragging">
+  <!-- reverse list so first juror is on top -->
+  @for (juror of data.selected.reverse(); track data.selected) {
+  <div
+    class="dragable-juror"
+    cdkDrag
+    [cdkDragData]="juror"
+    (cdkDragStarted)="dragStarted()"
+    (cdkDragEnded)="dragEnded($event)"
+    [cdkDragFreeDragPosition]="juror.position"
+  >
+    <app-jury-card
+      [juror]="juror"
+      (clicked)="jurorClicked(juror)"
+    ></app-jury-card>
+  </div>
+  }
 </div>
-}

@@ -1,4 +1,4 @@
-import { CdkDrag, CdkDragEnd } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragEnd, Point } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -33,6 +33,7 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
   data: JuryData = new JuryData();
   notifier$ = new Subject();
   private dragging: boolean;
+  private stickyGridSize = 25;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -70,12 +71,11 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
 
   setJurorPositions(jurors: Juror[]) {
     if (!jurors.length) return;
-    const yOffset = 50;
     var position = { x: 0, y: 0 };
     for (var i = 0; i < jurors.length; i++) {
       var juror = jurors[i];
       juror.position = { x: position.x, y: position.y };
-      position.y += yOffset;
+      position.y += this.stickyGridSize;
     }
     this.saveData();
   }
@@ -89,10 +89,24 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
   }
 
   dragEnded(event: CdkDragEnd) {
-    var data = event.source.data as Juror;
-    data.position.x += event.distance.x;
-    data.position.y += event.distance.y;
+    var juror = event.source.data as Juror;
+    juror.position.x += event.distance.x;
+    juror.position.y += event.distance.y;
+    this.lockToGrid(juror.position);
+    event.source.setFreeDragPosition(juror.position);
     this.saveData();
+  }
+
+  lockToGrid(position: Point) {
+    position.x = this.roundToGrid(position.x);
+    position.y = this.roundToGrid(position.y);
+  }
+
+  roundToGrid(num: number): number {
+    var low = num - (Math.abs(num) % this.stickyGridSize);
+    var high = low + this.stickyGridSize;
+    if (num - low > high - num) return high;
+    return low;
   }
 
   jurorClicked(juror: Juror) {
@@ -101,9 +115,7 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
       return;
     }
     var dialogRef = this.openEditDialog(juror);
-    dialogRef.afterClosed().subscribe(() => {
-      this.saveData();
-    });
+    dialogRef.afterClosed().subscribe(() => this.saveData());
   }
 
   private openEditDialog(

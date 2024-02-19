@@ -2,6 +2,7 @@
   <button mat-button (click)="resetJurorPositions()">Reset Positions</button>
 </app-second-toolbar>
 
+<!-- reverse list so first juror is on top -->
 @for (juror of data.selected.reverse(); track data.selected) {
 <div
   class="dragable-juror"

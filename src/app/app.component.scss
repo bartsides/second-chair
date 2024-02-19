@@ -19,6 +19,7 @@ $dark-mode-size: 30px;
 }
 
 mat-toolbar {
+  position: -webkit-sticky;
   position: sticky;
   top: 0;
   display: flex;

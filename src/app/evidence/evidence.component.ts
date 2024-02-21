@@ -25,7 +25,6 @@ import { Exhibit } from '../shared/models/exhibit';
 export class EvidenceComponent implements OnInit, OnDestroy {
   notifier$ = new Subject();
   data: EvidenceData = new EvidenceData();
-  private dictionary = 'ABC'; //'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -92,61 +91,27 @@ export class EvidenceComponent implements OnInit, OnDestroy {
       let marker = 0;
       for (let i = 0; i < list.length; i++) {
         if (!list[i]?.marker) continue;
-        let num = this.atn(list[i].marker);
+        let num = this.alphaToNumber(list[i].marker);
         if (num > marker) marker = num;
       }
       marker++;
-      return this.nta(marker).toUpperCase();
+      return this.numberToAlpha(marker).toUpperCase();
     }
   }
 
   numberToAlpha(num: number): string {
-    if (num <= this.dictionary.length) {
-      return this.dictionary.slice(num - 1, num);
-    }
-    let index = num % this.dictionary.length;
-    let quotient = num / this.dictionary.length;
-    let result;
-
-    if (quotient >= 1) {
-      if (index === 0) quotient--;
-      result = this.numberToAlpha(quotient);
-    }
-
-    if (index === 0) index = this.dictionary.length;
-
-    return result + this.dictionary.slice(index - 1, index);
-  }
-
-  alphaToNumber(alpha: string): number {
-    let result = 0;
-    let index = 0;
-
-    for (let i = 0; i <= alpha.length; i++) {
-      index = this.dictionary.search(alpha.slice(i - 1, i)) + 1;
-      if (index === 0) return 0;
-      result += index * Math.pow(this.dictionary.length, alpha.length - i);
-    }
-
-    return result;
-  }
-
-  nta(n: number): string {
-    if (n < 1) return '';
+    if (num < 1) return '';
     return (
-      this.nta(Math.floor((n - 1) / this.dictionary.length)) +
-      this.dictionary[n - 1]
+      this.numberToAlpha(Math.floor((num - 1) / 26)) +
+      String.fromCharCode(((num - 1) % 26) + 65)
     );
   }
 
-  atn(a: string): number {
-    return a
+  alphaToNumber(alpha: string): number {
+    return alpha
       .toUpperCase()
       .split('')
-      .reduce(
-        (a, val) => a * this.dictionary.length + val.charCodeAt(0) - 64,
-        0
-      );
+      .reduce((i, val) => i * 26 + val.charCodeAt(0) - 64, 0);
   }
 
   exhibitClicked(exhibit: Exhibit) {

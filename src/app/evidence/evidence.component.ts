@@ -7,6 +7,7 @@ import { Subject } from 'rxjs';
 import { ExhibitCardComponent } from '../shared/components/exhibit-card/exhibit-card.component';
 import { ExhibitEditComponent } from '../shared/components/exhibit-edit/exhibit-edit.component';
 import { SecondToolbarComponent } from '../shared/components/second-toolbar/second-toolbar.component';
+import { EvidenceData } from '../shared/models/evidence-data';
 import { Exhibit } from '../shared/models/exhibit';
 
 @Component({
@@ -23,8 +24,11 @@ import { Exhibit } from '../shared/models/exhibit';
 })
 export class EvidenceComponent implements OnDestroy {
   notifier$ = new Subject();
-  plaintiffEvidence: Exhibit[] = [];
-  defendantEvidence: Exhibit[] = [];
+  data: EvidenceData = <EvidenceData>{
+    plaintiffEvidence: [],
+    defendantEvidence: [],
+    defendantNumbered: true,
+  };
 
   constructor(public activatedRoute: ActivatedRoute, public dialog: MatDialog) {
     this.fakeData();
@@ -36,9 +40,9 @@ export class EvidenceComponent implements OnDestroy {
   }
 
   fakeData() {
-    for (var i = 0; i < 50; i++) {
-      this.plaintiffEvidence.push(this.generateExhibit(i));
-      this.defendantEvidence.push(this.generateExhibit(i));
+    for (var i = 0; i < 25; i++) {
+      this.data.plaintiffEvidence.push(this.generateExhibit(i + 1));
+      this.data.defendantEvidence.push(this.generateExhibit(i + 1));
     }
   }
 
@@ -51,10 +55,46 @@ export class EvidenceComponent implements OnDestroy {
     };
   }
 
+  addExhibit(defendant: boolean = true) {
+    var exhibit: Exhibit = <Exhibit>{};
+    exhibit.marker = this.getNextMarker(defendant);
+    var dialogRef = this.openEditDialog(exhibit, true);
+    dialogRef.afterClosed().subscribe((res: Exhibit) => {
+      if (res && (res.description || res.supportingWitness)) {
+        var list = defendant
+          ? this.data.defendantEvidence
+          : this.data.plaintiffEvidence;
+        list.push(res);
+        this.saveData();
+      }
+    });
+  }
+
+  getNextMarker(defendant: boolean): string {
+    var list = defendant
+      ? this.data.defendantEvidence
+      : this.data.plaintiffEvidence;
+    var numbered = defendant === this.data.defendantNumbered;
+    if (numbered) {
+      var marker = 0;
+      for (var i = 0; i < list.length; i++) {
+        if (!list[i]?.marker) continue;
+        var num = Number(list[i].marker);
+        if (!isNaN(num) && num > marker) {
+          console.log(marker, ' -> ', num);
+          marker = num;
+        }
+      }
+      return (marker + 1).toString();
+    } else {
+      return 'A';
+    }
+  }
+
   exhibitClicked(exhibit: Exhibit) {
     var dialogRef = this.openEditDialog(exhibit);
     dialogRef.afterClosed().subscribe(() => {
-      //this.saveData();
+      this.saveData();
     });
   }
 
@@ -67,4 +107,6 @@ export class EvidenceComponent implements OnDestroy {
       minWidth: '70%',
     });
   }
+
+  saveData() {}
 }

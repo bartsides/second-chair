@@ -4,9 +4,9 @@
 <div class="evidence-lists-container">
   <div class="plaintiff-evidence-container">
     <h1 class="evidence-title mat-headline-2">π</h1>
-    <button mat-button>+</button>
+    <button mat-button (click)="addExhibit(false)">+</button>
     <div class="evidence-list">
-      @for (exhibit of plaintiffEvidence; track plaintiffEvidence) {
+      @for (exhibit of data.plaintiffEvidence; track data.plaintiffEvidence) {
       <app-exhibit-card
         [exhibit]="exhibit"
         (clicked)="exhibitClicked($event)"
@@ -16,9 +16,9 @@
   </div>
   <div class="defendant-evidence-container">
     <h1 class="evidence-title mat-headline-2">Δ</h1>
-    <button mat-button>+</button>
+    <button mat-button (click)="addExhibit()">+</button>
     <div class="evidence-list">
-      @for (exhibit of defendantEvidence; track defendantEvidence) {
+      @for (exhibit of data.defendantEvidence; track data.defendantEvidence) {
       <app-exhibit-card
         [exhibit]="exhibit"
         (clicked)="exhibitClicked($event)"

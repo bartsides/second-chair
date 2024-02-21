@@ -63,7 +63,7 @@ export class AppComponent implements OnInit, OnDestroy {
         filter((e) => e instanceof NavigationEnd)
       )
       .subscribe(() => {
-        var route = this.getChild(this.activatedRoute);
+        let route = this.getChild(this.activatedRoute);
         if (this.routerTitleSub) this.routerTitleSub.unsubscribe();
         this.routerTitleSub = route.title
           .pipe(takeUntil(this.notifier$))
@@ -87,7 +87,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private setThemeByUserPreference() {
-    var darkMode =
+    let darkMode =
       !window.matchMedia || window.matchMedia('(prefers-color-scheme: dark)');
     this.setTheme(this.themes[darkMode ? 0 : 1]);
   }
@@ -101,7 +101,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   clearData() {
-    var dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Clear all data',
         message: 'Are you sure you want to clear all data?',
@@ -110,7 +110,7 @@ export class AppComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe((res) => {
       if (res === 'Yes') {
         this.$StorageService.clearData();
-        var url = this.router.url;
+        let url = this.router.url;
         this.router
           .navigateByUrl('refresh', { skipLocationChange: true })
           .then(() => this.router.navigateByUrl(url));

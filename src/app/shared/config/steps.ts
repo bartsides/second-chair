@@ -1,6 +1,6 @@
 import { Step } from '../models/step';
 
-var Steps: Step[] = [
+let Steps: Step[] = [
   {
     title: 'Jury Selection',
     icon: 'person_add',

@@ -60,7 +60,7 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
   }
 
   private loadData() {
-    var data = this.$StorageService.getData(LocalStorageKeys.jury);
+    let data = this.$StorageService.getData(LocalStorageKeys.jury);
     if (data) this.data = JSON.parse(data);
   }
 
@@ -72,7 +72,7 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
   }
 
   fakeData() {
-    for (var i = 0; i < 8; i++) {
+    for (let i = 0; i < 8; i++) {
       this.data.pool.push(this.generateJuror());
     }
   }
@@ -118,8 +118,8 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
   }
 
   addJuror() {
-    var juror: Juror = <Juror>{};
-    var dialogRef = this.openEditDialog(juror, true);
+    let juror: Juror = <Juror>{};
+    let dialogRef = this.openEditDialog(juror, true);
     dialogRef.afterClosed().subscribe((res: Juror) => {
       if (res && (res.firstName || res.lastName)) {
         this.data.pool.push(res);
@@ -137,7 +137,7 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
       this.dragging = false;
       return;
     }
-    var dialogRef = this.openEditDialog(juror);
+    let dialogRef = this.openEditDialog(juror);
     dialogRef.afterClosed().subscribe(() => {
       this.saveData();
     });
@@ -163,17 +163,17 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
       // Move items between lists
 
       // Manually find index as wrapped drag and drop lists produce off results
-      var previousIndex = 0;
-      for (var i = 0; i < event.previousContainer.data.length; i++) {
+      let previousIndex = 0;
+      for (let i = 0; i < event.previousContainer.data.length; i++) {
         if (event.previousContainer.data[i] == event.item.data) {
           previousIndex = i;
           break;
         }
       }
 
-      var index = 0;
-      var juror = event.previousContainer.data[previousIndex];
-      var movingToSelected = event.container.id == 'selected-jurors';
+      let index = 0;
+      let juror = event.previousContainer.data[previousIndex];
+      let movingToSelected = event.container.id == 'selected-jurors';
       if (movingToSelected) {
         index = event.container.data.length;
         juror.number = this.getNextJurorNumber();
@@ -194,9 +194,9 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
   }
 
   private getNextJurorNumber(): number {
-    var jurorNumber = 1;
+    let jurorNumber = 1;
 
-    for (var juror of this.data.selected) {
+    for (let juror of this.data.selected) {
       if (juror.number > jurorNumber) {
         return jurorNumber;
       }

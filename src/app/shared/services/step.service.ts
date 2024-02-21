@@ -9,11 +9,11 @@ export class StepService {
   getCurrentStep(stepTitle: string | undefined): CurrentStep | undefined {
     if (!stepTitle) return undefined;
 
-    for (var i = 0; i < this.steps.length; i++) {
-      var step = this.steps[i];
+    for (let i = 0; i < this.steps.length; i++) {
+      let step = this.steps[i];
       if (step.title === stepTitle) {
-        var previous = i > 0 ? this.steps[i - 1] : undefined;
-        var next = i < this.steps.length - 1 ? this.steps[i + 1] : undefined;
+        let previous = i > 0 ? this.steps[i - 1] : undefined;
+        let next = i < this.steps.length - 1 ? this.steps[i + 1] : undefined;
         return {
           previous,
           current: step,

@@ -42,9 +42,15 @@ export class EvidenceComponent implements OnInit, OnDestroy {
   }
 
   fakeData() {
-    for (let i = 0; i < 27; i++) {
+    for (let i = 0; i < 8; i++) {
       this.data.plaintiffEvidence.push(this.generateExhibit(false));
       this.data.defendantEvidence.push(this.generateExhibit(true));
+    }
+    for (let i = 0; i < this.data.plaintiffEvidence.length; i++) {
+      if (i % 2 === 1) this.data.plaintiffEvidence[i].marker += ' - 1';
+    }
+    for (let i = 0; i < this.data.defendantEvidence.length; i++) {
+      if (i % 2 === 1) this.data.defendantEvidence[i].marker += ' - 1';
     }
   }
 
@@ -77,26 +83,33 @@ export class EvidenceComponent implements OnInit, OnDestroy {
       ? this.data.defendantEvidence
       : this.data.plaintiffEvidence;
     let numbered = defendant === this.data.defendantNumbered;
-    if (numbered) {
-      let marker = 0;
-      for (let i = 0; i < list.length; i++) {
-        if (!list[i]?.marker) continue;
-        let num = Number(list[i].marker);
-        if (!isNaN(num) && num > marker) {
-          marker = num;
-        }
+    return numbered
+      ? this.getNextNumberMarker(list)
+      : this.getNextAlphaMarker(list);
+  }
+
+  getNextNumberMarker(list: Exhibit[]): string {
+    let nextMarker = 0;
+    for (let i = 0; i < list.length; i++) {
+      if (!list[i]?.marker) continue;
+      let num = Number(list[i].marker.trim());
+      if (!isNaN(num) && num > nextMarker) {
+        nextMarker = num;
       }
-      return (marker + 1).toString();
-    } else {
-      let marker = 0;
-      for (let i = 0; i < list.length; i++) {
-        if (!list[i]?.marker) continue;
-        let num = this.alphaToNumber(list[i].marker);
-        if (num > marker) marker = num;
-      }
-      marker++;
-      return this.numberToAlpha(marker).toUpperCase();
     }
+    return (nextMarker + 1).toString();
+  }
+
+  getNextAlphaMarker(list: Exhibit[]): string {
+    let nextMarker = 0;
+    for (let i = 0; i < list.length; i++) {
+      let marker = list[i]?.marker;
+      if (!marker || !/^[a-zA-Z]+$/.test(marker)) continue;
+      let num = this.alphaToNumber(marker);
+      if (num > nextMarker) nextMarker = num;
+    }
+    nextMarker++;
+    return this.numberToAlpha(nextMarker).toUpperCase();
   }
 
   numberToAlpha(num: number): string {

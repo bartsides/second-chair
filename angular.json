@@ -67,7 +67,8 @@
               "port": 8080
             },
             "development": {
-              "buildTarget": "second-chair:build:development"
+              "buildTarget": "second-chair:build:development",
+              "port": 8080
             }
           },
           "defaultConfiguration": "development"

@@ -2,8 +2,8 @@ runtime: nodejs20
 handlers:
   # Serve all static files with urls ending with a file extension
   - url: /(.*\..+)$
-    static_files: dist/\1
-    upload: dist/(.*\..+)$
+    static_files: dist/second-chair/browser/\1
+    upload: dist/second-chair/browser/(.*\..+)$
     secure: always
   # catch all handler to index.html
   - url: /.*

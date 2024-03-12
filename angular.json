@@ -63,12 +63,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "second-chair:build:production",
-              "port": 8080
+              "buildTarget": "second-chair:build:production"
             },
             "development": {
-              "buildTarget": "second-chair:build:development",
-              "port": 8080
+              "buildTarget": "second-chair:build:development"
             }
           },
           "defaultConfiguration": "development"

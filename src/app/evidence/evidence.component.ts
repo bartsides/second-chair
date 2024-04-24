@@ -7,12 +7,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute } from '@angular/router';
 import { faker } from '@faker-js/faker';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, tap } from 'rxjs';
 import { ExhibitCardComponent } from '../shared/components/exhibit-card/exhibit-card.component';
 import { ExhibitEditComponent } from '../shared/components/exhibit-edit/exhibit-edit.component';
 import { SecondToolbarComponent } from '../shared/components/second-toolbar/second-toolbar.component';
+import { LocalStorageKeys } from '../shared/config/local-storage-keys';
 import { EvidenceData } from '../shared/models/evidence-data';
 import { Exhibit } from '../shared/models/exhibit';
+import { StorageService } from '../shared/services/storage.service';
 import { Util } from '../shared/util/util';
 
 @Component({
@@ -35,37 +37,32 @@ import { Util } from '../shared/util/util';
 export class EvidenceComponent implements OnInit, OnDestroy {
   notifier$ = new Subject();
   filter$ = new Subject<string>();
+  searchFilter: string = '';
   data: EvidenceData = new EvidenceData();
   filteredData: EvidenceData;
   evidenceSearchControl = new FormControl();
 
-  constructor(public activatedRoute: ActivatedRoute, public dialog: MatDialog) {
+  constructor(
+    public activatedRoute: ActivatedRoute,
+    public dialog: MatDialog,
+    public $StorageService: StorageService
+  ) {
     this.filteredData = new EvidenceData();
     this.filter$
       .pipe(takeUntil(this.notifier$))
       .subscribe((val) => this.filterData(val));
   }
 
-  filterData(val: string) {
-    this.filteredData.plaintiffEvidence = [];
-    this.filteredData.defendantEvidence = [];
-    this.data.plaintiffEvidence
-      .filter((exhibit) => Util.search(exhibit, val))
-      .forEach((exhibit) => this.filteredData.plaintiffEvidence.push(exhibit));
-    this.data.defendantEvidence
-      .filter((exhibit) => Util.search(exhibit, val))
-      .forEach((exhibit) => this.filteredData.defendantEvidence.push(exhibit));
-  }
-
   ngOnInit(): void {
     this.evidenceSearchControl.valueChanges
-      .pipe(takeUntil(this.notifier$))
+      .pipe(
+        takeUntil(this.notifier$),
+        tap((val) => (this.searchFilter = val))
+      )
       .subscribe((val) => {
         this.filter$.next(val);
       });
     this.loadData();
-    this.fakeData();
-    this.filter$.next('');
   }
 
   ngOnDestroy(): void {
@@ -84,6 +81,7 @@ export class EvidenceComponent implements OnInit, OnDestroy {
     for (let i = 0; i < this.data.defendantEvidence.length; i++) {
       if (i % 2 === 1) this.data.defendantEvidence[i].marker += ' - 1';
     }
+    this.saveData();
   }
 
   generateExhibit(defendant: boolean): Exhibit {
@@ -176,7 +174,28 @@ export class EvidenceComponent implements OnInit, OnDestroy {
     });
   }
 
-  saveData() {}
+  saveData() {
+    this.$StorageService.saveData(
+      LocalStorageKeys.evidence,
+      JSON.stringify(this.data)
+    );
+    this.filter$.next(this.searchFilter);
+  }
 
-  loadData() {}
+  loadData() {
+    let data = this.$StorageService.getData(LocalStorageKeys.evidence);
+    if (data) this.data = JSON.parse(data);
+    this.filter$.next(this.searchFilter);
+  }
+
+  filterData(val: string) {
+    this.filteredData.plaintiffEvidence = [];
+    this.filteredData.defendantEvidence = [];
+    this.data.plaintiffEvidence
+      .filter((exhibit) => Util.search(exhibit, val))
+      .forEach((exhibit) => this.filteredData.plaintiffEvidence.push(exhibit));
+    this.data.defendantEvidence
+      .filter((exhibit) => Util.search(exhibit, val))
+      .forEach((exhibit) => this.filteredData.defendantEvidence.push(exhibit));
+  }
 }

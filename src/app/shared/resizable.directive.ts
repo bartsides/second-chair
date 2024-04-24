@@ -21,7 +21,6 @@ export class ResizableDirective implements OnInit {
 
     const newHeight = (height: number) => {
       const newHeight = Math.max(this.resizableMinHeight, height);
-      console.log(newHeight);
       el.nativeElement.style.height = newHeight + 'px';
     };
 

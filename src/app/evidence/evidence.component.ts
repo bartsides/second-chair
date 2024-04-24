@@ -1,14 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute } from '@angular/router';
 import { faker } from '@faker-js/faker';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { ExhibitCardComponent } from '../shared/components/exhibit-card/exhibit-card.component';
 import { ExhibitEditComponent } from '../shared/components/exhibit-edit/exhibit-edit.component';
 import { SecondToolbarComponent } from '../shared/components/second-toolbar/second-toolbar.component';
 import { EvidenceData } from '../shared/models/evidence-data';
 import { Exhibit } from '../shared/models/exhibit';
+import { Util } from '../shared/util/util';
 
 @Component({
   selector: 'app-evidence',
@@ -16,7 +21,12 @@ import { Exhibit } from '../shared/models/exhibit';
   imports: [
     ExhibitCardComponent,
     ExhibitEditComponent,
+    FormsModule,
     MatButtonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    ReactiveFormsModule,
     SecondToolbarComponent,
   ],
   templateUrl: './evidence.component.html',
@@ -24,16 +34,38 @@ import { Exhibit } from '../shared/models/exhibit';
 })
 export class EvidenceComponent implements OnInit, OnDestroy {
   notifier$ = new Subject();
+  filter$ = new Subject<string>();
   data: EvidenceData = new EvidenceData();
+  filteredData: EvidenceData;
+  evidenceSearchControl = new FormControl();
 
-  constructor(
-    public activatedRoute: ActivatedRoute,
-    public dialog: MatDialog
-  ) {}
+  constructor(public activatedRoute: ActivatedRoute, public dialog: MatDialog) {
+    this.filteredData = new EvidenceData();
+    this.filter$
+      .pipe(takeUntil(this.notifier$))
+      .subscribe((val) => this.filterData(val));
+  }
+
+  filterData(val: string) {
+    this.filteredData.plaintiffEvidence = [];
+    this.filteredData.defendantEvidence = [];
+    this.data.plaintiffEvidence
+      .filter((exhibit) => Util.search(exhibit, val))
+      .forEach((exhibit) => this.filteredData.plaintiffEvidence.push(exhibit));
+    this.data.defendantEvidence
+      .filter((exhibit) => Util.search(exhibit, val))
+      .forEach((exhibit) => this.filteredData.defendantEvidence.push(exhibit));
+  }
 
   ngOnInit(): void {
+    this.evidenceSearchControl.valueChanges
+      .pipe(takeUntil(this.notifier$))
+      .subscribe((val) => {
+        this.filter$.next(val);
+      });
     this.loadData();
     this.fakeData();
+    this.filter$.next('');
   }
 
   ngOnDestroy(): void {

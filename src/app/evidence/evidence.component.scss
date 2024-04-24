@@ -1,3 +1,14 @@
+.evidence-search-bar {
+  width: 100%;
+  margin: auto;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.evidence-search-bar-field {
+  min-width: max(400px, 33%);
+}
+
 .evidence-lists-container {
   width: 100%;
   max-height: 95%;

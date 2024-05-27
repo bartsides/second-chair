@@ -1,0 +1,39 @@
+:host {
+  width: 100%;
+}
+
+.evidence-list-container {
+  height: 100%;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.evidence-list-title {
+  width: 100%;
+}
+
+.evidence-list-title-button {
+  width: 100%;
+  min-height: 70px;
+}
+
+.evidence-list-title-button-icon {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-top: 4px;
+  padding-bottom: 10px;
+}
+
+.evidence-list-title-button-icon > .mat-headline-2,
+.evidence-list-title-button-icon > .mat-headline-4 {
+  margin-bottom: 0px !important;
+  margin-left: 10px;
+}
+
+.evidence-list {
+  height: 100%;
+  overflow-y: auto;
+}

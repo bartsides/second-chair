@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute } from '@angular/router';
 import { faker } from '@faker-js/faker';
 import { Subject, takeUntil, tap } from 'rxjs';
+import { EvidenceListComponent } from '../shared/components/evidence-list/evidence-list.component';
 import { ExhibitCardComponent } from '../shared/components/exhibit-card/exhibit-card.component';
 import { ExhibitEditComponent } from '../shared/components/exhibit-edit/exhibit-edit.component';
 import { SecondToolbarComponent } from '../shared/components/second-toolbar/second-toolbar.component';
@@ -21,6 +22,7 @@ import { Util } from '../shared/util/util';
   selector: 'app-evidence',
   standalone: true,
   imports: [
+    EvidenceListComponent,
     ExhibitCardComponent,
     ExhibitEditComponent,
     FormsModule,
@@ -71,15 +73,15 @@ export class EvidenceComponent implements OnInit, OnDestroy {
   }
 
   fakeData() {
-    for (let i = 0; i < 8; i++) {
-      this.data.plaintiffEvidence.push(this.generateExhibit(false));
-      this.data.defendantEvidence.push(this.generateExhibit(true));
-    }
-    for (let i = 0; i < this.data.plaintiffEvidence.length; i++) {
-      if (i % 2 === 1) this.data.plaintiffEvidence[i].marker += ' - 1';
-    }
-    for (let i = 0; i < this.data.defendantEvidence.length; i++) {
-      if (i % 2 === 1) this.data.defendantEvidence[i].marker += ' - 1';
+    let fakeCount = 8;
+    for (let i = 0; i < fakeCount; i++) {
+      let e = this.generateExhibit(false);
+      if (i % 2 === 1) e.marker += ' - 1';
+      this.data.plaintiffEvidence.push(e);
+
+      e = this.generateExhibit(true);
+      if (i % 2 === 1) e.marker += ' - 1';
+      this.data.defendantEvidence.push(e);
     }
     this.saveData();
   }

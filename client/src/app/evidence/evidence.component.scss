@@ -1,0 +1,32 @@
+.evidence-search-bar {
+  width: 100%;
+  margin: auto;
+  display: flex;
+  justify-content: flex-end;
+
+  .evidence-search-bar-field {
+    min-width: max(400px, 33%);
+  }
+}
+
+.evidence-lists-container {
+  width: 100%;
+  min-height: 500px;
+  max-height: 80%;
+  display: flex;
+}
+
+app-evidence-list {
+  width: 50%;
+  border-radius: 4px;
+}
+
+.plaintiff-evidence-list {
+  margin-left: 5%;
+  margin-right: 2%;
+}
+
+.defendant-evidence-list {
+  margin-right: 5%;
+  margin-left: 2%;
+}

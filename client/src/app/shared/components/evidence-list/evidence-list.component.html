@@ -1,0 +1,22 @@
+<div class="evidence-list-container">
+  <div class="evidence-list-title">
+    <button
+      mat-button
+      class="evidence-list-title-button"
+      (click)="addExhibit()"
+    >
+      <div class="evidence-list-title-button-icon">
+        <div class="mat-headline-2">{{ icon }}</div>
+        <div class="mat-headline-4">+</div>
+      </div>
+    </button>
+  </div>
+  <div class="evidence-list">
+    @for (exhibit of exhibits; track exhibits) {
+    <app-exhibit-card
+      [exhibit]="exhibit"
+      (clicked)="exhibitClicked($event)"
+    ></app-exhibit-card>
+    }
+  </div>
+</div>

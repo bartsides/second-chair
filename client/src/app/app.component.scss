@@ -1,0 +1,55 @@
+@import "../variables";
+
+$dark-mode-size: 30px;
+
+::ng-deep {
+  .mat-mdc-menu-item-text {
+    display: flex;
+    align-items: center;
+  }
+
+  .light-clear-data-button {
+    &.mat-mdc-menu-item:not([disabled]):hover {
+      color: var(--mat-menu-item-label-text-color) !important;
+      mat-icon {
+        color: var(--mat-menu-item-label-text-color) !important;
+      }
+    }
+  }
+}
+
+mat-toolbar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+
+  .left,
+  .right {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.light-mode-button,
+.dark-mode-button {
+  display: flex;
+  align-items: center;
+}
+
+.light-mode-icon {
+  fill: white;
+}
+
+.clear-data-button {
+  color: #ffffff;
+  mat-icon {
+    color: #ffffff;
+  }
+}
+
+.title-icon {
+  margin-right: 16px;
+  transform: scale(1.3);
+}

@@ -1,0 +1,89 @@
+@import "../../variables";
+
+.strike-tracker-bar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.plaintiff-strike-tracker,
+.center-strike-tracker,
+.defendant-strike-tracker {
+  display: flex;
+  align-items: center;
+}
+
+.defendant-strike-tracker {
+  flex-direction: row-reverse;
+}
+
+.tracker-label {
+  font-size: 24px;
+}
+
+.strike-button {
+  font-size: 24px;
+}
+
+.jury-list-container {
+  min-width: 90%;
+  margin-top: 16px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 16px;
+  h1 {
+    margin-left: 1em;
+    margin-bottom: 0;
+  }
+}
+
+.jury-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  min-width: 100%;
+  max-width: 100%;
+  min-height: calc(var(--card-size) + var(--card-margin) * 2);
+  border-radius: 4px;
+}
+
+.jury-pool-header {
+  display: flex;
+  align-items: center;
+}
+
+.add-juror-card-button {
+  cursor: pointer;
+  width: var(--card-size);
+  height: var(--card-size);
+  max-width: var(--card-size);
+  max-height: var(--card-size);
+  margin: var(--card-margin);
+  color: var(--mat-app-text-color, inherit);
+
+  // .mat-mdc-card - copied so style works when no jurors have been added
+  border-radius: var(--mdc-elevated-card-container-shape);
+  background-color: var(--mdc-elevated-card-container-color);
+  border-width: 0;
+  border-style: solid;
+  border-color: var(--mdc-elevated-card-container-color);
+  box-shadow: var(--mdc-elevated-card-container-elevation);
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.add-juror-card-icon {
+  transform: scale(2);
+}
+
+.delete-icon {
+  transform: scale(1.3);
+}

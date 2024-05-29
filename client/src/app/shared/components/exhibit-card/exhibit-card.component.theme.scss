@@ -1,0 +1,13 @@
+@use "@angular/material" as mat;
+
+@mixin color($theme) {
+  .evidence-card {
+    border-bottom: solid 1px mat.get-theme-color($theme, primary, default);
+  }
+}
+
+@mixin theme($theme) {
+  @if mat.theme-has($theme, color) {
+    @include color($theme);
+  }
+}

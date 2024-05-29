@@ -1,0 +1,135 @@
+<app-second-toolbar [activatedRoute]="activatedRoute" [subject]="notifier$">
+  <button mat-button (click)="fakeData()">Fake Data</button>
+</app-second-toolbar>
+
+<div class="strike-tracker-bar">
+  <div class="plaintiff-strike-tracker">
+    <button mat-button class="strike-button" (click)="addPlaintiffStrike(-1)">
+      -
+    </button>
+    @for(strike of createRange(data.plaintiffStrikes); track
+    data.plaintiffStrikes) {
+    <mat-icon>radio_button_checked</mat-icon>
+    } @for(strike of createRange(data.totalStrikes - data.plaintiffStrikes);
+    track data.plaintiffStrikes) {
+    <mat-icon>radio_button_unchecked</mat-icon>
+    }
+    <button mat-button class="strike-button" (click)="addPlaintiffStrike()">
+      +
+    </button>
+    <span class="tracker-label">π</span>
+  </div>
+  <div class="center-strike-tracker">
+    <button mat-button class="strike-button" (click)="addTotalStrike(-1)">
+      -
+    </button>
+    <span class="tracker-label">Strikes</span>
+    <button mat-button class="strike-button" (click)="addTotalStrike()">
+      +
+    </button>
+  </div>
+
+  <div class="defendant-strike-tracker">
+    <button mat-button class="strike-button" (click)="addDefendantStrike(-1)">
+      -
+    </button>
+    @for(strike of createRange(data.defendantStrikes); track
+    data.defendantStrikes) {
+    <mat-icon>radio_button_checked</mat-icon>
+    } @for(strike of createRange(data.totalStrikes - data.defendantStrikes);
+    track data.defendantStrikes) {
+    <mat-icon>radio_button_unchecked</mat-icon>
+    }
+    <button mat-button class="strike-button" (click)="addDefendantStrike()">
+      +
+    </button>
+    <span class="tracker-label">Δ</span>
+  </div>
+</div>
+
+<div class="jury-list-container">
+  <h1>Jury Box</h1>
+
+  <div
+    id="selected-jurors"
+    class="jury-list"
+    cdkDropList
+    cdkDropListOrientation="horizontal"
+    [cdkDropListData]="data.selected"
+    [cdkDropListConnectedTo]="[
+      'selected-jurors',
+      'juror-pool',
+      'not-selected-jurors'
+    ]"
+    (cdkDropListDropped)="drop($event)"
+  >
+    @for (juror of data.selected; track data.selected) {
+    <div cdkDrag [cdkDragData]="juror" (cdkDragStarted)="dragStarted()">
+      <app-jury-card
+        [juror]="juror"
+        (clicked)="jurorClicked($event)"
+      ></app-jury-card>
+    </div>
+    }
+  </div>
+</div>
+
+<div class="jury-list-container">
+  <div class="jury-pool-header">
+    <h1>Jury Pool</h1>
+    <button mat-button (click)="addJuror()" class="strike-button">+</button>
+  </div>
+
+  <div
+    id="juror-pool"
+    class="jury-list"
+    cdkDropList
+    cdkDropListOrientation="horizontal"
+    [cdkDropListData]="data.pool"
+    [cdkDropListConnectedTo]="[
+      'selected-jurors',
+      'juror-pool',
+      'not-selected-jurors'
+    ]"
+    (cdkDropListDropped)="drop($event)"
+  >
+    @for (juror of data.pool; track data.pool) {
+    <app-jury-card
+      cdkDrag
+      [cdkDragData]="juror"
+      [juror]="juror"
+      (clicked)="jurorClicked($event)"
+    ></app-jury-card>
+    }
+    <button class="add-juror-card-button" (click)="addJuror()">
+      <mat-icon class="add-juror-card-icon">add</mat-icon>
+    </button>
+  </div>
+</div>
+
+<div class="jury-list-container">
+  <h1><mat-icon class="delete-icon">delete</mat-icon></h1>
+
+  <div
+    id="not-selected-jurors"
+    class="jury-list"
+    cdkDropList
+    cdkDropListOrientation="horizontal"
+    [cdkDropListData]="data.notSelected"
+    [cdkDropListConnectedTo]="[
+      'selected-jurors',
+      'juror-pool',
+      'not-selected-jurors'
+    ]"
+    (cdkDropListDropped)="drop($event)"
+  >
+    @for (juror of data.notSelected; track data.notSelected) {
+    <app-jury-card
+      cdkDrag
+      [cdkDragData]="juror"
+      [juror]="juror"
+      (clicked)="jurorClicked($event)"
+    ></app-jury-card>
+    }
+  </div>
+</div>

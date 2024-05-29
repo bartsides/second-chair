@@ -1,0 +1,22 @@
+@host = https://localhost:7275
+
+GET {{host}}/cases/
+Accept: application/json
+
+###
+
+GET {{host}}/cases/f4248c29-7f82-4bcf-95c6-2420c0bb9f34
+Accept: application/json
+
+###
+
+GET {{host}}/todos/
+Accept: application/json
+
+###
+
+POST {{host}}/todos/
+Accept: application/json
+Body: {}
+
+###

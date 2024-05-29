@@ -17,6 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          using: 'node20'
           submodules: true
           lfs: false
       - name: Build And Deploy

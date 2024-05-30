@@ -19,5 +19,5 @@ steps:
     cd client
     npm install -g @angular/cli
     npm install
-    ng build --prod
+    ng build
   displayName: 'npm install and build'

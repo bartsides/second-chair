@@ -1,6 +1,8 @@
 runtime: aspnetcore
 env: flex
 
+service: second-chair-api
+
 runtime_config:
   operating_system: ubuntu22
 

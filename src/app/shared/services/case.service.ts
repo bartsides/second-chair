@@ -12,11 +12,11 @@ export class CaseService {
 
   getCase(caseId: string) {
     return this.http.get<GetCaseQueryResult>(
-      `${environment.apiUrl}cases/${caseId}`
+      `${environment.apiUrl}/cases/${caseId}`
     );
   }
 
   getCases() {
-    return this.http.get<GetCasesQueryResult>(`${environment.apiUrl}cases`);
+    return this.http.get<GetCasesQueryResult>(`${environment.apiUrl}/cases`);
   }
 }

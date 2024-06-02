@@ -17,9 +17,11 @@ import { JurorCardComponent } from '../shared/components/juror-card/juror-card.c
 import { JurorEditComponent } from '../shared/components/juror-edit/juror-edit.component';
 import { SecondToolbarComponent } from '../shared/components/second-toolbar/second-toolbar.component';
 import { LocalStorageKeys } from '../shared/config/local-storage-keys';
+import { CaseDetails } from '../shared/models/case-details';
 import { Juror } from '../shared/models/juror';
 import { JuryData } from '../shared/models/jury-data';
 import { ResizableDirective } from '../shared/resizable.directive';
+import { CaseService } from '../shared/services/case.service';
 import { StorageService } from '../shared/services/storage.service';
 
 @Component({
@@ -42,15 +44,18 @@ import { StorageService } from '../shared/services/storage.service';
 export class JurySelectionComponent implements OnInit, OnDestroy {
   private dragging: boolean;
   data: JuryData = new JuryData();
+  currentCase: CaseDetails | undefined | null = null;
   notifier$ = new Subject();
 
   constructor(
     public activatedRoute: ActivatedRoute,
     public dialog: MatDialog,
+    public $CaseService: CaseService,
     public $StorageService: StorageService
   ) {}
 
   ngOnInit(): void {
+    // TODO: Add loading handling and symbol
     this.loadData();
   }
 
@@ -60,15 +65,27 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
   }
 
   private loadData() {
+    // TODO: Add check if case details exist in storage and retrieve if not there. Add on case route
+    let caseDetails = this.$StorageService.getData(
+      LocalStorageKeys.currentCase
+    );
+    if (caseDetails) this.currentCase = JSON.parse(caseDetails);
+
     let data = this.$StorageService.getData(LocalStorageKeys.jury);
     if (data) this.data = JSON.parse(data);
   }
 
   private saveData() {
+    if (!this.currentCase) return;
+    this.$StorageService.saveData(
+      LocalStorageKeys.currentCase,
+      JSON.stringify(this.currentCase)
+    );
     this.$StorageService.saveData(
       LocalStorageKeys.jury,
       JSON.stringify(this.data)
     );
+    this.$CaseService.updateCase(this.currentCase).subscribe();
   }
 
   fakeData() {
@@ -89,30 +106,33 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
   }
 
   addTotalStrike(amount: number = 1) {
+    if (!this.currentCase) return;
     // Minimum of 1 and don't allow lower than other strikes
-    this.data.totalStrikes = Math.max(
-      this.data.totalStrikes + amount,
+    this.currentCase.strikes.total = Math.max(
+      this.currentCase.strikes.total + amount,
       1,
-      this.data.defendantStrikes,
-      this.data.plaintiffStrikes
+      this.currentCase.strikes.defendant,
+      this.currentCase.strikes.plaintiff
     );
     this.saveData();
   }
 
   addDefendantStrike(amount: number = 1) {
+    if (!this.currentCase) return;
     // Set within 0 and total strikes
-    this.data.defendantStrikes = Math.min(
-      Math.max(this.data.defendantStrikes + amount, 0),
-      this.data.totalStrikes
+    this.currentCase.strikes.defendant = Math.min(
+      Math.max(this.currentCase.strikes.defendant + amount, 0),
+      this.currentCase.strikes.total
     );
     this.saveData();
   }
 
   addPlaintiffStrike(amount: number = 1) {
+    if (!this.currentCase) return;
     // Set within 0 and total strikes
-    this.data.plaintiffStrikes = Math.min(
-      Math.max(this.data.plaintiffStrikes + amount, 0),
-      this.data.totalStrikes
+    this.currentCase.strikes.plaintiff = Math.min(
+      Math.max(this.currentCase.strikes.plaintiff + amount, 0),
+      this.currentCase.strikes.total
     );
     this.saveData();
   }

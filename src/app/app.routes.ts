@@ -5,30 +5,37 @@ import { JuryPlacementComponent } from './jury-placement/jury-placement.componen
 import { JurySelectionComponent } from './jury-selection/jury-selection.component';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'jury-selection' },
+  { path: '', pathMatch: 'full', redirectTo: 'cases' },
+  {
+    path: 'refresh',
+    title: 'Cases',
+    component: CasesComponent,
+  },
   {
     path: 'cases',
     title: 'Cases',
     component: CasesComponent,
   },
   {
-    path: 'refresh',
-    title: 'Jury Selection',
+    path: 'case/:caseId',
+    title: 'Case',
     component: JurySelectionComponent,
-  },
-  {
-    path: 'jury-selection',
-    title: 'Jury Selection',
-    component: JurySelectionComponent,
-  },
-  {
-    path: 'jury-placement',
-    title: 'Jury Placement',
-    component: JuryPlacementComponent,
-  },
-  {
-    path: 'evidence',
-    title: 'Evidence',
-    component: EvidenceComponent,
+    children: [
+      {
+        path: 'jury-selection',
+        title: 'Jury Selection',
+        component: JurySelectionComponent,
+      },
+      {
+        path: 'jury-placement',
+        title: 'Jury Placement',
+        component: JuryPlacementComponent,
+      },
+      {
+        path: 'evidence',
+        title: 'Evidence',
+        component: EvidenceComponent,
+      },
+    ],
   },
 ];

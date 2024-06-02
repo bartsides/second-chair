@@ -2,16 +2,17 @@
   <button mat-button (click)="fakeData()">Fake Data</button>
 </app-second-toolbar>
 
+@if (currentCase) {
 <div class="strike-tracker-bar">
   <div class="plaintiff-strike-tracker">
     <button mat-button class="strike-button" (click)="addPlaintiffStrike(-1)">
       -
     </button>
-    @for(strike of createRange(data.plaintiffStrikes); track
-    data.plaintiffStrikes) {
+    @for(strike of createRange(currentCase.strikes.plaintiff); track
+    currentCase.strikes.plaintiff) {
     <mat-icon>radio_button_checked</mat-icon>
-    } @for(strike of createRange(data.totalStrikes - data.plaintiffStrikes);
-    track data.plaintiffStrikes) {
+    } @for(strike of createRange(currentCase.strikes.total -
+    currentCase.strikes.plaintiff); track currentCase.strikes.plaintiff) {
     <mat-icon>radio_button_unchecked</mat-icon>
     }
     <button mat-button class="strike-button" (click)="addPlaintiffStrike()">
@@ -33,11 +34,11 @@
     <button mat-button class="strike-button" (click)="addDefendantStrike(-1)">
       -
     </button>
-    @for(strike of createRange(data.defendantStrikes); track
-    data.defendantStrikes) {
+    @for(strike of createRange(currentCase.strikes.defendant); track
+    currentCase.strikes.defendant) {
     <mat-icon>radio_button_checked</mat-icon>
-    } @for(strike of createRange(data.totalStrikes - data.defendantStrikes);
-    track data.defendantStrikes) {
+    } @for(strike of createRange(currentCase.strikes.total -
+    currentCase.strikes.defendant); track currentCase.strikes.defendant) {
     <mat-icon>radio_button_unchecked</mat-icon>
     }
     <button mat-button class="strike-button" (click)="addDefendantStrike()">
@@ -133,3 +134,4 @@
     }
   </div>
 </div>
+}

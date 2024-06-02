@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import environment from '../../../environment';
+import { CaseDetails } from '../models/case-details';
 import {
   GetCaseQueryResult,
   GetCasesQueryResult,
@@ -18,5 +19,12 @@ export class CaseService {
 
   getCases() {
     return this.http.get<GetCasesQueryResult>(`${environment.apiUrl}/cases`);
+  }
+
+  updateCase(caseDetails: CaseDetails) {
+    return this.http.put(
+      `${environment.apiUrl}/cases/${caseDetails.id}`,
+      caseDetails
+    );
   }
 }

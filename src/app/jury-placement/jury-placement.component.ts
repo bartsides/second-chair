@@ -1,11 +1,11 @@
-import { CdkDrag, CdkDragEnd, Point } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragEnd } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { JurorCardComponent } from '../shared/components/juror-card/juror-card.component';
 import { JurorEditComponent } from '../shared/components/juror-edit/juror-edit.component';
 import { SecondToolbarComponent } from '../shared/components/second-toolbar/second-toolbar.component';
@@ -56,7 +56,7 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
       this.data = JSON.parse(data);
       let jurors: Juror[] = [];
       for (let juror of this.data.selected) {
-        if (!juror.position) jurors.push(juror);
+        if (!juror.positionX || !juror.positionY) jurors.push(juror);
       }
       this.setJurorPositions(jurors);
     }
@@ -74,7 +74,8 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
     let position = { x: 0, y: 0 };
     for (let i = 0; i < jurors.length; i++) {
       let juror = jurors[i];
-      juror.position = { x: position.x, y: position.y };
+      juror.positionX = position.x;
+      juror.positionY = position.y;
       position.y += this.stickyGridSize;
     }
     this.saveData();
@@ -91,19 +92,25 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
   dragEnded(event: CdkDragEnd) {
     if (event.event.type == 'touchend') this.dragging = false;
     let juror = event.source.data as Juror;
-    juror.position.x += event.distance.x;
-    juror.position.y += event.distance.y;
-    this.lockToGrid(juror.position);
-    event.source.setFreeDragPosition(juror.position);
+    if (juror.positionX && juror.positionY) {
+      juror.positionX += event.distance.x;
+      juror.positionY += event.distance.y;
+      this.lockToGrid(juror);
+      event.source.setFreeDragPosition({
+        x: juror.positionX,
+        y: juror.positionY,
+      });
+    }
     this.saveData();
   }
 
-  lockToGrid(position: Point) {
-    position.x = this.roundToGrid(position.x);
-    position.y = this.roundToGrid(position.y);
+  lockToGrid(juror: Juror) {
+    juror.positionX = this.roundToGrid(juror.positionX);
+    juror.positionY = this.roundToGrid(juror.positionY);
   }
 
-  roundToGrid(num: number): number {
+  roundToGrid(num: number | null): number {
+    if (num === null) return 0;
     let low = Math.max(0, num - (Math.abs(num) % this.stickyGridSize));
     let high = Math.max(0, low + this.stickyGridSize);
     if (num - low > high - num) return high;
@@ -116,7 +123,10 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
       return;
     }
     let dialogRef = this.openEditDialog(juror);
-    dialogRef.afterClosed().subscribe(() => this.saveData());
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.notifier$))
+      .subscribe(() => this.saveData());
   }
 
   private openEditDialog(

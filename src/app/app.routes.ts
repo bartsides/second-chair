@@ -18,24 +18,22 @@ export const routes: Routes = [
   },
   {
     path: 'case/:caseId',
-    title: 'Case',
+    title: 'Jury Selection',
     component: JurySelectionComponent,
-    children: [
-      {
-        path: 'jury-selection',
-        title: 'Jury Selection',
-        component: JurySelectionComponent,
-      },
-      {
-        path: 'jury-placement',
-        title: 'Jury Placement',
-        component: JuryPlacementComponent,
-      },
-      {
-        path: 'evidence',
-        title: 'Evidence',
-        component: EvidenceComponent,
-      },
-    ],
+  },
+  {
+    path: 'case/:caseId/jury-selection',
+    title: 'Jury Selection',
+    component: JurySelectionComponent,
+  },
+  {
+    path: 'case/:caseId/jury-placement',
+    title: 'Jury Placement',
+    component: JuryPlacementComponent,
+  },
+  {
+    path: 'case/:caseId/evidence',
+    title: 'Evidence',
+    component: EvidenceComponent,
   },
 ];

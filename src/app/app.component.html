@@ -1,10 +1,14 @@
 <mat-menu #menu="matMenu">
-  @for (step of steps; track steps) {
-  <button mat-menu-item [routerLink]="step.route">
+  <button mat-menu-item routerLink="/cases">
+    <mat-icon>gavel</mat-icon>
+    <span>Cases</span>
+  </button>
+  @if (currentCase && currentCase.id) { @for (step of steps; track steps) {
+  <button mat-menu-item [routerLink]="'/case/' + currentCase.id + step.route">
     <mat-icon>{{ step.icon }}</mat-icon>
     <span>{{ step.title }}</span>
   </button>
-  } @if (useDarkTheme) {
+  } } @if (useDarkTheme) {
   <button mat-menu-item (click)="setTheme(themes[1])" class="light-mode-button">
     <mat-icon>light_mode</mat-icon>
     <span>Light mode</span>

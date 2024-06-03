@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,14 +7,18 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {
   ActivatedRoute,
+  ActivationEnd,
   NavigationEnd,
   Router,
   RouterModule,
 } from '@angular/router';
-import { Subject, Subscription, filter, takeUntil } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
+import { LocalStorageKeys } from './shared/config/local-storage-keys';
 import { Steps } from './shared/config/steps';
+import { CaseDetails } from './shared/models/case-details';
 import { CurrentStep } from './shared/models/current-step';
+import { CaseService } from './shared/services/case.service';
 import { StepService } from './shared/services/step.service';
 import { StorageService } from './shared/services/storage.service';
 
@@ -31,7 +35,7 @@ import { StorageService } from './shared/services/storage.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnDestroy {
   themes: string[] = ['dark-theme', 'light-theme'];
   useDarkTheme = true;
   notifier$ = new Subject();
@@ -39,9 +43,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
   steps = Steps;
   currentStep: CurrentStep | undefined;
+  currentCase: CaseDetails | undefined | null;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
+    private $CaseService: CaseService,
     private $StorageService: StorageService,
     private $StepService: StepService,
     private router: Router,
@@ -54,23 +60,15 @@ export class AppComponent implements OnInit, OnDestroy {
       .addEventListener('change', () => {
         this.setThemeByUserPreference();
       });
-  }
 
-  ngOnInit(): void {
-    this.router.events
-      .pipe(
-        takeUntil(this.notifier$),
-        filter((e) => e instanceof NavigationEnd)
-      )
-      .subscribe(() => {
-        let route = this.getChild(this.activatedRoute);
-        if (this.routerTitleSub) this.routerTitleSub.unsubscribe();
-        this.routerTitleSub = route.title
-          .pipe(takeUntil(this.notifier$))
-          .subscribe(
-            (t) => (this.currentStep = this.$StepService.getCurrentStep(t))
-          );
-      });
+    this.$CaseService.currentCase$
+      .pipe(takeUntil(this.notifier$))
+      .subscribe((currentCase) => (this.currentCase = currentCase));
+
+    this.router.events.pipe(takeUntil(this.notifier$)).subscribe((e) => {
+      if (e instanceof ActivationEnd) this.handleActivationEnd(e);
+      else if (e instanceof NavigationEnd) this.handleNavigationEnd(e);
+    });
   }
 
   ngOnDestroy(): void {
@@ -78,12 +76,48 @@ export class AppComponent implements OnInit, OnDestroy {
     this.notifier$.complete();
   }
 
-  getChild(activatedRoute: ActivatedRoute): ActivatedRoute {
-    if (activatedRoute.firstChild) {
-      return this.getChild(activatedRoute.firstChild);
-    } else {
-      return activatedRoute;
+  handleActivationEnd(e: ActivationEnd) {
+    // Get case details
+    let caseId = e.snapshot.params['caseId'];
+    if (!caseId) return;
+    let caseDetails = this.$StorageService.getData(
+      LocalStorageKeys.currentCase
+    );
+    if (caseDetails) {
+      let currentCase = JSON.parse(caseDetails);
+      if (currentCase?.id == caseId) {
+        this.$CaseService.currentCase$.next(currentCase);
+        return;
+      }
     }
+
+    this.$CaseService
+      .getCase(caseId)
+      .pipe(takeUntil(this.notifier$))
+      .subscribe((res) => {
+        this.$StorageService.saveData(
+          LocalStorageKeys.currentCase,
+          JSON.stringify(res.caseDetails)
+        );
+        this.$CaseService.currentCase$.next(res.caseDetails);
+      });
+  }
+
+  handleNavigationEnd(e: NavigationEnd) {
+    // Track changing steps
+    let route = this.getChild(this.activatedRoute);
+    if (this.routerTitleSub) this.routerTitleSub.unsubscribe();
+    this.routerTitleSub = route.title
+      .pipe(takeUntil(this.notifier$))
+      .subscribe(
+        (t) => (this.currentStep = this.$StepService.getCurrentStep(t))
+      );
+  }
+
+  getChild(activatedRoute: ActivatedRoute): ActivatedRoute {
+    return activatedRoute.firstChild
+      ? this.getChild(activatedRoute.firstChild)
+      : activatedRoute;
   }
 
   private setThemeByUserPreference() {
@@ -107,14 +141,17 @@ export class AppComponent implements OnInit, OnDestroy {
         message: 'Are you sure you want to clear all data?',
       },
     });
-    dialogRef.afterClosed().subscribe((res) => {
-      if (res === 'Yes') {
-        this.$StorageService.clearData();
-        let url = this.router.url;
-        this.router
-          .navigateByUrl('refresh', { skipLocationChange: true })
-          .then(() => this.router.navigateByUrl(url));
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.notifier$))
+      .subscribe((res) => {
+        if (res === 'Yes') {
+          this.$StorageService.clearData();
+          let url = this.router.url;
+          this.router
+            .navigateByUrl('refresh', { skipLocationChange: true })
+            .then(() => this.router.navigateByUrl(url));
+        }
+      });
   }
 }

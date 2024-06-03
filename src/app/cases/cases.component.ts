@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { LocalStorageKeys } from '../shared/config/local-storage-keys';
 import { CaseDetails } from '../shared/models/case-details';
 import { CaseSummary } from '../shared/models/case-summary';
@@ -16,7 +17,8 @@ import { StorageService } from '../shared/services/storage.service';
   styleUrl: './cases.component.scss',
 })
 export class CasesComponent implements OnInit {
-  currentCase: CaseSummary | CaseDetails | null;
+  notifier$ = new Subject();
+  currentCase: CaseDetails | undefined | null;
   cases: CaseSummary[] = [];
 
   constructor(
@@ -26,13 +28,15 @@ export class CasesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadSelectedCase();
+    this.$CaseService.currentCase$
+      .pipe(takeUntil(this.notifier$))
+      .subscribe((currentCase) => (this.currentCase = currentCase));
     this.loadCases();
   }
 
-  loadSelectedCase() {
-    let data = this.$StorageService.getData(LocalStorageKeys.currentCase);
-    this.currentCase = data ? JSON.parse(data) : null;
+  ngOnDestroy(): void {
+    this.notifier$.next(undefined);
+    this.notifier$.complete();
   }
 
   saveSelectedCase() {
@@ -48,9 +52,9 @@ export class CasesComponent implements OnInit {
   }
 
   selectCase(currentCase: CaseSummary) {
-    this.currentCase = currentCase;
     this.$CaseService.getCase(currentCase.id).subscribe((res) => {
       this.currentCase = res.caseDetails;
+      this.$CaseService.currentCase$.next(this.currentCase);
       this.$StorageService.saveData(
         LocalStorageKeys.currentCase,
         JSON.stringify(this.currentCase)

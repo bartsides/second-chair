@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import environment from '../../../environment';
 import { CaseDetails } from '../models/case-details';
 import {
@@ -9,6 +10,10 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class CaseService {
+  public currentCase$ = new BehaviorSubject<CaseDetails | undefined | null>(
+    null
+  );
+
   constructor(private http: HttpClient) {}
 
   getCase(caseId: string) {

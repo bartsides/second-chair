@@ -99,15 +99,18 @@ export class EvidenceComponent implements OnInit, OnDestroy {
     let exhibit: Exhibit = <Exhibit>{};
     exhibit.marker = this.getNextMarker(defendant);
     let dialogRef = this.openEditDialog(exhibit, true);
-    dialogRef.afterClosed().subscribe((res: Exhibit) => {
-      if (res && (res.description || res.supportingWitness)) {
-        let list = defendant
-          ? this.data.defendantEvidence
-          : this.data.plaintiffEvidence;
-        list.push(res);
-        this.saveData();
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.notifier$))
+      .subscribe((res: Exhibit) => {
+        if (res && (res.description || res.supportingWitness)) {
+          let list = defendant
+            ? this.data.defendantEvidence
+            : this.data.plaintiffEvidence;
+          list.push(res);
+          this.saveData();
+        }
+      });
   }
 
   getNextMarker(defendant: boolean): string {
@@ -161,9 +164,12 @@ export class EvidenceComponent implements OnInit, OnDestroy {
 
   exhibitClicked(exhibit: Exhibit) {
     let dialogRef = this.openEditDialog(exhibit);
-    dialogRef.afterClosed().subscribe(() => {
-      this.saveData();
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.notifier$))
+      .subscribe(() => {
+        this.saveData();
+      });
   }
 
   private openEditDialog(

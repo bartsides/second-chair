@@ -11,7 +11,10 @@
     [cdkDragData]="juror"
     (cdkDragStarted)="dragStarted()"
     (cdkDragEnded)="dragEnded($event)"
-    [cdkDragFreeDragPosition]="juror.position"
+    [cdkDragFreeDragPosition]="{
+      x: juror.positionX ?? 0,
+      y: juror.positionY ?? 0
+    }"
   >
     <app-jury-card
       [juror]="juror"

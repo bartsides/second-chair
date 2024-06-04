@@ -1,3 +1,5 @@
+@if (loading){<app-loading></app-loading>}
+
 <app-second-toolbar [activatedRoute]="activatedRoute" [subject]="notifier$">
   <button mat-button (click)="fakeData()">Fake Data</button>
 </app-second-toolbar>

@@ -13,6 +13,7 @@ export class CaseService {
   public currentCase$ = new BehaviorSubject<CaseDetails | undefined | null>(
     null
   );
+  public loadingCase$ = new BehaviorSubject<boolean>(false);
 
   constructor(private http: HttpClient) {}
 

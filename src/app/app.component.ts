@@ -80,6 +80,8 @@ export class AppComponent implements OnDestroy {
     // Get case details
     let caseId = e.snapshot.params['caseId'];
     if (!caseId) return;
+
+    this.$CaseService.loadingCase$.next(true);
     let caseDetails = this.$StorageService.getData(
       LocalStorageKeys.currentCase
     );
@@ -87,6 +89,7 @@ export class AppComponent implements OnDestroy {
       let currentCase = JSON.parse(caseDetails);
       if (currentCase?.id == caseId) {
         this.$CaseService.currentCase$.next(currentCase);
+        this.$CaseService.loadingCase$.next(false);
         return;
       }
     }
@@ -100,6 +103,7 @@ export class AppComponent implements OnDestroy {
           JSON.stringify(res.caseDetails)
         );
         this.$CaseService.currentCase$.next(res.caseDetails);
+        this.$CaseService.loadingCase$.next(false);
       });
   }
 

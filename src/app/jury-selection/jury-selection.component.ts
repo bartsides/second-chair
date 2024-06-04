@@ -10,12 +10,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { faker } from '@faker-js/faker';
 import { Subject, takeUntil } from 'rxjs';
 import { JurorCardComponent } from '../shared/components/juror-card/juror-card.component';
 import { JurorEditComponent } from '../shared/components/juror-edit/juror-edit.component';
+import { LoadingComponent } from '../shared/components/loading/loading.component';
 import { SecondToolbarComponent } from '../shared/components/second-toolbar/second-toolbar.component';
 import { LocalStorageKeys } from '../shared/config/local-storage-keys';
 import { CaseDetails } from '../shared/models/case-details';
@@ -32,9 +34,11 @@ import { StorageService } from '../shared/services/storage.service';
   imports: [
     DragDropModule,
     JurorCardComponent,
+    LoadingComponent,
     MatButtonModule,
     MatButtonToggleModule,
     MatIconModule,
+    MatProgressSpinnerModule,
     MatToolbarModule,
     ResizableDirective,
     RouterModule,
@@ -49,27 +53,35 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
   currentCase: CaseDetails | undefined | null = null;
   notifier$ = new Subject();
 
+  loadingCase = false;
+  loadingJurors = true;
+  get loading(): boolean {
+    return this.loadingCase || this.loadingJurors;
+  }
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public dialog: MatDialog,
-    public $CaseService: CaseService,
-    public $JurorService: JurorService,
-    public $StorageService: StorageService,
-    public route: ActivatedRoute,
-    public location: Location
+    private $CaseService: CaseService,
+    private $JurorService: JurorService,
+    private $StorageService: StorageService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
-    // TODO: Add loading handling and symbol
     this.activatedRoute.params
       .pipe(takeUntil(this.notifier$))
       .subscribe((params) => {
         let caseId = params['caseId'];
         this.location.replaceState(`case/${caseId}/jury-selection`);
-        this.$JurorService
-          .getJurorsOfCase(caseId)
-          .subscribe((res) => (this.data = res.juryData));
+        this.$JurorService.getJurorsOfCase(caseId).subscribe((res) => {
+          this.data = res.juryData;
+          this.loadingJurors = false;
+        });
       });
+    this.$CaseService.loadingCase$
+      .pipe(takeUntil(this.notifier$))
+      .subscribe((loadingCase) => (this.loadingCase = loadingCase));
     this.$CaseService.currentCase$
       .pipe(takeUntil(this.notifier$))
       .subscribe((currentCase) => (this.currentCase = currentCase));

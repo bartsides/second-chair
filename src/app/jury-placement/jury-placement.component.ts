@@ -8,11 +8,12 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { JurorCardComponent } from '../shared/components/juror-card/juror-card.component';
 import { JurorEditComponent } from '../shared/components/juror-edit/juror-edit.component';
+import { LoadingComponent } from '../shared/components/loading/loading.component';
 import { SecondToolbarComponent } from '../shared/components/second-toolbar/second-toolbar.component';
-import { LocalStorageKeys } from '../shared/config/local-storage-keys';
 import { Juror } from '../shared/models/juror';
 import { JuryData } from '../shared/models/jury-data';
-import { StorageService } from '../shared/services/storage.service';
+import { CaseService } from '../shared/services/case.service';
+import { JurorService } from '../shared/services/juror.service';
 
 @Component({
   selector: 'app-jury-placement',
@@ -20,6 +21,7 @@ import { StorageService } from '../shared/services/storage.service';
   imports: [
     CdkDrag,
     JurorCardComponent,
+    LoadingComponent,
     MatButton,
     MatIconModule,
     MatToolbarModule,
@@ -35,38 +37,43 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
   dragging: boolean;
   private stickyGridSize = 25;
 
+  loadingCase = false;
+  loadingJurors = true;
+  get loading(): boolean {
+    return this.loadingCase || this.loadingJurors;
+  }
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public dialog: MatDialog,
-    public $StorageService: StorageService
+    private $CaseService: CaseService,
+    private $JurorService: JurorService
   ) {}
 
   ngOnInit(): void {
-    this.loadData();
+    this.$CaseService.loadingCase$
+      .pipe(takeUntil(this.notifier$))
+      .subscribe((loadingCase) => (this.loadingCase = loadingCase));
+    this.activatedRoute.params
+      .pipe(takeUntil(this.notifier$))
+      .subscribe((params) => {
+        this.$JurorService
+          .getJurorsOfCase(params['caseId'])
+          .subscribe((res) => {
+            this.data = res.juryData;
+            let jurors: Juror[] = [];
+            for (let juror of this.data.selected) {
+              if (!juror.positionX || !juror.positionY) jurors.push(juror);
+            }
+            this.setJurorPositions(jurors);
+            this.loadingJurors = false;
+          });
+      });
   }
 
   ngOnDestroy(): void {
     this.notifier$.next(undefined);
     this.notifier$.complete();
-  }
-
-  private loadData() {
-    let data = this.$StorageService.getData(LocalStorageKeys.jury);
-    if (data) {
-      this.data = JSON.parse(data);
-      let jurors: Juror[] = [];
-      for (let juror of this.data.selected) {
-        if (!juror.positionX || !juror.positionY) jurors.push(juror);
-      }
-      this.setJurorPositions(jurors);
-    }
-  }
-
-  private saveData() {
-    this.$StorageService.saveData(
-      LocalStorageKeys.jury,
-      JSON.stringify(this.data)
-    );
   }
 
   setJurorPositions(jurors: Juror[]) {
@@ -77,8 +84,8 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
       juror.positionX = position.x;
       juror.positionY = position.y;
       position.y += this.stickyGridSize;
+      this.$JurorService.updateJuror(juror).subscribe();
     }
-    this.saveData();
   }
 
   resetJurorPositions() {
@@ -92,7 +99,7 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
   dragEnded(event: CdkDragEnd) {
     if (event.event.type == 'touchend') this.dragging = false;
     let juror = event.source.data as Juror;
-    if (juror.positionX && juror.positionY) {
+    if (juror.positionX != null && juror.positionY != null) {
       juror.positionX += event.distance.x;
       juror.positionY += event.distance.y;
       this.lockToGrid(juror);
@@ -101,7 +108,7 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
         y: juror.positionY,
       });
     }
-    this.saveData();
+    this.$JurorService.updateJuror(juror).subscribe();
   }
 
   lockToGrid(juror: Juror) {
@@ -126,7 +133,7 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.notifier$))
-      .subscribe(() => this.saveData());
+      .subscribe(() => this.$JurorService.updateJuror(juror).subscribe());
   }
 
   private openEditDialog(

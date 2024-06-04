@@ -16,6 +16,10 @@ export class JurorService {
     return this.http.put(`${environment.apiUrl}/jurors/${juror.id}`, juror);
   }
 
+  updateJurors(jurors: Juror[]) {
+    return this.http.put(`${environment.apiUrl}/jurors`, { jurors: jurors });
+  }
+
   getJurorsOfCase(caseId: string) {
     return this.http.get<GetJurorsOfCaseResult>(
       `${environment.apiUrl}/cases/${caseId}/jurors`

@@ -84,8 +84,8 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
       juror.positionX = position.x;
       juror.positionY = position.y;
       position.y += this.stickyGridSize;
-      this.$JurorService.updateJuror(juror).subscribe();
     }
+    this.$JurorService.updateJurors(jurors).subscribe();
   }
 
   resetJurorPositions() {

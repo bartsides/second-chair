@@ -2,19 +2,29 @@ import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { CaseEditComponent } from '../shared/components/case-edit/case-edit.component';
+import { LoadingComponent } from '../shared/components/loading/loading.component';
+import { SecondToolbarComponent } from '../shared/components/second-toolbar/second-toolbar.component';
 import { LocalStorageKeys } from '../shared/config/local-storage-keys';
+import { Steps } from '../shared/config/steps';
 import { CaseDetails } from '../shared/models/case-details';
 import { CaseSummary } from '../shared/models/case-summary';
+import { Step } from '../shared/models/step';
 import { CaseService } from '../shared/services/case.service';
 import { StorageService } from '../shared/services/storage.service';
 
 @Component({
   selector: 'app-cases',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule],
+  imports: [
+    LoadingComponent,
+    MatButtonModule,
+    MatIconModule,
+    RouterModule,
+    SecondToolbarComponent,
+  ],
   templateUrl: './cases.component.html',
   styleUrl: './cases.component.scss',
 })
@@ -22,18 +32,29 @@ export class CasesComponent implements OnInit {
   notifier$ = new Subject();
   currentCase: CaseDetails | undefined | null;
   cases: CaseSummary[] = [];
+  firstStep: Step = Steps[0];
+
+  loadingCases = false;
+  loadingCase = false;
+  get loading(): boolean {
+    return this.loadingCase || this.loadingCases;
+  }
 
   constructor(
     private $CaseService: CaseService,
     private $StorageService: StorageService,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.$CaseService.currentCase$
       .pipe(takeUntil(this.notifier$))
       .subscribe((currentCase) => (this.currentCase = currentCase));
+    this.$CaseService.loadingCase$
+      .pipe(takeUntil(this.notifier$))
+      .subscribe((loadingCase) => (this.loadingCase = loadingCase));
     this.loadCases();
   }
 
@@ -49,8 +70,10 @@ export class CasesComponent implements OnInit {
   }
 
   loadCases() {
+    this.loadingCases = true;
     this.$CaseService.getCases().subscribe((data) => {
       this.cases = data?.caseSummaries ?? [];
+      this.loadingCases = false;
     });
   }
 

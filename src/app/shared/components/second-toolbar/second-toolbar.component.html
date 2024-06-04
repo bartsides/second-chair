@@ -1,27 +1,30 @@
 <mat-toolbar class="second-toolbar">
-  @if (currentStep?.previous && currentCase && currentCase.id) {
-  <button
-    mat-button
-    [routerLink]="'/case/' + currentCase.id + currentStep?.previous?.route"
-    class="step-button"
-  >
-    <span>
-      <mat-icon>chevron_left</mat-icon>
-      <span>{{ currentStep?.previous?.title }}</span>
-    </span>
-  </button>
-  }
-  <ng-content></ng-content>
-  @if (currentStep?.next && currentCase && currentCase.id) {
-  <button
-    mat-button
-    [routerLink]="'/case/' + currentCase.id + currentStep?.next?.route"
-    class="step-button"
-  >
-    <span>
-      <span>{{ currentStep?.next?.title }}</span>
-      <mat-icon>chevron_right</mat-icon>
-    </span>
-  </button>
-  }
+  <div class="second-toolbar-left">{{ currentCase?.name }}</div>
+  <div class="second-toolbar-right">
+    @if (currentStep?.previous && currentCase && currentCase.id) {
+    <button
+      mat-button
+      [routerLink]="'/case/' + currentCase.id + currentStep?.previous?.route"
+      class="step-button"
+    >
+      <span>
+        <mat-icon>chevron_left</mat-icon>
+        <span>{{ currentStep?.previous?.title }}</span>
+      </span>
+    </button>
+    }
+    <ng-content></ng-content>
+    @if (currentStep?.next && currentCase && currentCase.id) {
+    <button
+      mat-button
+      [routerLink]="'/case/' + currentCase.id + currentStep?.next?.route"
+      class="step-button"
+    >
+      <span>
+        <span>{{ currentStep?.next?.title }}</span>
+        <mat-icon>chevron_right</mat-icon>
+      </span>
+    </button>
+    }
+  </div>
 </mat-toolbar>

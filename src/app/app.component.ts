@@ -79,7 +79,6 @@ export class AppComponent implements OnDestroy {
   handleActivationEnd(e: ActivationEnd) {
     // Get case details
     let caseId = e.snapshot.params['caseId'];
-    if (!caseId) return;
 
     this.$CaseService.loadingCase$.next(true);
     let caseDetails = this.$StorageService.getData(
@@ -87,12 +86,14 @@ export class AppComponent implements OnDestroy {
     );
     if (caseDetails) {
       let currentCase = JSON.parse(caseDetails);
-      if (currentCase?.id == caseId) {
+      if (!caseId || currentCase?.id == caseId) {
         this.$CaseService.currentCase$.next(currentCase);
         this.$CaseService.loadingCase$.next(false);
         return;
       }
     }
+
+    if (!caseId) return;
 
     this.$CaseService
       .getCase(caseId)

@@ -10,7 +10,9 @@
     @for (case of cases; track cases) {
     <div>
       <div>{{ case.name }}</div>
-      <div><button mat-button (click)="selectCase(case)">Select</button></div>
+      <div>
+        <button mat-button (click)="selectCaseSummary(case)">Select</button>
+      </div>
     </div>
     }
   </div>

@@ -116,9 +116,9 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
     // Minimum of 1 and don't allow lower than other strikes
     this.currentCase.strikes.total = Math.max(
       this.currentCase.strikes.total + amount,
-      1,
       this.currentCase.strikes.defendant,
-      this.currentCase.strikes.plaintiff
+      this.currentCase.strikes.plaintiff,
+      1
     );
     this.saveCase();
   }

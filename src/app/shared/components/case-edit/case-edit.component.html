@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>Case</h2>
+
+<mat-dialog-content>
+  <div>
+    <p>Case Name</p>
+    <mat-form-field>
+      <input matInput [(ngModel)]="case.name" />
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">
+    @if (addMode) {Add} @else {Close}
+  </button>
+</mat-dialog-actions>

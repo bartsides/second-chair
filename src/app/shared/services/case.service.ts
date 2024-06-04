@@ -16,6 +16,10 @@ export class CaseService {
 
   constructor(private http: HttpClient) {}
 
+  addCase(caseDetails: CaseDetails) {
+    return this.http.post(`${environment.apiUrl}/cases`, caseDetails);
+  }
+
   getCase(caseId: string) {
     return this.http.get<GetCaseQueryResult>(
       `${environment.apiUrl}/cases/${caseId}`

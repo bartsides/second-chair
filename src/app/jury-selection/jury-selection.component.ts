@@ -20,13 +20,13 @@ import { JurorEditComponent } from '../shared/components/juror-edit/juror-edit.c
 import { LoadingComponent } from '../shared/components/loading/loading.component';
 import { SecondToolbarComponent } from '../shared/components/second-toolbar/second-toolbar.component';
 import { LocalStorageKeys } from '../shared/config/local-storage-keys';
-import { CaseDetails } from '../shared/models/case-details';
 import { Juror } from '../shared/models/juror';
 import { JuryData } from '../shared/models/jury-data';
+import { TrialDetails } from '../shared/models/trial-details';
 import { ResizableDirective } from '../shared/resizable.directive';
-import { CaseService } from '../shared/services/case.service';
 import { JurorService } from '../shared/services/juror.service';
 import { StorageService } from '../shared/services/storage.service';
+import { TrialService } from '../shared/services/trial.service';
 
 @Component({
   selector: 'app-jury-selection',
@@ -50,19 +50,19 @@ import { StorageService } from '../shared/services/storage.service';
 export class JurySelectionComponent implements OnInit, OnDestroy {
   private dragging: boolean;
   data: JuryData = new JuryData();
-  currentCase: CaseDetails | undefined | null = null;
+  currentTrial: TrialDetails | undefined | null = null;
   notifier$ = new Subject();
 
-  loadingCase = false;
+  loadingTrial = false;
   loadingJurors = true;
   get loading(): boolean {
-    return this.loadingCase || this.loadingJurors;
+    return this.loadingTrial || this.loadingJurors;
   }
 
   constructor(
     public activatedRoute: ActivatedRoute,
     public dialog: MatDialog,
-    private $CaseService: CaseService,
+    private $TrialService: TrialService,
     private $JurorService: JurorService,
     private $StorageService: StorageService,
     private location: Location
@@ -72,19 +72,19 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
     this.activatedRoute.params
       .pipe(takeUntil(this.notifier$))
       .subscribe((params) => {
-        let caseId = params['caseId'];
-        this.location.replaceState(`case/${caseId}/jury-selection`);
-        this.$JurorService.getJurorsOfCase(caseId).subscribe((res) => {
+        let trialId = params['trialId'];
+        this.location.replaceState(`trial/${trialId}/jury-selection`);
+        this.$JurorService.getJurorsOfTrial(trialId).subscribe((res) => {
           this.data = res.juryData;
           this.loadingJurors = false;
         });
       });
-    this.$CaseService.loadingCase$
+    this.$TrialService.loadingTrial$
       .pipe(takeUntil(this.notifier$))
-      .subscribe((loadingCase) => (this.loadingCase = loadingCase));
-    this.$CaseService.currentCase$
+      .subscribe((loadingTrial) => (this.loadingTrial = loadingTrial));
+    this.$TrialService.currentTrial$
       .pipe(takeUntil(this.notifier$))
-      .subscribe((currentCase) => (this.currentCase = currentCase));
+      .subscribe((currentTrial) => (this.currentTrial = currentTrial));
   }
 
   ngOnDestroy(): void {
@@ -92,14 +92,14 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
     this.notifier$.complete();
   }
 
-  private saveCase() {
-    if (!this.currentCase) return;
+  private saveTrial() {
+    if (!this.currentTrial) return;
     this.$StorageService.saveData(
-      LocalStorageKeys.currentCase,
-      JSON.stringify(this.currentCase)
+      LocalStorageKeys.currentTrial,
+      JSON.stringify(this.currentTrial)
     );
-    this.$CaseService.currentCase$.next(this.currentCase);
-    this.$CaseService.updateCase(this.currentCase).subscribe();
+    this.$TrialService.currentTrial$.next(this.currentTrial);
+    this.$TrialService.updateTrial(this.currentTrial).subscribe();
   }
 
   fakeData() {
@@ -113,7 +113,7 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
   generateJuror(): Juror {
     return <Juror>{
       id: crypto.randomUUID(),
-      caseId: this.currentCase?.id,
+      trialId: this.currentTrial?.id,
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
     };
@@ -124,41 +124,41 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
   }
 
   addTotalStrike(amount: number = 1) {
-    if (!this.currentCase) return;
+    if (!this.currentTrial) return;
     // Minimum of 1 and don't allow lower than other strikes
-    this.currentCase.strikes.total = Math.max(
-      this.currentCase.strikes.total + amount,
-      this.currentCase.strikes.defendant,
-      this.currentCase.strikes.plaintiff,
+    this.currentTrial.strikes.total = Math.max(
+      this.currentTrial.strikes.total + amount,
+      this.currentTrial.strikes.defendant,
+      this.currentTrial.strikes.plaintiff,
       1
     );
-    this.saveCase();
+    this.saveTrial();
   }
 
   addDefendantStrike(amount: number = 1) {
-    if (!this.currentCase) return;
+    if (!this.currentTrial) return;
     // Set within 0 and total strikes
-    this.currentCase.strikes.defendant = Math.min(
-      Math.max(this.currentCase.strikes.defendant + amount, 0),
-      this.currentCase.strikes.total
+    this.currentTrial.strikes.defendant = Math.min(
+      Math.max(this.currentTrial.strikes.defendant + amount, 0),
+      this.currentTrial.strikes.total
     );
-    this.saveCase();
+    this.saveTrial();
   }
 
   addPlaintiffStrike(amount: number = 1) {
-    if (!this.currentCase) return;
+    if (!this.currentTrial) return;
     // Set within 0 and total strikes
-    this.currentCase.strikes.plaintiff = Math.min(
-      Math.max(this.currentCase.strikes.plaintiff + amount, 0),
-      this.currentCase.strikes.total
+    this.currentTrial.strikes.plaintiff = Math.min(
+      Math.max(this.currentTrial.strikes.plaintiff + amount, 0),
+      this.currentTrial.strikes.total
     );
-    this.saveCase();
+    this.saveTrial();
   }
 
   addJuror() {
     let juror: Juror = <Juror>{
       id: crypto.randomUUID(),
-      caseId: this.currentCase?.id,
+      trialId: this.currentTrial?.id,
       selected: 'pool',
     };
     let dialogRef = this.openEditDialog(juror, true);

@@ -4,10 +4,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { CaseDetails } from '../../models/case-details';
 import { CurrentStep } from '../../models/current-step';
-import { CaseService } from '../../services/case.service';
+import { TrialDetails } from '../../models/trial-details';
 import { StepService } from '../../services/step.service';
+import { TrialService } from '../../services/trial.service';
 
 @Component({
   selector: 'app-second-toolbar',
@@ -20,10 +20,10 @@ export class SecondToolbarComponent implements OnInit {
   @Input({ required: true }) activatedRoute: ActivatedRoute;
   @Input({ required: true }) subject: Subject<unknown>;
   currentStep: CurrentStep | undefined;
-  currentCase: CaseDetails | undefined | null;
+  currentTrial: TrialDetails | undefined | null;
 
   constructor(
-    private $CaseService: CaseService,
+    private $TrialService: TrialService,
     private $StepService: StepService
   ) {}
 
@@ -31,10 +31,10 @@ export class SecondToolbarComponent implements OnInit {
     this.activatedRoute.title.pipe(takeUntil(this.subject)).subscribe((t) => {
       this.currentStep = this.$StepService.getCurrentStep(t);
     });
-    this.$CaseService.currentCase$
+    this.$TrialService.currentTrial$
       .pipe(takeUntil(this.subject))
-      .subscribe((currentCase) => {
-        this.currentCase = currentCase;
+      .subscribe((currentTrial) => {
+        this.currentTrial = currentTrial;
       });
   }
 }

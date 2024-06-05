@@ -16,11 +16,11 @@ import { Subject, Subscription, takeUntil } from 'rxjs';
 import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
 import { LocalStorageKeys } from './shared/config/local-storage-keys';
 import { Steps } from './shared/config/steps';
-import { CaseDetails } from './shared/models/case-details';
 import { CurrentStep } from './shared/models/current-step';
-import { CaseService } from './shared/services/case.service';
+import { TrialDetails } from './shared/models/trial-details';
 import { StepService } from './shared/services/step.service';
 import { StorageService } from './shared/services/storage.service';
+import { TrialService } from './shared/services/trial.service';
 
 @Component({
   selector: 'app-root',
@@ -43,11 +43,11 @@ export class AppComponent implements OnDestroy {
 
   steps = Steps;
   currentStep: CurrentStep | undefined;
-  currentCase: CaseDetails | undefined | null;
+  currentTrial: TrialDetails | undefined | null;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    private $CaseService: CaseService,
+    private $TrialService: TrialService,
     private $StorageService: StorageService,
     private $StepService: StepService,
     private router: Router,
@@ -61,9 +61,9 @@ export class AppComponent implements OnDestroy {
         this.setThemeByUserPreference();
       });
 
-    this.$CaseService.currentCase$
+    this.$TrialService.currentTrial$
       .pipe(takeUntil(this.notifier$))
-      .subscribe((currentCase) => (this.currentCase = currentCase));
+      .subscribe((currentTrial) => (this.currentTrial = currentTrial));
 
     this.router.events.pipe(takeUntil(this.notifier$)).subscribe((e) => {
       if (e instanceof ActivationEnd) this.handleActivationEnd(e);
@@ -77,34 +77,35 @@ export class AppComponent implements OnDestroy {
   }
 
   handleActivationEnd(e: ActivationEnd) {
-    // Get case details
-    let caseId = e.snapshot.params['caseId'];
+    // Get trial details
+    let trialId = e.snapshot.params['trialId'];
 
-    this.$CaseService.loadingCase$.next(true);
-    let caseDetails = this.$StorageService.getData(
-      LocalStorageKeys.currentCase
-    );
-    if (caseDetails) {
-      let currentCase = JSON.parse(caseDetails);
-      if (!caseId || currentCase?.id == caseId) {
-        this.$CaseService.currentCase$.next(currentCase);
-        this.$CaseService.loadingCase$.next(false);
+    this.$TrialService.loadingTrial$.next(true);
+    let trial = this.$StorageService.getData(LocalStorageKeys.currentTrial);
+    if (trial) {
+      let currentTrial = JSON.parse(trial);
+      if (!trialId || currentTrial?.id == trialId) {
+        this.$TrialService.currentTrial$.next(currentTrial);
+        this.$TrialService.loadingTrial$.next(false);
         return;
       }
     }
 
-    if (!caseId) return;
+    if (!trialId) {
+      this.$TrialService.loadingTrial$.next(false);
+      return;
+    }
 
-    this.$CaseService
-      .getCase(caseId)
+    this.$TrialService
+      .getTrial(trialId)
       .pipe(takeUntil(this.notifier$))
       .subscribe((res) => {
         this.$StorageService.saveData(
-          LocalStorageKeys.currentCase,
-          JSON.stringify(res.caseDetails)
+          LocalStorageKeys.currentTrial,
+          JSON.stringify(res.trialDetails)
         );
-        this.$CaseService.currentCase$.next(res.caseDetails);
-        this.$CaseService.loadingCase$.next(false);
+        this.$TrialService.currentTrial$.next(res.trialDetails);
+        this.$TrialService.loadingTrial$.next(false);
       });
   }
 

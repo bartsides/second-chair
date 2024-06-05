@@ -1,0 +1,34 @@
+@if (loading) {
+<app-loading></app-loading>
+} @if (currentTrial) {
+<app-second-toolbar [activatedRoute]="activatedRoute" [subject]="notifier$">
+  <button
+    mat-button
+    [routerLink]="'/trial/' + currentTrial.id + firstStep.route"
+    class="step-button"
+  >
+    <span>
+      <span>{{ firstStep.title }}</span>
+      <mat-icon>chevron_right</mat-icon>
+    </span>
+  </button>
+</app-second-toolbar>
+}
+
+<div class="trials-container">
+  <div class="trials-title">
+    <button class="add-trial-button" mat-button (click)="addTrial()">
+      <h2>Trials<mat-icon>add</mat-icon></h2>
+    </button>
+  </div>
+  <div class="trials-list">
+    @for (trial of trials; track trials) {
+    <div>
+      <div>{{ trial.name }}</div>
+      <div>
+        <button mat-button (click)="selectTrialSummary(trial)">Select</button>
+      </div>
+    </div>
+    }
+  </div>
+</div>

@@ -1,4 +1,4 @@
-export class CaseDetails {
+export class TrialDetails {
   id: string;
   name: string;
   strikes: Strikes;

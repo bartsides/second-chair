@@ -12,8 +12,8 @@ import { LoadingComponent } from '../shared/components/loading/loading.component
 import { SecondToolbarComponent } from '../shared/components/second-toolbar/second-toolbar.component';
 import { Juror } from '../shared/models/juror';
 import { JuryData } from '../shared/models/jury-data';
-import { CaseService } from '../shared/services/case.service';
 import { JurorService } from '../shared/services/juror.service';
+import { TrialService } from '../shared/services/trial.service';
 
 @Component({
   selector: 'app-jury-placement',
@@ -37,28 +37,28 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
   dragging: boolean;
   private stickyGridSize = 25;
 
-  loadingCase = false;
+  loadingTrial = false;
   loadingJurors = true;
   get loading(): boolean {
-    return this.loadingCase || this.loadingJurors;
+    return this.loadingTrial || this.loadingJurors;
   }
 
   constructor(
     public activatedRoute: ActivatedRoute,
     public dialog: MatDialog,
-    private $CaseService: CaseService,
+    private $TrialService: TrialService,
     private $JurorService: JurorService
   ) {}
 
   ngOnInit(): void {
-    this.$CaseService.loadingCase$
+    this.$TrialService.loadingTrial$
       .pipe(takeUntil(this.notifier$))
-      .subscribe((loadingCase) => (this.loadingCase = loadingCase));
+      .subscribe((loadingTrial) => (this.loadingTrial = loadingTrial));
     this.activatedRoute.params
       .pipe(takeUntil(this.notifier$))
       .subscribe((params) => {
         this.$JurorService
-          .getJurorsOfCase(params['caseId'])
+          .getJurorsOfTrial(params['trialId'])
           .subscribe((res) => {
             this.data = res.juryData;
             let jurors: Juror[] = [];

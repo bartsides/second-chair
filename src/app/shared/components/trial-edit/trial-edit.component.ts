@@ -12,15 +12,15 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { CaseDetails } from '../../models/case-details';
+import { TrialDetails } from '../../models/trial-details';
 
 interface DialogData {
-  case: CaseDetails;
+  trial: TrialDetails;
   addMode: boolean;
 }
 
 @Component({
-  selector: 'app-case-edit',
+  selector: 'app-trial-edit',
   standalone: true,
   imports: [
     CommonModule,
@@ -33,22 +33,22 @@ interface DialogData {
     MatDialogActions,
     MatDialogClose,
   ],
-  templateUrl: './case-edit.component.html',
-  styleUrl: './case-edit.component.scss',
+  templateUrl: './trial-edit.component.html',
+  styleUrl: './trial-edit.component.scss',
 })
-export class CaseEditComponent {
-  case: CaseDetails;
+export class TrialEditComponent {
+  trial: TrialDetails;
   addMode = false;
 
   constructor(
-    public dialogRef: MatDialogRef<CaseEditComponent>,
+    public dialogRef: MatDialogRef<TrialEditComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) {
-    this.case = data.case;
+    this.trial = data.trial;
     if (data.addMode) this.addMode = true;
   }
 
   close() {
-    this.dialogRef.close(this.case);
+    this.dialogRef.close(this.trial);
   }
 }

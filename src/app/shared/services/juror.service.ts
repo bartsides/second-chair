@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import environment from '../../../environment';
 import { Juror } from '../models/juror';
-import { GetJurorsOfCaseResult } from '../models/results/juror-results';
+import { GetJurorsOfTrialResult } from '../models/results/juror-results';
 
 @Injectable({ providedIn: 'root' })
 export class JurorService {
@@ -20,9 +20,9 @@ export class JurorService {
     return this.http.put(`${environment.apiUrl}/jurors`, { jurors: jurors });
   }
 
-  getJurorsOfCase(caseId: string) {
-    return this.http.get<GetJurorsOfCaseResult>(
-      `${environment.apiUrl}/cases/${caseId}/jurors`
+  getJurorsOfTrial(trialId: string) {
+    return this.http.get<GetJurorsOfTrialResult>(
+      `${environment.apiUrl}/trials/${trialId}/jurors`
     );
   }
 }

@@ -1,10 +1,10 @@
 <mat-menu #menu="matMenu">
-  <button mat-menu-item routerLink="/cases">
+  <button mat-menu-item routerLink="/trials">
     <mat-icon>gavel</mat-icon>
-    <span>Cases</span>
+    <span>Trials</span>
   </button>
-  @if (currentCase && currentCase.id) { @for (step of steps; track steps) {
-  <button mat-menu-item [routerLink]="'/case/' + currentCase.id + step.route">
+  @if (currentTrial && currentTrial.id) { @for (step of steps; track steps) {
+  <button mat-menu-item [routerLink]="'/trial/' + currentTrial.id + step.route">
     <mat-icon>{{ step.icon }}</mat-icon>
     <span>{{ step.title }}</span>
   </button>

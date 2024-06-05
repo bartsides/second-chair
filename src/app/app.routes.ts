@@ -1,38 +1,38 @@
 import { Routes } from '@angular/router';
-import { CasesComponent } from './cases/cases.component';
 import { EvidenceComponent } from './evidence/evidence.component';
 import { JuryPlacementComponent } from './jury-placement/jury-placement.component';
 import { JurySelectionComponent } from './jury-selection/jury-selection.component';
+import { TrialsComponent } from './trials/trials.component';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'cases' },
+  { path: '', pathMatch: 'full', redirectTo: 'trials' },
   {
     path: 'refresh',
-    title: 'Cases',
-    component: CasesComponent,
+    title: 'Trials',
+    component: TrialsComponent,
   },
   {
-    path: 'cases',
-    title: 'Cases',
-    component: CasesComponent,
+    path: 'trials',
+    title: 'Trials',
+    component: TrialsComponent,
   },
   {
-    path: 'case/:caseId',
+    path: 'trial/:trialId',
     title: 'Jury Selection',
     component: JurySelectionComponent,
   },
   {
-    path: 'case/:caseId/jury-selection',
+    path: 'trial/:trialId/jury-selection',
     title: 'Jury Selection',
     component: JurySelectionComponent,
   },
   {
-    path: 'case/:caseId/jury-placement',
+    path: 'trial/:trialId/jury-placement',
     title: 'Jury Placement',
     component: JuryPlacementComponent,
   },
   {
-    path: 'case/:caseId/evidence',
+    path: 'trial/:trialId/evidence',
     title: 'Evidence',
     component: EvidenceComponent,
   },

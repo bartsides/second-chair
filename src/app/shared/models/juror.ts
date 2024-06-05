@@ -1,6 +1,6 @@
 export interface Juror {
   id: string;
-  caseId: string;
+  trialId: string;
   firstName: string;
   lastName: string;
   stoplight: string;

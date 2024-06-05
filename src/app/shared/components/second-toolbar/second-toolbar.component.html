@@ -1,10 +1,10 @@
 <mat-toolbar class="second-toolbar">
-  <div class="second-toolbar-left">{{ currentCase?.name }}</div>
+  <div class="second-toolbar-left">{{ currentTrial?.name }}</div>
   <div class="second-toolbar-right">
-    @if (currentStep?.previous && currentCase && currentCase.id) {
+    @if (currentStep?.previous && currentTrial && currentTrial.id) {
     <button
       mat-button
-      [routerLink]="'/case/' + currentCase.id + currentStep?.previous?.route"
+      [routerLink]="'/trial/' + currentTrial.id + currentStep?.previous?.route"
       class="step-button"
     >
       <span>
@@ -14,10 +14,10 @@
     </button>
     }
     <ng-content></ng-content>
-    @if (currentStep?.next && currentCase && currentCase.id) {
+    @if (currentStep?.next && currentTrial && currentTrial.id) {
     <button
       mat-button
-      [routerLink]="'/case/' + currentCase.id + currentStep?.next?.route"
+      [routerLink]="'/trial/' + currentTrial.id + currentStep?.next?.route"
       class="step-button"
     >
       <span>

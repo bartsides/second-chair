@@ -1,11 +1,11 @@
 @use "@angular/material" as mat;
 
 @mixin color($theme) {
-  .cases-container {
+  .trials-container {
     border: solid 1px mat.get-theme-color($theme, primary, default);
   }
 
-  .cases-title {
+  .trials-title {
     border-bottom: solid 1px mat.get-theme-color($theme, primary, default);
     background-color: mat.get-theme-color($theme, primary, default);
   }

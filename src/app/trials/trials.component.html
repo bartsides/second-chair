@@ -1,10 +1,10 @@
 @if (loading) {
 <app-loading></app-loading>
-} @if (currentTrial) {
+} @if (trial) {
 <app-second-toolbar [activatedRoute]="activatedRoute" [subject]="notifier$">
   <button
     mat-button
-    [routerLink]="'/trial/' + currentTrial.id + firstStep.route"
+    [routerLink]="'/trial/' + trial.id + firstStep.route"
     class="step-button"
   >
     <span>

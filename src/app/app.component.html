@@ -3,8 +3,8 @@
     <mat-icon>gavel</mat-icon>
     <span>Trials</span>
   </button>
-  @if (currentTrial && currentTrial.id) { @for (step of steps; track steps) {
-  <button mat-menu-item [routerLink]="'/trial/' + currentTrial.id + step.route">
+  @if (trial && trial.id) { @for (step of steps; track steps) {
+  <button mat-menu-item [routerLink]="'/trial/' + trial.id + step.route">
     <mat-icon>{{ step.icon }}</mat-icon>
     <span>{{ step.title }}</span>
   </button>

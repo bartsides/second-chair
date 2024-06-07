@@ -50,7 +50,7 @@ import { TrialService } from '../shared/services/trial.service';
 export class JurySelectionComponent implements OnInit, OnDestroy {
   private dragging: boolean;
   data: JuryData = new JuryData();
-  currentTrial: TrialDetails | undefined | null = null;
+  trial: TrialDetails | undefined | null = null;
   notifier$ = new Subject();
 
   loadingTrial = false;
@@ -82,9 +82,9 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
     this.$TrialService.loadingTrial$
       .pipe(takeUntil(this.notifier$))
       .subscribe((loadingTrial) => (this.loadingTrial = loadingTrial));
-    this.$TrialService.currentTrial$
+    this.$TrialService.trial$
       .pipe(takeUntil(this.notifier$))
-      .subscribe((currentTrial) => (this.currentTrial = currentTrial));
+      .subscribe((trial) => (this.trial = trial));
   }
 
   ngOnDestroy(): void {
@@ -93,13 +93,13 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
   }
 
   private saveTrial() {
-    if (!this.currentTrial) return;
+    if (!this.trial) return;
     this.$StorageService.saveData(
-      LocalStorageKeys.currentTrial,
-      JSON.stringify(this.currentTrial)
+      LocalStorageKeys.trial,
+      JSON.stringify(this.trial)
     );
-    this.$TrialService.currentTrial$.next(this.currentTrial);
-    this.$TrialService.updateTrial(this.currentTrial).subscribe();
+    this.$TrialService.trial$.next(this.trial);
+    this.$TrialService.updateTrial(this.trial).subscribe();
   }
 
   fakeData() {
@@ -113,7 +113,7 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
   generateJuror(): Juror {
     return <Juror>{
       id: crypto.randomUUID(),
-      trialId: this.currentTrial?.id,
+      trialId: this.trial?.id,
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
     };
@@ -124,33 +124,33 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
   }
 
   addTotalStrike(amount: number = 1) {
-    if (!this.currentTrial) return;
+    if (!this.trial) return;
     // Minimum of 1 and don't allow lower than other strikes
-    this.currentTrial.strikes.total = Math.max(
-      this.currentTrial.strikes.total + amount,
-      this.currentTrial.strikes.defendant,
-      this.currentTrial.strikes.plaintiff,
+    this.trial.strikes.total = Math.max(
+      this.trial.strikes.total + amount,
+      this.trial.strikes.defendant,
+      this.trial.strikes.plaintiff,
       1
     );
     this.saveTrial();
   }
 
   addDefendantStrike(amount: number = 1) {
-    if (!this.currentTrial) return;
+    if (!this.trial) return;
     // Set within 0 and total strikes
-    this.currentTrial.strikes.defendant = Math.min(
-      Math.max(this.currentTrial.strikes.defendant + amount, 0),
-      this.currentTrial.strikes.total
+    this.trial.strikes.defendant = Math.min(
+      Math.max(this.trial.strikes.defendant + amount, 0),
+      this.trial.strikes.total
     );
     this.saveTrial();
   }
 
   addPlaintiffStrike(amount: number = 1) {
-    if (!this.currentTrial) return;
+    if (!this.trial) return;
     // Set within 0 and total strikes
-    this.currentTrial.strikes.plaintiff = Math.min(
-      Math.max(this.currentTrial.strikes.plaintiff + amount, 0),
-      this.currentTrial.strikes.total
+    this.trial.strikes.plaintiff = Math.min(
+      Math.max(this.trial.strikes.plaintiff + amount, 0),
+      this.trial.strikes.total
     );
     this.saveTrial();
   }
@@ -158,7 +158,7 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
   addJuror() {
     let juror: Juror = <Juror>{
       id: crypto.randomUUID(),
-      trialId: this.currentTrial?.id,
+      trialId: this.trial?.id,
       selected: 'pool',
     };
     let dialogRef = this.openEditDialog(juror, true);

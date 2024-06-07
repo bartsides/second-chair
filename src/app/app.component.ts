@@ -43,7 +43,7 @@ export class AppComponent implements OnDestroy {
 
   steps = Steps;
   currentStep: CurrentStep | undefined;
-  currentTrial: TrialDetails | undefined | null;
+  trial: TrialDetails | undefined | null;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -61,9 +61,9 @@ export class AppComponent implements OnDestroy {
         this.setThemeByUserPreference();
       });
 
-    this.$TrialService.currentTrial$
+    this.$TrialService.trial$
       .pipe(takeUntil(this.notifier$))
-      .subscribe((currentTrial) => (this.currentTrial = currentTrial));
+      .subscribe((trial) => (this.trial = trial));
 
     this.router.events.pipe(takeUntil(this.notifier$)).subscribe((e) => {
       if (e instanceof ActivationEnd) this.handleActivationEnd(e);
@@ -78,14 +78,13 @@ export class AppComponent implements OnDestroy {
 
   handleActivationEnd(e: ActivationEnd) {
     // Get trial details
-    let trialId = e.snapshot.params['trialId'];
-
     this.$TrialService.loadingTrial$.next(true);
-    let trial = this.$StorageService.getData(LocalStorageKeys.currentTrial);
-    if (trial) {
-      let currentTrial = JSON.parse(trial);
-      if (!trialId || currentTrial?.id == trialId) {
-        this.$TrialService.currentTrial$.next(currentTrial);
+    let trialId = e.snapshot.params['trialId'];
+    let data = this.$StorageService.getData(LocalStorageKeys.trial);
+    if (data) {
+      let trial = JSON.parse(data);
+      if (!trialId || trial?.id == trialId) {
+        this.$TrialService.trial$.next(trial);
         this.$TrialService.loadingTrial$.next(false);
         return;
       }
@@ -101,10 +100,10 @@ export class AppComponent implements OnDestroy {
       .pipe(takeUntil(this.notifier$))
       .subscribe((res) => {
         this.$StorageService.saveData(
-          LocalStorageKeys.currentTrial,
+          LocalStorageKeys.trial,
           JSON.stringify(res.trialDetails)
         );
-        this.$TrialService.currentTrial$.next(res.trialDetails);
+        this.$TrialService.trial$.next(res.trialDetails);
         this.$TrialService.loadingTrial$.next(false);
       });
   }

@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { EvidenceComponent } from './evidence/evidence.component';
 import { JuryPlacementComponent } from './jury-placement/jury-placement.component';
 import { JurySelectionComponent } from './jury-selection/jury-selection.component';
+import { TrialComponent } from './trial/trial.component';
 import { TrialsComponent } from './trials/trials.component';
 
 export const routes: Routes = [
@@ -18,8 +19,13 @@ export const routes: Routes = [
   },
   {
     path: 'trial/:trialId',
-    title: 'Jury Selection',
-    component: JurySelectionComponent,
+    title: 'Trial Details',
+    component: TrialComponent,
+  },
+  {
+    path: 'trial/:trialId/details',
+    title: 'Trial Details',
+    component: TrialComponent,
   },
   {
     path: 'trial/:trialId/jury-selection',

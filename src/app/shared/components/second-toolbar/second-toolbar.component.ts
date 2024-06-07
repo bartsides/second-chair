@@ -20,7 +20,7 @@ export class SecondToolbarComponent implements OnInit {
   @Input({ required: true }) activatedRoute: ActivatedRoute;
   @Input({ required: true }) subject: Subject<unknown>;
   currentStep: CurrentStep | undefined;
-  currentTrial: TrialDetails | undefined | null;
+  trial: TrialDetails | undefined | null;
 
   constructor(
     private $TrialService: TrialService,
@@ -31,10 +31,10 @@ export class SecondToolbarComponent implements OnInit {
     this.activatedRoute.title.pipe(takeUntil(this.subject)).subscribe((t) => {
       this.currentStep = this.$StepService.getCurrentStep(t);
     });
-    this.$TrialService.currentTrial$
+    this.$TrialService.trial$
       .pipe(takeUntil(this.subject))
-      .subscribe((currentTrial) => {
-        this.currentTrial = currentTrial;
+      .subscribe((trial) => {
+        this.trial = trial;
       });
   }
 }

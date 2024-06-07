@@ -6,7 +6,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { LoadingComponent } from '../shared/components/loading/loading.component';
 import { SecondToolbarComponent } from '../shared/components/second-toolbar/second-toolbar.component';
-import { TrialEditComponent } from '../shared/components/trial-edit/trial-edit.component';
+import { TrialAddComponent } from '../shared/components/trial-add/trial-add.component';
 import { LocalStorageKeys } from '../shared/config/local-storage-keys';
 import { Steps } from '../shared/config/steps';
 import { Step } from '../shared/models/step';
@@ -30,7 +30,7 @@ import { TrialService } from '../shared/services/trial.service';
 })
 export class TrialsComponent implements OnInit {
   notifier$ = new Subject();
-  currentTrial: TrialDetails | undefined | null;
+  trial: TrialDetails | undefined | null;
   trials: TrialSummary[] = [];
   firstStep: Step = Steps[0];
 
@@ -49,9 +49,9 @@ export class TrialsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.$TrialService.currentTrial$
+    this.$TrialService.trial$
       .pipe(takeUntil(this.notifier$))
-      .subscribe((currentTrial) => (this.currentTrial = currentTrial));
+      .subscribe((trial) => (this.trial = trial));
     this.$TrialService.loadingTrial$
       .pipe(takeUntil(this.notifier$))
       .subscribe((loadingTrial) => (this.loadingTrial = loadingTrial));
@@ -64,8 +64,8 @@ export class TrialsComponent implements OnInit {
   }
 
   saveSelectedTrial() {
-    this.currentTrial = JSON.parse(
-      this.$StorageService.getData(LocalStorageKeys.currentTrial)
+    this.trial = JSON.parse(
+      this.$StorageService.getData(LocalStorageKeys.trial)
     );
   }
 
@@ -77,19 +77,19 @@ export class TrialsComponent implements OnInit {
     });
   }
 
-  selectTrialSummary(currentTrial: TrialSummary) {
-    this.$TrialService.getTrial(currentTrial.id).subscribe((res) => {
+  selectTrialSummary(trial: TrialSummary) {
+    this.$TrialService.getTrial(trial.id).subscribe((res) => {
       this.selectTrial(res.trialDetails);
     });
   }
 
-  selectTrial(currentTrial: TrialDetails) {
-    this.$TrialService.currentTrial$.next(currentTrial);
+  selectTrial(trial: TrialDetails) {
+    this.$TrialService.trial$.next(trial);
     this.$StorageService.saveData(
-      LocalStorageKeys.currentTrial,
-      JSON.stringify(currentTrial)
+      LocalStorageKeys.trial,
+      JSON.stringify(trial)
     );
-    this.router.navigate(['trial', currentTrial.id]);
+    this.router.navigate(['trial', trial.id]);
   }
 
   addTrial() {
@@ -119,8 +119,8 @@ export class TrialsComponent implements OnInit {
   private openEditDialog(
     trial: TrialDetails,
     addMode: boolean = false
-  ): MatDialogRef<TrialEditComponent, any> {
-    return this.dialog.open(TrialEditComponent, {
+  ): MatDialogRef<TrialAddComponent, any> {
+    return this.dialog.open(TrialAddComponent, {
       data: { trial: trial, addMode },
       minWidth: '70%',
     });

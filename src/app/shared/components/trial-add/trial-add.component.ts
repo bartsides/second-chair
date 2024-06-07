@@ -20,7 +20,7 @@ interface DialogData {
 }
 
 @Component({
-  selector: 'app-trial-edit',
+  selector: 'app-trial-add',
   standalone: true,
   imports: [
     CommonModule,
@@ -33,15 +33,15 @@ interface DialogData {
     MatDialogActions,
     MatDialogClose,
   ],
-  templateUrl: './trial-edit.component.html',
-  styleUrl: './trial-edit.component.scss',
+  templateUrl: './trial-add.component.html',
+  styleUrl: './trial-add.component.scss',
 })
-export class TrialEditComponent {
+export class TrialAddComponent {
   trial: TrialDetails;
   addMode = false;
 
   constructor(
-    public dialogRef: MatDialogRef<TrialEditComponent>,
+    public dialogRef: MatDialogRef<TrialAddComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) {
     this.trial = data.trial;

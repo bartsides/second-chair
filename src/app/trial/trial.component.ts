@@ -77,6 +77,11 @@ export class TrialComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       id: [this.trial.id, [Validators.required]],
       name: [this.trial.name, [Validators.required]],
+      strikes: this.fb.group({
+        total: this.trial.strikes.total,
+        plaintiff: this.trial.strikes.plaintiff,
+        defendant: this.trial.strikes.defendant,
+      }),
     });
   }
 

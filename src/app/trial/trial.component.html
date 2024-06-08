@@ -4,14 +4,19 @@
 </app-second-toolbar>
 
 <form [formGroup]="form" (ngSubmit)="save()">
-  <mat-card class="trial-details-card">
-    <mat-card-content>
-      <p>Name</p>
-      <mat-form-field>
-        <input matInput formControlName="name" placeholder="Name" type="text" />
-      </mat-form-field>
-    </mat-card-content>
-  </mat-card>
+  <div class="trial-details-card">
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" />
+    </mat-form-field>
+  </div>
 
-  <button mat-button [disabled]="!formValid">Save</button>
+  <button
+    mat-flat-button
+    color="primary"
+    [disabled]="!formValid"
+    class="save-trial-button"
+  >
+    Save
+  </button>
 </form>

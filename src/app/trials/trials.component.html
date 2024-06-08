@@ -18,15 +18,17 @@
 <div class="trials-container">
   <div class="trials-title">
     <button class="add-trial-button" mat-button (click)="addTrial()">
-      <h2>Trials<mat-icon>add</mat-icon></h2>
+      <div class="mat-h2">Trials +</div>
     </button>
   </div>
   <div class="trials-list">
     @for (trial of trials; track trials) {
-    <div>
-      <div>{{ trial.name }}</div>
-      <div>
-        <button mat-button (click)="selectTrialSummary(trial)">Select</button>
+    <div class="trial-summary">
+      <div class="trial-name">{{ trial.name }}</div>
+      <div class="select-trial">
+        <button mat-stroked-button (click)="selectTrialSummary(trial)">
+          Select
+        </button>
       </div>
     </div>
     }

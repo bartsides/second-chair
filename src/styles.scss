@@ -32,12 +32,12 @@ $light-theme: mat.define-light-theme(
 .dark-theme {
   @include mat.all-component-colors($dark-theme);
   @include app.theme($dark-theme);
-  @include app.dark($dark-theme);
+  @include app.dark();
 }
 
 .light-theme {
   @include app.theme($light-theme);
-  @include app.light($light-theme);
+  @include app.light();
 }
 
 html,

@@ -1,8 +1,15 @@
 .trial-details-card {
   margin: 40px;
+  padding: 20px;
   max-width: 1000px;
+  border-radius: 4px;
 }
 
 mat-form-field {
   min-width: 400px;
+}
+
+.save-trial-button {
+  float: right;
+  margin-right: 40px;
 }

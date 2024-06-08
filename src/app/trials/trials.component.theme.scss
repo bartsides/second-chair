@@ -9,6 +9,10 @@
     border-bottom: solid 1px mat.get-theme-color($theme, primary, default);
     background-color: mat.get-theme-color($theme, primary, default);
   }
+
+  .trial-summary:not(:last-child) {
+    border-bottom: solid 1px mat.get-theme-color($theme, primary, default);
+  }
 }
 
 @mixin theme($theme) {

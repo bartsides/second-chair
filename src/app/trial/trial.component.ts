@@ -15,7 +15,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { LoadingComponent } from '../shared/components/loading/loading.component';
 import { SecondToolbarComponent } from '../shared/components/second-toolbar/second-toolbar.component';
+import { LocalStorageKeys } from '../shared/config/local-storage-keys';
 import { TrialDetails } from '../shared/models/trial-details';
+import { StorageService } from '../shared/services/storage.service';
 import { TrialService } from '../shared/services/trial.service';
 
 @Component({
@@ -48,6 +50,7 @@ export class TrialComponent implements OnInit, OnDestroy {
   constructor(
     public activatedRoute: ActivatedRoute,
     public dialog: MatDialog,
+    private $StorageService: StorageService,
     private $TrialService: TrialService,
     private fb: FormBuilder
   ) {}
@@ -78,10 +81,12 @@ export class TrialComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    if (!this.trial) return;
-
-    // TODO: Validate form
-    console.log('saving trial', this.form.valid, this.trial, this.form.value);
-    //this.$TrialService.updateTrial(this.trial).subscribe();
+    if (!this.form.value || !this.form.valid) return;
+    this.$TrialService.trial$.next(this.form.value);
+    this.$StorageService.saveData(
+      LocalStorageKeys.trial,
+      JSON.stringify(this.form.value)
+    );
+    this.$TrialService.updateTrial(this.form.value).subscribe();
   }
 }

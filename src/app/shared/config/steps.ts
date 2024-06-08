@@ -4,7 +4,7 @@ let Steps: Step[] = [
   {
     title: 'Trial Details',
     icon: 'description',
-    route: 'details',
+    route: '/details',
   },
   {
     title: 'Jury Selection',

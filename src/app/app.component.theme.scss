@@ -1,4 +1,5 @@
 @use "@angular/material" as mat;
+@use "trial/trial.component.theme" as trial;
 @use "trials/trials.component.theme" as trials;
 @use "shared/components/exhibit-card/exhibit-card.component.theme" as
   exhibitCard;
@@ -42,6 +43,7 @@
     @include color($theme);
   }
 
+  @include trial.theme($theme);
   @include trials.theme($theme);
   @include exhibitCard.theme($theme);
   @include evidence.theme($theme);
@@ -49,13 +51,13 @@
   @include jurySelection.theme($theme);
 }
 
-@mixin dark($theme) {
+@mixin dark() {
   .hatched-bg {
     background-image: url("/assets/cross-white.png");
   }
 }
 
-@mixin light($theme) {
+@mixin light() {
   .hatched-bg {
     background-image: url("/assets/cross.png");
   }

@@ -5,13 +5,21 @@
     border: solid 1px mat.get-theme-color($theme, primary, default);
   }
 
-  .trials-title {
+  .trials-title-container {
     border-bottom: solid 1px mat.get-theme-color($theme, primary, default);
     background-color: mat.get-theme-color($theme, primary, default);
   }
 
+  .trial-plus {
+    color: mat.get-theme-color($theme, accent, default);
+  }
+
   .trial-summary:not(:last-child) {
     border-bottom: solid 1px mat.get-theme-color($theme, primary, default);
+  }
+
+  .select-trial-button {
+    border-color: mat.get-theme-color($theme, accent, default) !important;
   }
 }
 

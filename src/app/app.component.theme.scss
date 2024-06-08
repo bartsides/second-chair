@@ -36,6 +36,11 @@
   .clear-data-button {
     background-color: mat.get-theme-color($theme, warn, default);
   }
+
+  .primary-toolbar {
+    color: mat.get-theme-color($theme, accent, default);
+    background-color: mat.get-theme-color($theme, primary, default);
+  }
 }
 
 @mixin theme($theme) {

@@ -3,6 +3,7 @@
 <app-second-toolbar [activatedRoute]="activatedRoute" [subject]="notifier$">
 </app-second-toolbar>
 
+@if (form) {
 <form [formGroup]="form" (ngSubmit)="save()">
   <div class="trial-details-card">
     <mat-form-field>
@@ -20,3 +21,4 @@
     Save
   </button>
 </form>
+}

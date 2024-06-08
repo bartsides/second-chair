@@ -6,7 +6,7 @@
   }
 
   .evidence-list-title {
-    border-bottom: solid 1px mat.get-theme-color($theme, primary, default);
+    background-color: mat.get-theme-color($theme, primary, default);
   }
 }
 

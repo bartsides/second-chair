@@ -82,6 +82,7 @@ export class TrialComponent implements OnInit, OnDestroy {
         plaintiff: this.trial.strikes.plaintiff,
         defendant: this.trial.strikes.defendant,
       }),
+      defendantNumbered: this.trial.defendantNumbered,
     });
   }
 

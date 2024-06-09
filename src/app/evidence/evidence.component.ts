@@ -11,11 +11,13 @@ import { Subject, takeUntil, tap } from 'rxjs';
 import { EvidenceListComponent } from '../shared/components/evidence-list/evidence-list.component';
 import { ExhibitCardComponent } from '../shared/components/exhibit-card/exhibit-card.component';
 import { ExhibitEditComponent } from '../shared/components/exhibit-edit/exhibit-edit.component';
+import { LoadingComponent } from '../shared/components/loading/loading.component';
 import { SecondToolbarComponent } from '../shared/components/second-toolbar/second-toolbar.component';
-import { LocalStorageKeys } from '../shared/config/local-storage-keys';
 import { EvidenceData } from '../shared/models/evidence-data';
 import { Exhibit } from '../shared/models/exhibit';
-import { StorageService } from '../shared/services/storage.service';
+import { TrialDetails } from '../shared/models/trial-details';
+import { ExhibitService } from '../shared/services/exhibit.service';
+import { TrialService } from '../shared/services/trial.service';
 import { Util } from '../shared/util/util';
 
 @Component({
@@ -26,6 +28,7 @@ import { Util } from '../shared/util/util';
     ExhibitCardComponent,
     ExhibitEditComponent,
     FormsModule,
+    LoadingComponent,
     MatButtonModule,
     MatFormFieldModule,
     MatIconModule,
@@ -37,17 +40,26 @@ import { Util } from '../shared/util/util';
   styleUrl: './evidence.component.scss',
 })
 export class EvidenceComponent implements OnInit, OnDestroy {
+  trial: TrialDetails | undefined | null = null;
   notifier$ = new Subject();
+
   filter$ = new Subject<string>();
   searchFilter: string = '';
   data: EvidenceData = new EvidenceData();
   filteredData: EvidenceData;
   evidenceSearchControl = new FormControl();
 
+  loadingExhibits = false;
+  loadingTrial = false;
+  get loading() {
+    return this.loadingExhibits || this.loadingTrial;
+  }
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public dialog: MatDialog,
-    public $StorageService: StorageService
+    private $ExhibitService: ExhibitService,
+    private $TrialService: TrialService
   ) {
     this.filteredData = new EvidenceData();
     this.filter$
@@ -56,6 +68,15 @@ export class EvidenceComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.$TrialService.loadingTrial$
+      .pipe(takeUntil(this.notifier$))
+      .subscribe((loadingTrial) => (this.loadingTrial = loadingTrial));
+    this.$TrialService.trial$
+      .pipe(takeUntil(this.notifier$))
+      .subscribe((trial) => {
+        this.trial = trial;
+        this.loadData();
+      });
     this.evidenceSearchControl.valueChanges
       .pipe(
         takeUntil(this.notifier$),
@@ -64,7 +85,6 @@ export class EvidenceComponent implements OnInit, OnDestroy {
       .subscribe((val) => {
         this.filter$.next(val);
       });
-    this.loadData();
   }
 
   ngOnDestroy(): void {
@@ -73,17 +93,18 @@ export class EvidenceComponent implements OnInit, OnDestroy {
   }
 
   fakeData() {
-    let fakeCount = 8;
+    let fakeCount = 6;
     for (let i = 0; i < fakeCount; i++) {
       let e = this.generateExhibit(false);
       if (i % 2 === 1) e.marker += ' - 1';
       this.data.plaintiffEvidence.push(e);
+      this.saveExhibit(e);
 
       e = this.generateExhibit(true);
       if (i % 2 === 1) e.marker += ' - 1';
       this.data.defendantEvidence.push(e);
+      this.saveExhibit(e);
     }
-    this.saveData();
   }
 
   generateExhibit(defendant: boolean): Exhibit {
@@ -96,7 +117,12 @@ export class EvidenceComponent implements OnInit, OnDestroy {
   }
 
   addExhibit(defendant: boolean = true) {
-    let exhibit: Exhibit = <Exhibit>{};
+    if (!this.trial) return;
+    let exhibit: Exhibit = <Exhibit>{
+      id: crypto.randomUUID(),
+      trialId: this.trial.id,
+      defendant: defendant,
+    };
     exhibit.marker = this.getNextMarker(defendant);
     let dialogRef = this.openEditDialog(exhibit, true);
     dialogRef
@@ -108,16 +134,18 @@ export class EvidenceComponent implements OnInit, OnDestroy {
             ? this.data.defendantEvidence
             : this.data.plaintiffEvidence;
           list.push(res);
-          this.saveData();
+          this.$ExhibitService.addExhibit(res).subscribe();
+          this.filter$.next(this.searchFilter);
         }
       });
   }
 
   getNextMarker(defendant: boolean): string {
+    if (!this.trial) return '';
     let list = defendant
       ? this.data.defendantEvidence
       : this.data.plaintiffEvidence;
-    let numbered = defendant === this.data.defendantNumbered;
+    let numbered = defendant === this.trial.defendantNumbered;
     return numbered
       ? this.getNextNumberMarker(list)
       : this.getNextAlphaMarker(list);
@@ -168,7 +196,7 @@ export class EvidenceComponent implements OnInit, OnDestroy {
       .afterClosed()
       .pipe(takeUntil(this.notifier$))
       .subscribe(() => {
-        this.saveData();
+        this.saveExhibit(exhibit);
       });
   }
 
@@ -182,18 +210,18 @@ export class EvidenceComponent implements OnInit, OnDestroy {
     });
   }
 
-  saveData() {
-    this.$StorageService.saveData(
-      LocalStorageKeys.evidence,
-      JSON.stringify(this.data)
-    );
-    this.filter$.next(this.searchFilter);
+  saveExhibit(exhibit: Exhibit) {
+    this.$ExhibitService.updateExhibit(exhibit).subscribe();
   }
 
   loadData() {
-    let data = this.$StorageService.getData(LocalStorageKeys.evidence);
-    if (data) this.data = JSON.parse(data);
-    this.filter$.next(this.searchFilter);
+    if (!this.trial) return;
+    this.loadingExhibits = true;
+    this.$ExhibitService.getExhibitsOfTrial(this.trial.id).subscribe((res) => {
+      this.loadingExhibits = false;
+      this.data = res.evidenceData;
+      this.filter$.next(this.searchFilter);
+    });
   }
 
   filterData(val: string) {

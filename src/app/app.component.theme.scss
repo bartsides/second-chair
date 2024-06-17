@@ -1,10 +1,11 @@
 @use "@angular/material" as mat;
+@use "components/exhibit-card/exhibit-card.component.theme" as exhibitCard;
+@use "components/evidence-list/evidence-list.component.theme" as evidenceList;
+@use "pages/evidence/evidence.component.theme" as evidence;
+@use "pages/jury-selection/jury-selection.component.theme" as jurySelection;
+@use "pages/login/login.component.theme" as login;
 @use "pages/trial/trial.component.theme" as trial;
 @use "pages/trials/trials.component.theme" as trials;
-@use "components/exhibit-card/exhibit-card.component.theme" as exhibitCard;
-@use "pages/evidence/evidence.component.theme" as evidence;
-@use "components/evidence-list/evidence-list.component.theme" as evidenceList;
-@use "pages/jury-selection/jury-selection.component.theme" as jurySelection;
 
 @mixin color($theme) {
   ::-webkit-scrollbar {
@@ -46,12 +47,13 @@
     @include color($theme);
   }
 
-  @include trial.theme($theme);
-  @include trials.theme($theme);
   @include exhibitCard.theme($theme);
   @include evidence.theme($theme);
   @include evidenceList.theme($theme);
   @include jurySelection.theme($theme);
+  @include login.theme($theme);
+  @include trial.theme($theme);
+  @include trials.theme($theme);
 }
 
 @mixin dark() {

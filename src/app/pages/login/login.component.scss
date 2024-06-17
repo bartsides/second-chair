@@ -1,0 +1,26 @@
+.login-container {
+  margin: auto;
+  margin-top: 100px;
+  max-width: 400px;
+  max-height: 400px;
+}
+
+.login-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 56px;
+  margin-bottom: 22px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.login-button-container {
+  display: flex;
+  justify-content: end;
+}
+
+.login-field {
+  width: 100%;
+}

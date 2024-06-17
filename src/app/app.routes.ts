@@ -2,11 +2,12 @@ import { Routes } from '@angular/router';
 import { EvidenceComponent } from './pages/evidence/evidence.component';
 import { JuryPlacementComponent } from './pages/jury-placement/jury-placement.component';
 import { JurySelectionComponent } from './pages/jury-selection/jury-selection.component';
+import { LoginComponent } from './pages/login/login.component';
 import { TrialComponent } from './pages/trial/trial.component';
 import { TrialsComponent } from './pages/trials/trials.component';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'trials' },
+  { path: '', title: 'Login', component: LoginComponent },
   {
     path: 'refresh',
     title: 'Trials',

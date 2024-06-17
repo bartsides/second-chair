@@ -1,0 +1,27 @@
+@if (loading) {
+<app-loading></app-loading>
+} @if (form) {
+<div class="login-container">
+  <h1 class="login-title">Login</h1>
+  <form [formGroup]="form" (ngSubmit)="login()">
+    <mat-form-field class="login-field">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" />
+    </mat-form-field>
+    <mat-form-field class="login-field">
+      <mat-label>Password</mat-label>
+      <input matInput formControlName="password" type="password" />
+    </mat-form-field>
+  </form>
+  <div class="login-button-container">
+    <button
+      mat-flat-button
+      color="primary"
+      [disabled]="!formValid"
+      (click)="login()"
+    >
+      Login
+    </button>
+  </div>
+</div>
+}

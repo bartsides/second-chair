@@ -18,6 +18,7 @@ import { LocalStorageKeys } from './config/local-storage-keys';
 import { Steps } from './config/steps';
 import { CurrentStep } from './models/current-step';
 import { TrialDetails } from './models/trial-details';
+import { AuthService } from './services/auth.service';
 import { StepService } from './services/step.service';
 import { StorageService } from './services/storage.service';
 import { TrialService } from './services/trial.service';
@@ -47,6 +48,7 @@ export class AppComponent implements OnDestroy {
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
+    private $AuthService: AuthService,
     private $TrialService: TrialService,
     private $StorageService: StorageService,
     private $StepService: StepService,
@@ -139,11 +141,11 @@ export class AppComponent implements OnDestroy {
     );
   }
 
-  clearData() {
+  logout() {
     let dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
-        title: 'Clear all data',
-        message: 'Are you sure you want to clear all data?',
+        title: 'Logout',
+        message: 'Are you sure you want to logout?',
       },
     });
     dialogRef
@@ -151,11 +153,7 @@ export class AppComponent implements OnDestroy {
       .pipe(takeUntil(this.notifier$))
       .subscribe((res) => {
         if (res === 'Yes') {
-          this.$StorageService.clearData();
-          let url = this.router.url;
-          this.router
-            .navigateByUrl('refresh', { skipLocationChange: true })
-            .then(() => this.router.navigateByUrl(url));
+          this.$AuthService.logout();
         }
       });
   }

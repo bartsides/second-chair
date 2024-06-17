@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import environment from '../../environment';
 import { LocalStorageKeys } from '../config/local-storage-keys';
@@ -11,6 +12,7 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
+    private router: Router,
     private $StorageService: StorageService
   ) {}
 
@@ -18,7 +20,11 @@ export class AuthService {
     return this.token;
   }
 
-  getRefreshToken() {
+  hasRefreshToken() {
+    return !!this.getRefreshToken();
+  }
+
+  private getRefreshToken() {
     return this.$StorageService.getData(LocalStorageKeys.refreshKey);
   }
 
@@ -38,6 +44,11 @@ export class AuthService {
       });
 
     return subject;
+  }
+
+  logout() {
+    this.$StorageService.clearData();
+    this.router.navigateByUrl('/');
   }
 
   register(email: string, password: string) {

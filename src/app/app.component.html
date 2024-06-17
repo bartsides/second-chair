@@ -21,20 +21,20 @@
   } @if (useDarkTheme) {
   <button
     mat-menu-item
-    (click)="clearData()"
+    (click)="logout()"
     class="clear-data-button dark-clear-data-button"
   >
     <mat-icon>delete</mat-icon>
-    <span>Clear data</span>
+    <span>Logout</span>
   </button>
   } @else {
   <button
     mat-menu-item
-    (click)="clearData()"
+    (click)="logout()"
     class="clear-data-button light-clear-data-button"
   >
     <mat-icon>delete</mat-icon>
-    <span>Clear data</span>
+    <span>Logout</span>
   </button>
   }
 </mat-menu>

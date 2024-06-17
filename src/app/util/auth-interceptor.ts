@@ -36,20 +36,24 @@ function handle401Error(
   if (!isRefreshing) {
     isRefreshing = true;
 
-    if (authService.getRefreshToken()) {
-      return authService.refreshToken().pipe(
-        switchMap(() => {
-          isRefreshing = false;
-          req = authorizeRequest(req, authService);
-          return next(req);
-        }),
-        catchError((error) => {
-          isRefreshing = false;
-
-          return throwError(() => error);
-        })
-      );
+    if (!authService.hasRefreshToken()) {
+      isRefreshing = false;
+      authService.logout();
+      return next(req);
     }
+
+    return authService.refreshToken().pipe(
+      switchMap(() => {
+        isRefreshing = false;
+        req = authorizeRequest(req, authService);
+        return next(req);
+      }),
+      catchError((error) => {
+        isRefreshing = false;
+        authService.logout();
+        return throwError(() => error);
+      })
+    );
   }
 
   return next(req);

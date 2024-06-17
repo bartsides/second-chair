@@ -13,12 +13,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { LoadingComponent } from '../shared/components/loading/loading.component';
-import { SecondToolbarComponent } from '../shared/components/second-toolbar/second-toolbar.component';
-import { LocalStorageKeys } from '../shared/config/local-storage-keys';
-import { TrialDetails } from '../shared/models/trial-details';
-import { StorageService } from '../shared/services/storage.service';
-import { TrialService } from '../shared/services/trial.service';
+import { LoadingComponent } from '../../components/loading/loading.component';
+import { SecondToolbarComponent } from '../../components/second-toolbar/second-toolbar.component';
+import { LocalStorageKeys } from '../../config/local-storage-keys';
+import { TrialDetails } from '../../models/trial-details';
+import { StorageService } from '../../services/storage.service';
+import { TrialService } from '../../services/trial.service';
 
 @Component({
   selector: 'app-trial',

@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { EvidenceComponent } from './evidence/evidence.component';
-import { JuryPlacementComponent } from './jury-placement/jury-placement.component';
-import { JurySelectionComponent } from './jury-selection/jury-selection.component';
-import { TrialComponent } from './trial/trial.component';
-import { TrialsComponent } from './trials/trials.component';
+import { EvidenceComponent } from './pages/evidence/evidence.component';
+import { JuryPlacementComponent } from './pages/jury-placement/jury-placement.component';
+import { JurySelectionComponent } from './pages/jury-selection/jury-selection.component';
+import { TrialComponent } from './pages/trial/trial.component';
+import { TrialsComponent } from './pages/trials/trials.component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'trials' },

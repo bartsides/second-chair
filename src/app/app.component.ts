@@ -13,14 +13,14 @@ import {
   RouterModule,
 } from '@angular/router';
 import { Subject, Subscription, takeUntil } from 'rxjs';
-import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
-import { LocalStorageKeys } from './shared/config/local-storage-keys';
-import { Steps } from './shared/config/steps';
-import { CurrentStep } from './shared/models/current-step';
-import { TrialDetails } from './shared/models/trial-details';
-import { StepService } from './shared/services/step.service';
-import { StorageService } from './shared/services/storage.service';
-import { TrialService } from './shared/services/trial.service';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { LocalStorageKeys } from './config/local-storage-keys';
+import { Steps } from './config/steps';
+import { CurrentStep } from './models/current-step';
+import { TrialDetails } from './models/trial-details';
+import { StepService } from './services/step.service';
+import { StorageService } from './services/storage.service';
+import { TrialService } from './services/trial.service';
 
 @Component({
   selector: 'app-root',

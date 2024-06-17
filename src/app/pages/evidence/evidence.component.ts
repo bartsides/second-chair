@@ -8,17 +8,17 @@ import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute } from '@angular/router';
 import { faker } from '@faker-js/faker';
 import { Subject, takeUntil, tap } from 'rxjs';
-import { EvidenceListComponent } from '../shared/components/evidence-list/evidence-list.component';
-import { ExhibitCardComponent } from '../shared/components/exhibit-card/exhibit-card.component';
-import { ExhibitEditComponent } from '../shared/components/exhibit-edit/exhibit-edit.component';
-import { LoadingComponent } from '../shared/components/loading/loading.component';
-import { SecondToolbarComponent } from '../shared/components/second-toolbar/second-toolbar.component';
-import { EvidenceData } from '../shared/models/evidence-data';
-import { Exhibit } from '../shared/models/exhibit';
-import { TrialDetails } from '../shared/models/trial-details';
-import { ExhibitService } from '../shared/services/exhibit.service';
-import { TrialService } from '../shared/services/trial.service';
-import { Util } from '../shared/util/util';
+import { EvidenceListComponent } from '../../components/evidence-list/evidence-list.component';
+import { ExhibitCardComponent } from '../../components/exhibit-card/exhibit-card.component';
+import { ExhibitEditComponent } from '../../components/exhibit-edit/exhibit-edit.component';
+import { LoadingComponent } from '../../components/loading/loading.component';
+import { SecondToolbarComponent } from '../../components/second-toolbar/second-toolbar.component';
+import { EvidenceData } from '../../models/evidence-data';
+import { Exhibit } from '../../models/exhibit';
+import { TrialDetails } from '../../models/trial-details';
+import { ExhibitService } from '../../services/exhibit.service';
+import { TrialService } from '../../services/trial.service';
+import { Util } from '../../util/util';
 
 @Component({
   selector: 'app-evidence',

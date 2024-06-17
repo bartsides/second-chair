@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import environment from '../../../environment';
+import environment from '../../environment';
 import {
   GetTrialQueryResult,
   GetTrialsQueryResult,

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import environment from '../../../environment';
+import environment from '../../environment';
 import { Exhibit } from '../models/exhibit';
 import { GetExhibitsOfTrialResult } from '../models/results/exhibit-results';
 

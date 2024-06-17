@@ -4,16 +4,16 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { LoadingComponent } from '../shared/components/loading/loading.component';
-import { SecondToolbarComponent } from '../shared/components/second-toolbar/second-toolbar.component';
-import { TrialAddComponent } from '../shared/components/trial-add/trial-add.component';
-import { LocalStorageKeys } from '../shared/config/local-storage-keys';
-import { Steps } from '../shared/config/steps';
-import { Step } from '../shared/models/step';
-import { TrialDetails } from '../shared/models/trial-details';
-import { TrialSummary } from '../shared/models/trial-summary';
-import { StorageService } from '../shared/services/storage.service';
-import { TrialService } from '../shared/services/trial.service';
+import { LoadingComponent } from '../../components/loading/loading.component';
+import { SecondToolbarComponent } from '../../components/second-toolbar/second-toolbar.component';
+import { TrialAddComponent } from '../../components/trial-add/trial-add.component';
+import { LocalStorageKeys } from '../../config/local-storage-keys';
+import { Steps } from '../../config/steps';
+import { Step } from '../../models/step';
+import { TrialDetails } from '../../models/trial-details';
+import { TrialSummary } from '../../models/trial-summary';
+import { StorageService } from '../../services/storage.service';
+import { TrialService } from '../../services/trial.service';
 
 @Component({
   selector: 'app-trials',

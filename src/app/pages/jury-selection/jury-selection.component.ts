@@ -15,18 +15,18 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { faker } from '@faker-js/faker';
 import { Subject, takeUntil } from 'rxjs';
-import { JurorCardComponent } from '../shared/components/juror-card/juror-card.component';
-import { JurorEditComponent } from '../shared/components/juror-edit/juror-edit.component';
-import { LoadingComponent } from '../shared/components/loading/loading.component';
-import { SecondToolbarComponent } from '../shared/components/second-toolbar/second-toolbar.component';
-import { LocalStorageKeys } from '../shared/config/local-storage-keys';
-import { Juror } from '../shared/models/juror';
-import { JuryData } from '../shared/models/jury-data';
-import { TrialDetails } from '../shared/models/trial-details';
-import { ResizableDirective } from '../shared/resizable.directive';
-import { JurorService } from '../shared/services/juror.service';
-import { StorageService } from '../shared/services/storage.service';
-import { TrialService } from '../shared/services/trial.service';
+import { JurorCardComponent } from '../../components/juror-card/juror-card.component';
+import { JurorEditComponent } from '../../components/juror-edit/juror-edit.component';
+import { LoadingComponent } from '../../components/loading/loading.component';
+import { SecondToolbarComponent } from '../../components/second-toolbar/second-toolbar.component';
+import { LocalStorageKeys } from '../../config/local-storage-keys';
+import { Juror } from '../../models/juror';
+import { JuryData } from '../../models/jury-data';
+import { TrialDetails } from '../../models/trial-details';
+import { JurorService } from '../../services/juror.service';
+import { StorageService } from '../../services/storage.service';
+import { TrialService } from '../../services/trial.service';
+import { ResizableDirective } from '../../util/resizable.directive';
 
 @Component({
   selector: 'app-jury-selection',

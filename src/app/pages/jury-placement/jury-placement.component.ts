@@ -6,14 +6,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { JurorCardComponent } from '../shared/components/juror-card/juror-card.component';
-import { JurorEditComponent } from '../shared/components/juror-edit/juror-edit.component';
-import { LoadingComponent } from '../shared/components/loading/loading.component';
-import { SecondToolbarComponent } from '../shared/components/second-toolbar/second-toolbar.component';
-import { Juror } from '../shared/models/juror';
-import { JuryData } from '../shared/models/jury-data';
-import { JurorService } from '../shared/services/juror.service';
-import { TrialService } from '../shared/services/trial.service';
+import { JurorCardComponent } from '../../components/juror-card/juror-card.component';
+import { JurorEditComponent } from '../../components/juror-edit/juror-edit.component';
+import { LoadingComponent } from '../../components/loading/loading.component';
+import { SecondToolbarComponent } from '../../components/second-toolbar/second-toolbar.component';
+import { Juror } from '../../models/juror';
+import { JuryData } from '../../models/jury-data';
+import { JurorService } from '../../services/juror.service';
+import { TrialService } from '../../services/trial.service';
 
 @Component({
   selector: 'app-jury-placement',

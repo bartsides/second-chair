@@ -1,0 +1,52 @@
+@if (loading) {
+<app-loading></app-loading>
+} @if (form) {
+<div class="register-container">
+  <h1 class="register-title">Register</h1>
+  <form [formGroup]="form" (ngSubmit)="register()">
+    <mat-form-field class="register-field">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" />
+    </mat-form-field>
+    <mat-form-field class="register-field">
+      <mat-label>Password</mat-label>
+      <input matInput formControlName="password" type="password" />
+    </mat-form-field>
+    @if (passwordHasError && password.errors) {
+    <!-- filler to avoid awkward formatting -->
+    @if (password.errors['minlength']) {
+    <div class="error-text">
+      Password must be at least
+      {{ password.errors["minlength"].requiredLength }} characters long.
+    </div>
+    } @if (password.hasError('mustContainDigit')) {
+    <div class="error-text">
+      Password must have at least one digit ('0'-'9').
+    </div>
+    } @if (password.hasError('mustContainLowercase')) {
+    <div class="error-text">
+      Password must have at least one lowercase letter ('a'-'z').
+    </div>
+    } @if (password.hasError('mustContainUppercase')) {
+    <div class="error-text">
+      Password must have at least one uppercase letter ('A'-'Z').
+    </div>
+    } @if (password.hasError('mustContainNonAlphanumeric')) {
+    <div class="error-text">
+      Password must have at least one non alphanumeric character.
+    </div>
+    }
+    <!-- filler to avoid awkward formatting -->
+  </form>
+  <div class="register-button-container">
+    <button
+      mat-flat-button
+      color="primary"
+      [disabled]="!formValid"
+      (click)="register()"
+    >
+      Register
+    </button>
+  </div>
+</div>
+}

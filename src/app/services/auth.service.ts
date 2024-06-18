@@ -52,10 +52,18 @@ export class AuthService {
   }
 
   register(email: string, password: string) {
-    return this.http.post(`${environment.apiUrl}/auth/register`, {
-      email,
-      password,
-    });
+    let subject = new Subject();
+
+    this.http
+      .post(`${environment.apiUrl}/auth/register`, {
+        email,
+        password,
+      })
+      .subscribe(() => {
+        subject.next(true);
+      });
+
+    return subject;
   }
 
   refreshToken() {

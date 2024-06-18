@@ -13,9 +13,15 @@ import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { LoadingComponent } from '../../components/loading/loading.component';
 import { AuthService } from '../../services/auth.service';
+import {
+  mustContainDigit,
+  mustContainLowercase,
+  mustContainNonAlphanumeric,
+  mustContainUppercase,
+} from '../../util/validators';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   standalone: true,
   imports: [
     FormsModule,
@@ -25,10 +31,10 @@ import { AuthService } from '../../services/auth.service';
     MatInputModule,
     ReactiveFormsModule,
   ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.scss',
 })
-export class LoginComponent {
+export class RegisterComponent {
   loading = false;
   form: FormGroup;
 
@@ -53,23 +59,30 @@ export class LoginComponent {
   ) {
     this.form = fb.group({
       email: [null, [Validators.required, Validators.email]],
-      password: [null, [Validators.required, Validators.minLength(6)]],
+      password: [
+        null,
+        [
+          Validators.required,
+          Validators.minLength(6),
+          mustContainDigit(),
+          mustContainLowercase(),
+          mustContainUppercase(),
+          mustContainNonAlphanumeric(),
+        ],
+      ],
     });
   }
 
-  login() {
+  register() {
     this.loading = true;
 
     this.$AuthService
-      .login(this.form.value.email, this.form.value.password)
+      .register(this.form.value.email, this.form.value.password)
       .subscribe((res) => {
+        this.loading = false;
         if (res) {
-          this.router.navigateByUrl('trials');
+          this.router.navigateByUrl('/login');
         }
       });
-  }
-
-  register() {
-    this.router.navigateByUrl('/register');
   }
 }

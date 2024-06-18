@@ -1,21 +1,10 @@
-.new-user-container {
-  margin-top: 40px;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.login-container {
+.register-container {
   margin: auto;
   margin-top: 100px;
   max-width: 500px;
 }
 
-.login-title {
+.register-title {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26,11 +15,11 @@
   border-top-right-radius: 4px;
 }
 
-.login-button-container {
+.register-button-container {
   display: flex;
   justify-content: end;
 }
 
-.login-field {
+.register-field {
   width: 100%;
 }

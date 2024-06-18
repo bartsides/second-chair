@@ -4,6 +4,7 @@
 @use "pages/evidence/evidence.component.theme" as evidence;
 @use "pages/jury-selection/jury-selection.component.theme" as jurySelection;
 @use "pages/login/login.component.theme" as login;
+@use "pages/register/register.component.theme" as register;
 @use "pages/trial/trial.component.theme" as trial;
 @use "pages/trials/trials.component.theme" as trials;
 
@@ -40,6 +41,10 @@
     color: mat.get-theme-color($theme, accent, default);
     background-color: mat.get-theme-color($theme, primary, default);
   }
+
+  .error-text {
+    color: mat.get-theme-color($theme, warn, default);
+  }
 }
 
 @mixin theme($theme) {
@@ -52,6 +57,7 @@
   @include evidenceList.theme($theme);
   @include jurySelection.theme($theme);
   @include login.theme($theme);
+  @include register.theme($theme);
   @include trial.theme($theme);
   @include trials.theme($theme);
 }

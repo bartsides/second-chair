@@ -1,6 +1,10 @@
 @if (loading) {
 <app-loading></app-loading>
 } @if (form) {
+<div class="new-user-container">
+  <h1>New to Second Chair?</h1>
+  <button mat-flat-button color="primary" (click)="register()">Register</button>
+</div>
 <div class="login-container">
   <h1 class="login-title">Login</h1>
   <form [formGroup]="form" (ngSubmit)="login()">
@@ -12,6 +16,13 @@
       <mat-label>Password</mat-label>
       <input matInput formControlName="password" type="password" />
     </mat-form-field>
+    @if (passwordHasError && password.errors) { @if
+    (password.errors['minlength']) {
+    <div class="error-text">
+      Password must be at least
+      {{ password.errors["minlength"].requiredLength }} characters long.
+    </div>
+    } }
   </form>
   <div class="login-button-container">
     <button

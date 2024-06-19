@@ -1,12 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { FirmAddComponent } from '../../components/firm-add/firm-add.component';
 import { LoadingComponent } from '../../components/loading/loading.component';
 import { FirmDetails } from '../../models/firm-details';
 import { FirmSummary } from '../../models/firm-summary';
 import { UserProfile } from '../../models/user-profile';
+import { AuthService } from '../../services/auth.service';
 import { FirmService } from '../../services/firm.service';
 import { UserService } from '../../services/user.service';
 
@@ -23,8 +25,10 @@ export class FirmsComponent implements OnInit, OnDestroy {
   notifier$ = new Subject();
 
   constructor(
+    private $AuthService: AuthService,
     private $FirmService: FirmService,
     private $UserService: UserService,
+    private router: Router,
     public dialog: MatDialog
   ) {}
 
@@ -73,7 +77,22 @@ export class FirmsComponent implements OnInit, OnDestroy {
   }
 
   changeFirm(firm: FirmSummary | FirmDetails) {
-    // Call change firm
-    // then call refresh token
+    this.loading = true;
+    this.$FirmService.changeFirm(firm.id).subscribe({
+      next: () => {
+        this.$AuthService.refreshToken().subscribe((res) => {
+          this.loading = false;
+          if (res) {
+            this.router.navigateByUrl('/trials');
+          } else {
+            console.error('Error refreshing token');
+          }
+        });
+      },
+      error: (err) => {
+        this.loading = false;
+        console.error('Unable to change firms', err);
+      },
+    });
   }
 }

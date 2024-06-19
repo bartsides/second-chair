@@ -20,4 +20,8 @@ export class FirmService {
   updateFirm(id: string, name: string) {
     return this.http.put(`${environment.apiUrl}/firms/${id}`, { id, name });
   }
+
+  changeFirm(firmId: string) {
+    return this.http.put(`${environment.apiUrl}/firms/change`, { firmId });
+  }
 }

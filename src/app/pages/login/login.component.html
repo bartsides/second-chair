@@ -23,6 +23,10 @@
       {{ password.errors["minlength"].requiredLength }} characters long.
     </div>
     } }
+    <!---->
+    @if (loginFail) {
+    <div class="error-text">Invalid login credentials.</div>
+    }
   </form>
   <div class="login-button-container">
     <button

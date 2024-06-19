@@ -1,0 +1,30 @@
+@if (loading) {
+<app-loading></app-loading>
+}
+<!---->
+@if (userProfile) {
+<div class="firms-container">
+  <div class="firms-title-container">
+    <button class="add-firm-button" mat-button (click)="addFirm()">
+      <div class="firms-title mat-h2">Firms +</div>
+    </button>
+  </div>
+  <div class="firms-list">
+    @for (firm of userProfile.firms; track userProfile.firms) {
+    <div class="firm-summary">
+      <div class="firm-name">{{ firm.name }}</div>
+      <div class="select-firm">
+        <button
+          class="select-firm-button"
+          mat-flat-button
+          (click)="changeFirm(firm)"
+          color="primary"
+        >
+          Select
+        </button>
+      </div>
+    </div>
+    }
+  </div>
+</div>
+}

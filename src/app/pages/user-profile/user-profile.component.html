@@ -1,0 +1,27 @@
+@if (loading){<app-loading></app-loading>}
+<!---->
+@if (form) {
+<div class="user-profile-container">
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="user-profile-card">
+      <mat-form-field>
+        <mat-label>First Name</mat-label>
+        <input matInput formControlName="firstName" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Last Name</mat-label>
+        <input matInput formControlName="lastName" />
+      </mat-form-field>
+    </div>
+
+    <button
+      mat-flat-button
+      color="primary"
+      [disabled]="!formValid"
+      class="save-user-profile-button"
+    >
+      Save
+    </button>
+  </form>
+</div>
+}

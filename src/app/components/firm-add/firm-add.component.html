@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>Firm</h2>
+
+<mat-dialog-content>
+  <div>
+    <mat-form-field>
+      <mat-label>Firm Name</mat-label>
+      <input matInput [(ngModel)]="firm.name" />
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">
+    @if (addMode) {Add} @else {Close}
+  </button>
+</mat-dialog-actions>

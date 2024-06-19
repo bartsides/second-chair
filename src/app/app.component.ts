@@ -47,14 +47,14 @@ export class AppComponent implements OnDestroy {
   trial: TrialDetails | undefined | null;
 
   constructor(
+    public activatedRoute: ActivatedRoute,
+    public dialog: MatDialog,
     @Inject(DOCUMENT) private document: Document,
+    private router: Router,
     private $AuthService: AuthService,
     private $TrialService: TrialService,
     private $StorageService: StorageService,
-    private $StepService: StepService,
-    private router: Router,
-    public activatedRoute: ActivatedRoute,
-    public dialog: MatDialog
+    private $StepService: StepService
   ) {
     this.setThemeByUserPreference();
     window

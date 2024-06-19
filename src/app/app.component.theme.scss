@@ -2,11 +2,13 @@
 @use "components/exhibit-card/exhibit-card.component.theme" as exhibitCard;
 @use "components/evidence-list/evidence-list.component.theme" as evidenceList;
 @use "pages/evidence/evidence.component.theme" as evidence;
+@use "pages/firms/firms.component.theme" as firms;
 @use "pages/jury-selection/jury-selection.component.theme" as jurySelection;
 @use "pages/login/login.component.theme" as login;
 @use "pages/register/register.component.theme" as register;
 @use "pages/trial/trial.component.theme" as trial;
 @use "pages/trials/trials.component.theme" as trials;
+@use "pages/user-profile/user-profile.component.theme" as userProfile;
 
 @mixin color($theme) {
   ::-webkit-scrollbar {
@@ -55,11 +57,13 @@
   @include exhibitCard.theme($theme);
   @include evidence.theme($theme);
   @include evidenceList.theme($theme);
+  @include firms.theme($theme);
   @include jurySelection.theme($theme);
   @include login.theme($theme);
   @include register.theme($theme);
   @include trial.theme($theme);
   @include trials.theme($theme);
+  @include userProfile.theme($theme);
 }
 
 @mixin dark() {

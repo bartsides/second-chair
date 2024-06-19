@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import environment from '../../environment';
 import { LocalStorageKeys } from '../config/local-storage-keys';
 import { StorageService } from './storage.service';
+import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -13,8 +14,13 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private $StorageService: StorageService
+    private $StorageService: StorageService,
+    private $UserService: UserService
   ) {}
+
+  isAuthenticated(): boolean {
+    return !!this.token;
+  }
 
   getToken() {
     return this.token;
@@ -38,9 +44,14 @@ export class AuthService {
         twoFactorCode: null,
         twoFactorRecoveryCode: null,
       })
-      .subscribe((res: any) => {
-        this.processCredentials(res);
-        subject.next(true);
+      .subscribe({
+        next: (res: any) => {
+          this.processCredentials(res);
+          subject.next(true);
+        },
+        error: () => {
+          subject.next(false);
+        },
       });
 
     return subject;
@@ -73,9 +84,14 @@ export class AuthService {
       .post(`${environment.apiUrl}/auth/refresh`, {
         refreshToken: this.getRefreshToken(),
       })
-      .subscribe((res: any) => {
-        this.processCredentials(res);
-        subject.next(true);
+      .subscribe({
+        next: (res: any) => {
+          this.processCredentials(res);
+          subject.next(true);
+        },
+        error: () => {
+          this.logout();
+        },
       });
 
     return subject;
@@ -87,5 +103,20 @@ export class AuthService {
       LocalStorageKeys.refreshKey,
       res.refreshToken
     );
+
+    this.$UserService.getUserProfile().subscribe((res) => {
+      let userProfile = res.userProfile;
+      if (!userProfile || !userProfile.firstName || !userProfile.lastName) {
+        this.$UserService.newUser = true;
+        // Redirect to user profile page
+        this.router.navigateByUrl('/profile');
+        return;
+      }
+      if (!userProfile.firms?.length) {
+        // Redirect to firm page
+        this.router.navigateByUrl('/firms');
+        return;
+      }
+    });
   }
 }

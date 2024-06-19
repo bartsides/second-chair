@@ -30,6 +30,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginComponent {
   loading = false;
+  loginFail = false;
   form: FormGroup;
 
   get formValid(): boolean {
@@ -65,6 +66,9 @@ export class LoginComponent {
       .subscribe((res) => {
         if (res) {
           this.router.navigateByUrl('trials');
+        } else {
+          this.loading = false;
+          this.loginFail = true;
         }
       });
   }

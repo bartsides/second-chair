@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import environment from '../../environment';
 import { LocalStorageKeys } from '../config/local-storage-keys';
 import { StorageService } from './storage.service';
@@ -10,6 +10,7 @@ import { UserService } from './user.service';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   token: string;
+  isAuthenticated$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private http: HttpClient,
@@ -103,6 +104,7 @@ export class AuthService {
       LocalStorageKeys.refreshKey,
       res.refreshToken
     );
+    this.isAuthenticated$.next(this.isAuthenticated());
 
     this.$UserService.getUserProfile().subscribe((res) => {
       let userProfile = res.userProfile;

@@ -45,6 +45,7 @@ export class AppComponent implements OnDestroy {
   steps = Steps;
   currentStep: CurrentStep | undefined;
   trial: TrialDetails | undefined | null;
+  isAuthenticated = false;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -62,6 +63,10 @@ export class AppComponent implements OnDestroy {
       .addEventListener('change', () => {
         this.setThemeByUserPreference();
       });
+
+    this.$AuthService.isAuthenticated$
+      .pipe(takeUntil(this.notifier$))
+      .subscribe((val) => (this.isAuthenticated = val));
 
     this.$TrialService.trial$
       .pipe(takeUntil(this.notifier$))

@@ -1,14 +1,25 @@
 <mat-menu #menu="matMenu">
+  @if (isAuthenticated) {
+  <button mat-menu-item routerLink="/firms">
+    <mat-icon>corporate_fare</mat-icon>
+    <span>Firms</span>
+  </button>
   <button mat-menu-item routerLink="/trials">
     <mat-icon>gavel</mat-icon>
     <span>Trials</span>
   </button>
-  @if (trial && trial.id) { @for (step of steps; track steps) {
+  @if (trial && trial.id) {
+  <!---->
+  @for (step of steps; track steps) {
   <button mat-menu-item [routerLink]="'/trial/' + trial.id + step.route">
     <mat-icon>{{ step.icon }}</mat-icon>
     <span>{{ step.title }}</span>
   </button>
-  } } @if (useDarkTheme) {
+  }
+  <!---->
+  }
+  <!---->
+  } @if (useDarkTheme) {
   <button mat-menu-item (click)="setTheme(themes[1])" class="light-mode-button">
     <mat-icon>light_mode</mat-icon>
     <span>Light mode</span>
@@ -18,7 +29,9 @@
     <mat-icon>dark_mode</mat-icon>
     <span>Dark mode</span>
   </button>
-  } @if (useDarkTheme) {
+  } @if (isAuthenticated) {
+  <!---->
+  @if (useDarkTheme) {
   <button
     mat-menu-item
     (click)="logout()"
@@ -36,7 +49,7 @@
     <mat-icon>delete</mat-icon>
     <span>Logout</span>
   </button>
-  }
+  } }
 </mat-menu>
 
 <mat-toolbar class="primary-toolbar">

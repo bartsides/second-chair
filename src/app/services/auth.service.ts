@@ -104,9 +104,9 @@ export class AuthService {
       LocalStorageKeys.refreshKey,
       res.refreshToken
     );
-    this.isAuthenticated$.next(this.isAuthenticated());
 
     this.$UserService.getUserProfile().subscribe((res) => {
+      this.isAuthenticated$.next(this.isAuthenticated());
       let userProfile = res.userProfile;
       if (!userProfile || !userProfile.firstName || !userProfile.lastName) {
         this.$UserService.newUser = true;

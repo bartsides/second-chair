@@ -124,7 +124,7 @@ export class AuthService {
         if (!userProfile || !userProfile.firstName || !userProfile.lastName) {
           this.$UserService.newUser = true;
           this.router.navigateByUrl('/profile');
-        } else if (!userProfile.firms?.length) {
+        } else if (!userProfile.currentFirm || !userProfile.firms?.length) {
           this.router.navigateByUrl('/firms');
         } else if (redirectUrl) {
           this.router.navigateByUrl(redirectUrl);

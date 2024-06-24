@@ -5,4 +5,5 @@ export class UserProfile {
   firstName: string;
   lastName: string;
   firms: FirmSummary[];
+  currentFirm: FirmSummary;
 }

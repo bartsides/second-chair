@@ -65,7 +65,8 @@ function authorizeRequest(
 ): HttpRequest<any> {
   const token = authService.getToken();
   if (token) {
-    let headers = req.headers.append('Authorization', 'Bearer ' + token);
+    let headers = req.headers.set('Authorization', 'Bearer ' + token);
+
     req = req.clone({
       headers: headers,
       withCredentials: true,

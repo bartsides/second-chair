@@ -18,10 +18,12 @@ import { LocalStorageKeys } from './config/local-storage-keys';
 import { Steps } from './config/steps';
 import { CurrentStep } from './models/current-step';
 import { TrialDetails } from './models/trial-details';
+import { UserProfile } from './models/user-profile';
 import { AuthService } from './services/auth.service';
 import { StepService } from './services/step.service';
 import { StorageService } from './services/storage.service';
 import { TrialService } from './services/trial.service';
+import { UserService } from './services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -46,6 +48,20 @@ export class AppComponent implements OnDestroy {
   currentStep: CurrentStep | undefined;
   trial: TrialDetails | undefined | null;
   isAuthenticated = false;
+  userProfile: UserProfile | null;
+
+  get canAccessFirms(): boolean {
+    return (
+      this.isAuthenticated &&
+      !!this.userProfile &&
+      !!this.userProfile.firstName &&
+      !!this.userProfile.lastName
+    );
+  }
+
+  get canAccessTrials(): boolean {
+    return !!this.userProfile?.currentFirm;
+  }
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -55,7 +71,8 @@ export class AppComponent implements OnDestroy {
     private $AuthService: AuthService,
     private $TrialService: TrialService,
     private $StorageService: StorageService,
-    private $StepService: StepService
+    private $StepService: StepService,
+    private $UserService: UserService
   ) {
     this.setThemeByUserPreference();
     window
@@ -76,6 +93,10 @@ export class AppComponent implements OnDestroy {
       if (e instanceof ActivationEnd) this.handleActivationEnd(e);
       else if (e instanceof NavigationEnd) this.handleNavigationEnd(e);
     });
+
+    this.$UserService.user$
+      .pipe(takeUntil(this.notifier$))
+      .subscribe((userProfile) => (this.userProfile = userProfile));
   }
 
   ngOnDestroy(): void {

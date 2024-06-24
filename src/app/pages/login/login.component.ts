@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import {
-  AbstractControl,
   FormBuilder,
   FormGroup,
   FormsModule,
@@ -14,6 +13,7 @@ import { Router } from '@angular/router';
 import { ErrorMessageComponent } from '../../components/error-message/error-message.component';
 import { LoadingComponent } from '../../components/loading/loading.component';
 import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -39,19 +39,14 @@ export class LoginComponent {
     return this.form?.valid ?? false;
   }
 
-  get password(): AbstractControl {
-    return this.form.controls['password'];
-  }
-
-  get passwordHasError(): boolean {
-    let password = this.password;
-    if (!password) return false;
-    return password.invalid && (password.dirty || password.touched);
+  get justRegistered(): boolean {
+    return this.$UserService.newUser;
   }
 
   constructor(
     fb: FormBuilder,
     private $AuthService: AuthService,
+    private $UserService: UserService,
     private router: Router
   ) {
     this.form = fb.group({

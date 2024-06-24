@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { ErrorMessageComponent } from '../../components/error-message/error-message.component';
 import { LoadingComponent } from '../../components/loading/loading.component';
 import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../services/user.service';
 import {
   mustContainDigit,
   mustContainLowercase,
@@ -46,6 +47,7 @@ export class RegisterComponent {
   constructor(
     fb: FormBuilder,
     private $AuthService: AuthService,
+    private $UserService: UserService,
     private router: Router
   ) {
     this.form = fb.group({
@@ -72,6 +74,7 @@ export class RegisterComponent {
       .subscribe((res) => {
         this.loading = false;
         if (res) {
+          this.$UserService.newUser = true;
           this.router.navigateByUrl('/login');
         }
       });

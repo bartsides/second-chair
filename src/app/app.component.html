@@ -1,14 +1,15 @@
 <mat-menu #menu="matMenu">
-  @if (isAuthenticated) {
+  @if (canAccessFirms) {
   <button mat-menu-item routerLink="/firms">
     <mat-icon>corporate_fare</mat-icon>
     <span>Firms</span>
   </button>
+  @if (canAccessTrials) {
   <button mat-menu-item routerLink="/trials">
     <mat-icon>gavel</mat-icon>
     <span>Trials</span>
   </button>
-  @if (trial && trial.id) {
+  } @if (trial && trial.id) {
   <!---->
   @for (step of steps; track steps) {
   <button mat-menu-item [routerLink]="'/trial/' + trial.id + step.route">

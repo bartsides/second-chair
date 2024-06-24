@@ -12,18 +12,14 @@
       <mat-label>Email</mat-label>
       <input matInput formControlName="email" />
     </mat-form-field>
+    <app-error-message [control]="form.controls['email']"></app-error-message>
     <mat-form-field class="login-field">
       <mat-label>Password</mat-label>
       <input matInput formControlName="password" type="password" />
     </mat-form-field>
-    @if (passwordHasError && password.errors) { @if
-    (password.errors['minlength']) {
-    <div class="error-text">
-      Password must be at least
-      {{ password.errors["minlength"].requiredLength }} characters long.
-    </div>
-    } }
-    <!---->
+    <app-error-message
+      [control]="form.controls['password']"
+    ></app-error-message>
     @if (loginFail) {
     <div class="error-text">Invalid login credentials.</div>
     }

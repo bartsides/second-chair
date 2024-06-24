@@ -8,36 +8,14 @@
       <mat-label>Email</mat-label>
       <input matInput formControlName="email" />
     </mat-form-field>
+    <app-error-message [control]="form.controls['email']"></app-error-message>
     <mat-form-field class="register-field">
       <mat-label>Password</mat-label>
       <input matInput formControlName="password" type="password" />
     </mat-form-field>
-    @if (passwordHasError && password.errors) {
-    <!-- filler to avoid awkward formatting -->
-    @if (password.errors['minlength']) {
-    <div class="error-text">
-      Password must be at least
-      {{ password.errors["minlength"].requiredLength }} characters long.
-    </div>
-    } @if (password.hasError('mustContainDigit')) {
-    <div class="error-text">
-      Password must have at least one digit ('0'-'9').
-    </div>
-    } @if (password.hasError('mustContainLowercase')) {
-    <div class="error-text">
-      Password must have at least one lowercase letter ('a'-'z').
-    </div>
-    } @if (password.hasError('mustContainUppercase')) {
-    <div class="error-text">
-      Password must have at least one uppercase letter ('A'-'Z').
-    </div>
-    } @if (password.hasError('mustContainNonAlphanumeric')) {
-    <div class="error-text">
-      Password must have at least one non alphanumeric character.
-    </div>
-    }
-    <!-- filler to avoid awkward formatting -->
-    }
+    <app-error-message
+      [control]="form.controls['password']"
+    ></app-error-message>
   </form>
   <div class="register-button-container">
     <button

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import {
-  AbstractControl,
   FormBuilder,
   FormGroup,
   FormsModule,
@@ -11,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
+import { ErrorMessageComponent } from '../../components/error-message/error-message.component';
 import { LoadingComponent } from '../../components/loading/loading.component';
 import { AuthService } from '../../services/auth.service';
 import {
@@ -24,6 +24,7 @@ import {
   selector: 'app-register',
   standalone: true,
   imports: [
+    ErrorMessageComponent,
     FormsModule,
     LoadingComponent,
     MatButtonModule,
@@ -40,16 +41,6 @@ export class RegisterComponent {
 
   get formValid(): boolean {
     return this.form?.valid ?? false;
-  }
-
-  get password(): AbstractControl {
-    return this.form.controls['password'];
-  }
-
-  get passwordHasError(): boolean {
-    let password = this.password;
-    if (!password) return false;
-    return password.invalid && (password.dirty || password.touched);
   }
 
   constructor(

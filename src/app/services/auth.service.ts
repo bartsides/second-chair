@@ -35,8 +35,12 @@ export class AuthService {
     return this.$StorageService.getData(LocalStorageKeys.refreshKey);
   }
 
-  login(email: string, password: string) {
-    let subject = new Subject();
+  login(
+    email: string,
+    password: string,
+    redirectUrl: string
+  ): Subject<boolean> {
+    let subject = new Subject<boolean>();
 
     this.http
       .post(`${environment.apiUrl}/auth/login`, {
@@ -47,7 +51,7 @@ export class AuthService {
       })
       .subscribe({
         next: (res: any) => {
-          this.processCredentials(res);
+          this.processCredentials(res, subject, redirectUrl);
           subject.next(true);
         },
         error: () => {
@@ -59,7 +63,9 @@ export class AuthService {
   }
 
   logout() {
+    this.token = '';
     this.$StorageService.clearData();
+    this.isAuthenticated$.next(false);
     this.router.navigateByUrl('/');
   }
 
@@ -71,14 +77,15 @@ export class AuthService {
         email,
         password,
       })
-      .subscribe(() => {
-        subject.next(true);
+      .subscribe({
+        next: () => subject.next(true),
+        error: () => subject.next(false),
       });
 
     return subject;
   }
 
-  refreshToken() {
+  refreshToken(): Subject<boolean> {
     let subject = new Subject<boolean>();
 
     this.http
@@ -87,38 +94,44 @@ export class AuthService {
       })
       .subscribe({
         next: (res: any) => {
-          this.processCredentials(res);
+          this.processCredentials(res, subject, '');
           subject.next(true);
         },
         error: () => {
           this.logout();
+          subject.next(false);
         },
       });
 
     return subject;
   }
 
-  private processCredentials(res: any) {
+  private processCredentials(
+    res: any,
+    subject: Subject<boolean>,
+    redirectUrl: string
+  ) {
     this.token = res.accessToken;
     this.$StorageService.saveData(
       LocalStorageKeys.refreshKey,
       res.refreshToken
     );
 
-    this.$UserService.getUserProfile().subscribe((res) => {
-      this.isAuthenticated$.next(this.isAuthenticated());
-      let userProfile = res.userProfile;
-      if (!userProfile || !userProfile.firstName || !userProfile.lastName) {
-        this.$UserService.newUser = true;
-        // Redirect to user profile page
-        this.router.navigateByUrl('/profile');
-        return;
-      }
-      if (!userProfile.firms?.length) {
-        // Redirect to firm page
-        this.router.navigateByUrl('/firms');
-        return;
-      }
+    this.$UserService.getUserProfile().subscribe({
+      next: (res) => {
+        this.isAuthenticated$.next(this.isAuthenticated());
+        let userProfile = res.userProfile;
+        if (!userProfile || !userProfile.firstName || !userProfile.lastName) {
+          this.$UserService.newUser = true;
+          this.router.navigateByUrl('/profile');
+        } else if (!userProfile.firms?.length) {
+          this.router.navigateByUrl('/firms');
+        } else if (redirectUrl) {
+          this.router.navigateByUrl(redirectUrl);
+        }
+        subject.next(true);
+      },
+      error: () => subject.next(false),
     });
   }
 }

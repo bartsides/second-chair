@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
+import { ErrorMessageComponent } from '../../components/error-message/error-message.component';
 import { LoadingComponent } from '../../components/loading/loading.component';
 import { AuthService } from '../../services/auth.service';
 
@@ -18,6 +19,7 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-login',
   standalone: true,
   imports: [
+    ErrorMessageComponent,
     FormsModule,
     LoadingComponent,
     MatButtonModule,
@@ -62,14 +64,10 @@ export class LoginComponent {
     this.loading = true;
 
     this.$AuthService
-      .login(this.form.value.email, this.form.value.password)
+      .login(this.form.value.email, this.form.value.password, '/trials')
       .subscribe((res) => {
-        if (res) {
-          this.router.navigateByUrl('trials');
-        } else {
-          this.loading = false;
-          this.loginFail = true;
-        }
+        this.loading = false;
+        if (!res) this.loginFail = false;
       });
   }
 

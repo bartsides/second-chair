@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { Router } from '@angular/router';
 import { LoadingComponent } from '../../components/loading/loading.component';
 import { UserProfile } from '../../models/user-profile';
 import { UserService } from '../../services/user.service';
@@ -38,7 +39,11 @@ export class UserProfileComponent implements OnInit {
     return this.form?.valid ?? false;
   }
 
-  constructor(private fb: FormBuilder, private $UserService: UserService) {}
+  constructor(
+    private fb: FormBuilder,
+    private $UserService: UserService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loading = true;
@@ -63,6 +68,9 @@ export class UserProfileComponent implements OnInit {
     this.$UserService.user$.next(this.form.value);
     this.$UserService
       .addUpdateUserProfile(this.form.value.firstName, this.form.value.lastName)
-      .subscribe(() => (this.loading = false));
+      .subscribe(() => {
+        this.loading = false;
+        if (this.$UserService.newUser) this.router.navigateByUrl('/firms');
+      });
   }
 }

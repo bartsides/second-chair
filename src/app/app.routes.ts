@@ -4,6 +4,7 @@ import { FirmsComponent } from './pages/firms/firms.component';
 import { JuryPlacementComponent } from './pages/jury-placement/jury-placement.component';
 import { JurySelectionComponent } from './pages/jury-selection/jury-selection.component';
 import { LoginComponent } from './pages/login/login.component';
+import { MessagesComponent } from './pages/messages/messages.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { TrialComponent } from './pages/trial/trial.component';
 import { TrialsComponent } from './pages/trials/trials.component';
@@ -37,5 +38,10 @@ export const routes: Routes = [
     path: 'trial/:trialId/evidence',
     title: 'Evidence',
     component: EvidenceComponent,
+  },
+  {
+    path: 'trial/:trialId/messages',
+    title: 'Messages',
+    component: MessagesComponent,
   },
 ];

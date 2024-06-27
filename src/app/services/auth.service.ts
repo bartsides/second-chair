@@ -85,7 +85,7 @@ export class AuthService {
     return subject;
   }
 
-  refreshToken(): Subject<boolean> {
+  refreshToken(redirectUrl: string = ''): Subject<boolean> {
     let subject = new Subject<boolean>();
 
     this.http
@@ -94,7 +94,7 @@ export class AuthService {
       })
       .subscribe({
         next: (res: any) => {
-          this.processCredentials(res, subject, '');
+          this.processCredentials(res, subject, redirectUrl);
           subject.next(true);
         },
         error: () => {

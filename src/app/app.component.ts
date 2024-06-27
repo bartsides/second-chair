@@ -14,14 +14,13 @@ import {
 } from '@angular/router';
 import { Subject, Subscription, takeUntil } from 'rxjs';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
-import { LocalStorageKeys } from './config/local-storage-keys';
 import { Steps } from './config/steps';
 import { CurrentStep } from './models/current-step';
 import { TrialDetails } from './models/trial-details';
 import { UserProfile } from './models/user-profile';
 import { AuthService } from './services/auth.service';
+import { MessagesService } from './services/messages.service';
 import { StepService } from './services/step.service';
-import { StorageService } from './services/storage.service';
 import { TrialService } from './services/trial.service';
 import { UserService } from './services/user.service';
 
@@ -49,6 +48,8 @@ export class AppComponent implements OnDestroy {
   trial: TrialDetails | undefined | null;
   isAuthenticated = false;
   userProfile: UserProfile | null;
+  connectedTrial: string;
+  connectingToMessages = false;
 
   get canAccessFirms(): boolean {
     return (
@@ -69,8 +70,8 @@ export class AppComponent implements OnDestroy {
     @Inject(DOCUMENT) private document: Document,
     private router: Router,
     private $AuthService: AuthService,
+    private $MessagesService: MessagesService,
     private $TrialService: TrialService,
-    private $StorageService: StorageService,
     private $StepService: StepService,
     private $UserService: UserService
   ) {
@@ -83,11 +84,17 @@ export class AppComponent implements OnDestroy {
 
     this.$AuthService.isAuthenticated$
       .pipe(takeUntil(this.notifier$))
-      .subscribe((val) => (this.isAuthenticated = val));
+      .subscribe((val) => {
+        this.isAuthenticated = val;
+        this.connectToMessages();
+      });
 
     this.$TrialService.trial$
       .pipe(takeUntil(this.notifier$))
-      .subscribe((trial) => (this.trial = trial));
+      .subscribe((trial) => {
+        this.trial = trial;
+        this.connectToMessages();
+      });
 
     this.router.events.pipe(takeUntil(this.notifier$)).subscribe((e) => {
       if (e instanceof ActivationEnd) this.handleActivationEnd(e);
@@ -104,33 +111,49 @@ export class AppComponent implements OnDestroy {
     this.notifier$.complete();
   }
 
+  connectToMessages() {
+    // TODO: Figure out how to have messages connect once
+    let canConnect =
+      !this.connectingToMessages ||
+      !this.isAuthenticated ||
+      !this.trial ||
+      this.trial?.id == this.connectedTrial;
+    if (!canConnect) return;
+
+    console.log('Disconnecting messages service');
+    this.connectingToMessages = true;
+    this.$MessagesService
+      .disconnect()
+      .then(() => {
+        if (!this.trial?.id) {
+          this.connectedTrial = '';
+          this.connectingToMessages = false;
+          return;
+        }
+        console.log('Sending connection request');
+        this.connectedTrial = this.trial.id;
+        this.$MessagesService.startConnection().subscribe(() => {
+          this.connectingToMessages = false;
+          console.log('Started connection');
+          this.$MessagesService.receiveMessage().subscribe();
+        });
+      })
+      .catch((error) =>
+        console.error('Error disconnecting hub connection', error)
+      );
+  }
+
   handleActivationEnd(e: ActivationEnd) {
     // Get trial details
-    this.$TrialService.loadingTrial$.next(true);
     let trialId = e.snapshot.params['trialId'];
-    let data = this.$StorageService.getData(LocalStorageKeys.trial);
-    if (data) {
-      let trial = JSON.parse(data);
-      if (!trialId || trial?.id == trialId) {
-        this.$TrialService.trial$.next(trial);
-        this.$TrialService.loadingTrial$.next(false);
-        return;
-      }
-    }
+    if (!trialId) return;
 
-    if (!trialId) {
-      this.$TrialService.loadingTrial$.next(false);
-      return;
-    }
+    this.$TrialService.loadingTrial$.next(true);
 
     this.$TrialService
       .getTrial(trialId)
       .pipe(takeUntil(this.notifier$))
       .subscribe((res) => {
-        this.$StorageService.saveData(
-          LocalStorageKeys.trial,
-          JSON.stringify(res.trialDetails)
-        );
         this.$TrialService.trial$.next(res.trialDetails);
         this.$TrialService.loadingTrial$.next(false);
       });

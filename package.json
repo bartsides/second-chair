@@ -25,6 +25,7 @@
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
     "@faker-js/faker": "^8.4.0",
+    "@microsoft/signalr": "^8.0.0",
     "crypto-js": "^4.2.0",
     "rxjs": "~7.8.0",
     "secure-web-storage": "^1.0.2",

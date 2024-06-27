@@ -1,0 +1,17 @@
+@use "@angular/material" as mat;
+
+@mixin color($theme) {
+  .messages-component-container {
+    border: solid 1px mat.get-theme-color($theme, primary, default);
+  }
+
+  .message-form {
+    border-top: solid 1px mat.get-theme-color($theme, primary, default);
+  }
+}
+
+@mixin theme($theme) {
+  @if mat.theme-has($theme, color) {
+    @include color($theme);
+  }
+}

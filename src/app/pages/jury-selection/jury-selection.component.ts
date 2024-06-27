@@ -19,12 +19,10 @@ import { JurorCardComponent } from '../../components/juror-card/juror-card.compo
 import { JurorEditComponent } from '../../components/juror-edit/juror-edit.component';
 import { LoadingComponent } from '../../components/loading/loading.component';
 import { SecondToolbarComponent } from '../../components/second-toolbar/second-toolbar.component';
-import { LocalStorageKeys } from '../../config/local-storage-keys';
 import { Juror } from '../../models/juror';
 import { JuryData } from '../../models/jury-data';
 import { TrialDetails } from '../../models/trial-details';
 import { JurorService } from '../../services/juror.service';
-import { StorageService } from '../../services/storage.service';
 import { TrialService } from '../../services/trial.service';
 import { ResizableDirective } from '../../util/resizable.directive';
 
@@ -64,7 +62,6 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private $TrialService: TrialService,
     private $JurorService: JurorService,
-    private $StorageService: StorageService,
     private location: Location
   ) {}
 
@@ -94,10 +91,6 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
 
   private saveTrial() {
     if (!this.trial) return;
-    this.$StorageService.saveData(
-      LocalStorageKeys.trial,
-      JSON.stringify(this.trial)
-    );
     this.$TrialService.trial$.next(this.trial);
     this.$TrialService.updateTrial(this.trial).subscribe();
   }

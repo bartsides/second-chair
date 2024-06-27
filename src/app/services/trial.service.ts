@@ -10,7 +10,7 @@ import { TrialDetails } from '../models/trial-details';
 
 @Injectable({ providedIn: 'root' })
 export class TrialService {
-  public trial$ = new BehaviorSubject<TrialDetails | undefined | null>(null);
+  public trial$ = new BehaviorSubject<TrialDetails | null>(null);
   public loadingTrial$ = new BehaviorSubject<boolean>(false);
 
   constructor(private http: HttpClient) {}

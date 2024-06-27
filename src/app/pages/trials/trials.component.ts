@@ -7,12 +7,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { LoadingComponent } from '../../components/loading/loading.component';
 import { SecondToolbarComponent } from '../../components/second-toolbar/second-toolbar.component';
 import { TrialAddComponent } from '../../components/trial-add/trial-add.component';
-import { LocalStorageKeys } from '../../config/local-storage-keys';
 import { Steps } from '../../config/steps';
 import { Step } from '../../models/step';
 import { TrialDetails } from '../../models/trial-details';
 import { TrialSummary } from '../../models/trial-summary';
-import { StorageService } from '../../services/storage.service';
 import { TrialService } from '../../services/trial.service';
 
 @Component({
@@ -42,7 +40,6 @@ export class TrialsComponent implements OnInit {
 
   constructor(
     private $TrialService: TrialService,
-    private $StorageService: StorageService,
     private router: Router,
     public dialog: MatDialog,
     public activatedRoute: ActivatedRoute
@@ -63,12 +60,6 @@ export class TrialsComponent implements OnInit {
     this.notifier$.complete();
   }
 
-  saveSelectedTrial() {
-    this.trial = JSON.parse(
-      this.$StorageService.getData(LocalStorageKeys.trial)
-    );
-  }
-
   loadTrials() {
     this.loadingTrials = true;
     this.$TrialService.getTrials().subscribe((data) => {
@@ -85,10 +76,6 @@ export class TrialsComponent implements OnInit {
 
   selectTrial(trial: TrialDetails) {
     this.$TrialService.trial$.next(trial);
-    this.$StorageService.saveData(
-      LocalStorageKeys.trial,
-      JSON.stringify(trial)
-    );
     this.router.navigate(['trial', trial.id]);
   }
 

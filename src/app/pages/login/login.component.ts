@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -30,7 +30,7 @@ import { UserService } from '../../services/user.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   loading = false;
   loginFail = false;
   form: FormGroup;
@@ -53,6 +53,10 @@ export class LoginComponent {
       email: [null, [Validators.required, Validators.email]],
       password: [null, [Validators.required, Validators.minLength(6)]],
     });
+  }
+
+  ngOnInit(): void {
+    this.$AuthService.refreshToken('/trials').subscribe();
   }
 
   login() {

@@ -1,0 +1,34 @@
+<div class="messages-component-container">
+  <div class="messages-container">
+    @for (message of messages; track messages) {
+    <div class="message">
+      <div class="message-author-line">
+        <div class="author">{{ message.author }}</div>
+
+        <div class="date">
+          : {{ message.addedDate | date : "M/dd/yy h:mm a" }}
+        </div>
+      </div>
+      <div class="message-content">{{ message.content }}</div>
+    </div>
+    }
+  </div>
+  <form class="message-form">
+    <mat-form-field>
+      <input
+        matInput
+        name="messageContent"
+        [(ngModel)]="message"
+        autocomplete="nope"
+      />
+    </mat-form-field>
+    <button
+      mat-flat-button
+      (click)="send()"
+      [disabled]="!message"
+      color="primary"
+    >
+      Send
+    </button>
+  </form>
+</div>

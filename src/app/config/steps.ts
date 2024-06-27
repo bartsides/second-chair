@@ -21,6 +21,11 @@ let Steps: Step[] = [
     icon: 'article',
     route: '/evidence',
   },
+  {
+    title: 'Messages',
+    icon: 'mode_comment',
+    route: '/messages',
+  },
 ];
 
 export { Steps };

@@ -1,20 +1,15 @@
 import { Injectable } from '@angular/core';
-import * as CryptoJS from 'crypto-js';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StorageService {
-  // TODO: Move key to config or make unique per account
-  private key = '641072897349741';
-
   public saveData(key: string, value: string) {
-    localStorage.setItem(key, this.encrypt(value));
+    localStorage.setItem(key, value);
   }
 
   public getData(key: string) {
-    let data = localStorage.getItem(key) || '';
-    return this.decrypt(data);
+    return localStorage.getItem(key) || '';
   }
 
   public removeData(key: string) {
@@ -25,13 +20,13 @@ export class StorageService {
     localStorage.clear();
   }
 
-  private encrypt(txt: string): string {
-    return CryptoJS.AES.encrypt(txt, this.key).toString();
-  }
+  // private encrypt(txt: string): string {
+  //   return CryptoJS.AES.encrypt(txt, this.key).toString();
+  // }
 
-  private decrypt(txtToDecrypt: string) {
-    return CryptoJS.AES.decrypt(txtToDecrypt, this.key).toString(
-      CryptoJS.enc.Utf8
-    );
-  }
+  // private decrypt(txtToDecrypt: string) {
+  //   return CryptoJS.AES.decrypt(txtToDecrypt, this.key).toString(
+  //     CryptoJS.enc.Utf8
+  //   );
+  // }
 }

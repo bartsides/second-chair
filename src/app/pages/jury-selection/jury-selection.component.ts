@@ -71,9 +71,12 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
       .subscribe((params) => {
         let trialId = params['trialId'];
         this.location.replaceState(`trial/${trialId}/jury-selection`);
-        this.$JurorService.getJurorsOfTrial(trialId).subscribe((res) => {
-          this.data = res.juryData;
-          this.loadingJurors = false;
+        this.$JurorService.getJurorsOfTrial(trialId).subscribe({
+          next: (res) => {
+            this.data = res.juryData;
+            this.loadingJurors = false;
+          },
+          error: (err) => console.error(err),
         });
       });
     this.$TrialService.loadingTrial$
@@ -92,14 +95,18 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
   private saveTrial() {
     if (!this.trial) return;
     this.$TrialService.trial$.next(this.trial);
-    this.$TrialService.updateTrial(this.trial).subscribe();
+    this.$TrialService
+      .updateTrial(this.trial)
+      .subscribe({ error: (err) => console.error(err) });
   }
 
   fakeData() {
     for (let i = 0; i < 8; i++) {
       let juror = this.generateJuror();
       this.data.pool.push(juror);
-      this.$JurorService.addJuror(juror).subscribe();
+      this.$JurorService
+        .addJuror(juror)
+        .subscribe({ error: (err) => console.error(err) });
     }
   }
 
@@ -161,13 +168,17 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
       .subscribe((res: Juror) => {
         if (res && (res.firstName || res.lastName)) {
           this.data.pool.push(res);
-          this.$JurorService.addJuror(juror).subscribe();
+          this.$JurorService
+            .addJuror(juror)
+            .subscribe({ error: (err) => console.error(err) });
         }
       });
   }
 
   saveJuror(juror: Juror) {
-    this.$JurorService.updateJuror(juror).subscribe();
+    this.$JurorService
+      .updateJuror(juror)
+      .subscribe({ error: (err) => console.error(err) });
   }
 
   dragStarted() {

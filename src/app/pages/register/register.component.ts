@@ -71,12 +71,15 @@ export class RegisterComponent {
 
     this.$AuthService
       .register(this.form.value.email, this.form.value.password)
-      .subscribe((res) => {
-        this.loading = false;
-        if (res) {
-          this.$UserService.newUser = true;
-          this.router.navigateByUrl('/login');
-        }
+      .subscribe({
+        next: (res) => {
+          this.loading = false;
+          if (res) {
+            this.$UserService.newUser = true;
+            this.router.navigateByUrl('/login');
+          }
+        },
+        error: (err) => console.error(err),
       });
   }
 }

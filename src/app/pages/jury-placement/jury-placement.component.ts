@@ -57,9 +57,8 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
     this.activatedRoute.params
       .pipe(takeUntil(this.notifier$))
       .subscribe((params) => {
-        this.$JurorService
-          .getJurorsOfTrial(params['trialId'])
-          .subscribe((res) => {
+        this.$JurorService.getJurorsOfTrial(params['trialId']).subscribe({
+          next: (res) => {
             this.data = res.juryData;
             let jurors: Juror[] = [];
             for (let juror of this.data.selected) {
@@ -67,7 +66,9 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
             }
             this.setJurorPositions(jurors);
             this.loadingJurors = false;
-          });
+          },
+          error: (err) => console.error(err),
+        });
       });
   }
 
@@ -85,7 +86,9 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
       juror.positionY = position.y;
       position.y += this.stickyGridSize;
     }
-    this.$JurorService.updateJurors(jurors).subscribe();
+    this.$JurorService
+      .updateJurors(jurors)
+      .subscribe({ error: (err) => console.error(err) });
   }
 
   resetJurorPositions() {
@@ -108,7 +111,9 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
         y: juror.positionY,
       });
     }
-    this.$JurorService.updateJuror(juror).subscribe();
+    this.$JurorService
+      .updateJuror(juror)
+      .subscribe({ error: (err) => console.error(err) });
   }
 
   lockToGrid(juror: Juror) {
@@ -133,7 +138,11 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.notifier$))
-      .subscribe(() => this.$JurorService.updateJuror(juror).subscribe());
+      .subscribe(() =>
+        this.$JurorService
+          .updateJuror(juror)
+          .subscribe({ error: (err) => console.error(err) })
+      );
   }
 
   private openEditDialog(

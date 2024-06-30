@@ -47,10 +47,13 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
-    this.$UserService.getUserProfile().subscribe((res) => {
-      this.loading = false;
-      this.userProfile = res?.userProfile;
-      this.initForm();
+    this.$UserService.getUserProfile().subscribe({
+      next: (res) => {
+        this.loading = false;
+        this.userProfile = res?.userProfile;
+        this.initForm();
+      },
+      error: (err) => console.error(err),
     });
   }
 
@@ -68,9 +71,12 @@ export class UserProfileComponent implements OnInit {
     this.$UserService.user$.next(this.form.value);
     this.$UserService
       .addUpdateUserProfile(this.form.value.firstName, this.form.value.lastName)
-      .subscribe(() => {
-        this.loading = false;
-        if (this.$UserService.newUser) this.router.navigateByUrl('/firms');
+      .subscribe({
+        next: () => {
+          this.loading = false;
+          if (this.$UserService.newUser) this.router.navigateByUrl('/firms');
+        },
+        error: (err) => console.error(err),
       });
   }
 }

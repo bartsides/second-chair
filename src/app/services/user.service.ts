@@ -18,11 +18,14 @@ export class UserService {
     let subject = new Subject<GetUserProfileQueryResults>();
     this.http
       .get<GetUserProfileQueryResults>(`${environment.apiUrl}/users/profile`)
-      .subscribe((res) => {
-        this.loadingUser$.next(false);
-        let userProfile = res?.userProfile;
-        this.user$.next(userProfile);
-        subject.next(res);
+      .subscribe({
+        next: (res) => {
+          this.loadingUser$.next(false);
+          let userProfile = res?.userProfile;
+          this.user$.next(userProfile);
+          subject.next(res);
+        },
+        error: (err) => console.error(err),
       });
     return subject;
   }

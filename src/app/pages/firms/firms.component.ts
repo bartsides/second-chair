@@ -58,9 +58,12 @@ export class FirmsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.notifier$))
       .subscribe((res: FirmDetails) => {
         if (res && res.name) {
-          this.$FirmService.addFirm(res.id, res.name).subscribe(() => {
-            this.userProfile?.firms.push(firm);
-            this.changeFirm(res);
+          this.$FirmService.addFirm(res.id, res.name).subscribe({
+            next: () => {
+              this.userProfile?.firms.push(firm);
+              this.changeFirm(res);
+            },
+            error: (err) => console.error(err),
           });
         }
       });
@@ -80,13 +83,16 @@ export class FirmsComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.$FirmService.changeFirm(firm.id).subscribe({
       next: () => {
-        this.$AuthService.refreshToken().subscribe((res) => {
-          this.loading = false;
-          if (res) {
-            this.router.navigateByUrl('/trials');
-          } else {
-            console.error('Error refreshing token');
-          }
+        this.$AuthService.refreshToken().subscribe({
+          next: (res) => {
+            this.loading = false;
+            if (res) {
+              this.router.navigateByUrl('/trials');
+            } else {
+              console.error('Error refreshing token');
+            }
+          },
+          error: (err) => console.error(err),
         });
       },
       error: (err) => {

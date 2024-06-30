@@ -62,15 +62,21 @@ export class TrialsComponent implements OnInit {
 
   loadTrials() {
     this.loadingTrials = true;
-    this.$TrialService.getTrials().subscribe((data) => {
-      this.trials = data?.trialSummaries ?? [];
-      this.loadingTrials = false;
+    this.$TrialService.getTrials().subscribe({
+      next: (data) => {
+        this.trials = data?.trialSummaries ?? [];
+        this.loadingTrials = false;
+      },
+      error: (err) => console.error(err),
     });
   }
 
   selectTrialSummary(trial: TrialSummary) {
-    this.$TrialService.getTrial(trial.id).subscribe((res) => {
-      this.selectTrial(res.trialDetails);
+    this.$TrialService.getTrial(trial.id).subscribe({
+      next: (res) => {
+        this.selectTrial(res.trialDetails);
+      },
+      error: (err) => console.error(err),
     });
   }
 
@@ -94,12 +100,17 @@ export class TrialsComponent implements OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.notifier$))
-      .subscribe((res: TrialDetails) => {
-        if (res && res.name) {
-          this.trials.push(res);
-          this.$TrialService.addTrial(res).subscribe();
-          this.selectTrial(res);
-        }
+      .subscribe({
+        next: (res: TrialDetails) => {
+          if (res && res.name) {
+            this.trials.push(res);
+            this.$TrialService
+              .addTrial(res)
+              .subscribe({ error: (err) => console.error(err) });
+            this.selectTrial(res);
+          }
+        },
+        error: (err) => console.error(err),
       });
   }
 

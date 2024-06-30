@@ -86,9 +86,7 @@ export class AppComponent implements OnDestroy {
       .pipe(takeUntil(this.notifier$))
       .subscribe((connected) => {
         this.connected = connected;
-        if (connected) {
-          this.joinTrialChat();
-        }
+        if (connected) this.joinTrialChat();
       });
 
     this.$AuthService.isAuthenticated$
@@ -98,8 +96,9 @@ export class AppComponent implements OnDestroy {
         if (this.isAuthenticated) {
           this.$MessageService
             .startConnection(this.$AuthService.getToken())
-            .subscribe(() => {
-              this.joinTrialChat();
+            .subscribe({
+              next: () => this.joinTrialChat(),
+              error: (err) => console.error(err),
             });
         }
       });
@@ -144,9 +143,12 @@ export class AppComponent implements OnDestroy {
     this.$TrialService
       .getTrial(trialId)
       .pipe(takeUntil(this.notifier$))
-      .subscribe((res) => {
-        this.$TrialService.trial$.next(res.trialDetails);
-        this.$TrialService.loadingTrial$.next(false);
+      .subscribe({
+        next: (res) => {
+          this.$TrialService.trial$.next(res.trialDetails);
+          this.$TrialService.loadingTrial$.next(false);
+        },
+        error: (err) => console.error(err),
       });
   }
 
@@ -157,7 +159,7 @@ export class AppComponent implements OnDestroy {
     this.routerTitleSub = route.title
       .pipe(takeUntil(this.notifier$))
       .subscribe(
-        (t) => (this.currentStep = this.$StepService.getCurrentStep(t))
+        (title) => (this.currentStep = this.$StepService.getCurrentStep(title))
       );
   }
 

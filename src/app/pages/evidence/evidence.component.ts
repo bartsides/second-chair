@@ -134,7 +134,9 @@ export class EvidenceComponent implements OnInit, OnDestroy {
             ? this.data.defendantEvidence
             : this.data.plaintiffEvidence;
           list.push(res);
-          this.$ExhibitService.addExhibit(res).subscribe();
+          this.$ExhibitService
+            .addExhibit(res)
+            .subscribe({ error: (err) => console.error(err) });
           this.filter$.next(this.searchFilter);
         }
       });
@@ -211,16 +213,21 @@ export class EvidenceComponent implements OnInit, OnDestroy {
   }
 
   saveExhibit(exhibit: Exhibit) {
-    this.$ExhibitService.updateExhibit(exhibit).subscribe();
+    this.$ExhibitService
+      .updateExhibit(exhibit)
+      .subscribe({ error: (err) => console.error(err) });
   }
 
   loadData() {
     if (!this.trial) return;
     this.loadingExhibits = true;
-    this.$ExhibitService.getExhibitsOfTrial(this.trial.id).subscribe((res) => {
-      this.loadingExhibits = false;
-      this.data = res.evidenceData;
-      this.filter$.next(this.searchFilter);
+    this.$ExhibitService.getExhibitsOfTrial(this.trial.id).subscribe({
+      next: (res) => {
+        this.loadingExhibits = false;
+        this.data = res.evidenceData;
+        this.filter$.next(this.searchFilter);
+      },
+      error: (err) => console.error(err),
     });
   }
 

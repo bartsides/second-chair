@@ -65,15 +65,18 @@ export class MessagesComponent implements OnDestroy {
     if (this.trial) {
       this.$MessagesService
         .sendMessage(crypto.randomUUID(), this.trial.id, this.message)
-        .subscribe();
+        .subscribe({ error: (err) => console.error(err) });
       this.message = '';
     }
   }
 
   loadMessages() {
-    this.$MessagesService.getMessages(this.trialId).subscribe((res) => {
-      this.messages = res?.messages ?? [];
-      this.messagesLoaded = true;
+    this.$MessagesService.getMessages(this.trialId).subscribe({
+      next: (res) => {
+        this.messages = res?.messages ?? [];
+        this.messagesLoaded = true;
+      },
+      error: (err) => console.error(err),
     });
   }
 }

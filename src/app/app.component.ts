@@ -19,7 +19,7 @@ import { CurrentStep } from './models/current-step';
 import { TrialDetails } from './models/trial-details';
 import { UserProfile } from './models/user-profile';
 import { AuthService } from './services/auth.service';
-import { MessagesService } from './services/messages.service';
+import { MessageService } from './services/message.service';
 import { StepService } from './services/step.service';
 import { TrialService } from './services/trial.service';
 import { UserService } from './services/user.service';
@@ -48,8 +48,8 @@ export class AppComponent implements OnDestroy {
   trial: TrialDetails | undefined | null;
   isAuthenticated = false;
   userProfile: UserProfile | null;
+  connected = false;
   connectedTrial: string;
-  connectingToMessages = false;
 
   get canAccessFirms(): boolean {
     return (
@@ -70,7 +70,7 @@ export class AppComponent implements OnDestroy {
     @Inject(DOCUMENT) private document: Document,
     private router: Router,
     private $AuthService: AuthService,
-    private $MessagesService: MessagesService,
+    private $MessageService: MessageService,
     private $TrialService: TrialService,
     private $StepService: StepService,
     private $UserService: UserService
@@ -82,18 +82,33 @@ export class AppComponent implements OnDestroy {
         this.setThemeByUserPreference();
       });
 
+    this.$MessageService.connected$
+      .pipe(takeUntil(this.notifier$))
+      .subscribe((connected) => {
+        this.connected = connected;
+        if (connected) {
+          this.joinTrialChat();
+        }
+      });
+
     this.$AuthService.isAuthenticated$
       .pipe(takeUntil(this.notifier$))
       .subscribe((val) => {
         this.isAuthenticated = val;
-        this.connectToMessages();
+        if (this.isAuthenticated) {
+          this.$MessageService
+            .startConnection(this.$AuthService.getToken())
+            .subscribe(() => {
+              this.joinTrialChat();
+            });
+        }
       });
 
     this.$TrialService.trial$
       .pipe(takeUntil(this.notifier$))
       .subscribe((trial) => {
         this.trial = trial;
-        this.connectToMessages();
+        this.joinTrialChat();
       });
 
     this.router.events.pipe(takeUntil(this.notifier$)).subscribe((e) => {
@@ -111,36 +126,12 @@ export class AppComponent implements OnDestroy {
     this.notifier$.complete();
   }
 
-  connectToMessages() {
-    // TODO: Figure out how to have messages connect once
-    let canConnect =
-      !this.connectingToMessages ||
-      !this.isAuthenticated ||
-      !this.trial ||
-      this.trial?.id == this.connectedTrial;
-    if (!canConnect) return;
-
-    console.log('Disconnecting messages service');
-    this.connectingToMessages = true;
-    this.$MessagesService
-      .disconnect()
-      .then(() => {
-        if (!this.trial?.id) {
-          this.connectedTrial = '';
-          this.connectingToMessages = false;
-          return;
-        }
-        console.log('Sending connection request');
-        this.connectedTrial = this.trial.id;
-        this.$MessagesService.startConnection().subscribe(() => {
-          this.connectingToMessages = false;
-          console.log('Started connection');
-          this.$MessagesService.receiveMessage().subscribe();
-        });
-      })
-      .catch((error) =>
-        console.error('Error disconnecting hub connection', error)
-      );
+  private joinTrialChat() {
+    if (!this.connected || !this.trial?.id) return;
+    this.$MessageService
+      .joinTrialChat(this.trial.id)
+      .then()
+      .catch((err) => console.error('error joining trial chat', err));
   }
 
   handleActivationEnd(e: ActivationEnd) {

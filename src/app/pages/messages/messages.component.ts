@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { Subject, takeUntil } from 'rxjs';
 import Message from '../../models/message';
 import { TrialDetails } from '../../models/trial-details';
-import { MessagesService } from '../../services/messages.service';
+import { MessageService } from '../../services/message.service';
 import { TrialService } from '../../services/trial.service';
 
 @Component({
@@ -32,7 +32,7 @@ export class MessagesComponent implements OnDestroy {
   notifier$ = new Subject();
 
   constructor(
-    private $MessagesService: MessagesService,
+    private $MessagesService: MessageService,
     private $TrialService: TrialService
   ) {
     this.$TrialService.trial$
@@ -47,7 +47,12 @@ export class MessagesComponent implements OnDestroy {
     this.$MessagesService.messages$
       .pipe(takeUntil(this.notifier$))
       .subscribe((message) => {
-        this.messages.push(message);
+        if (
+          message.trialId == this.trialId &&
+          this.messages.every((m) => m.id != message.id)
+        ) {
+          this.messages.push(message);
+        }
       });
   }
 

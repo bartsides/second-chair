@@ -70,6 +70,8 @@ export class MessageService {
       let obj = JSON.parse(json);
       let message = <Message>{
         id: obj.Id,
+        trialId: obj.TrialId,
+        addedById: obj.AddedById,
         author: obj.Author,
         content: obj.Content,
         addedDate: obj.AddedDate,

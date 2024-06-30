@@ -86,7 +86,7 @@ export class AppComponent implements OnDestroy {
       .pipe(takeUntil(this.notifier$))
       .subscribe((connected) => {
         this.connected = connected;
-        if (connected) this.joinTrialChat();
+        this.joinTrialChat();
       });
 
     this.$AuthService.isAuthenticated$

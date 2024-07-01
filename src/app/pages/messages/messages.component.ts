@@ -7,8 +7,10 @@ import { MatInputModule } from '@angular/material/input';
 import { Subject, takeUntil } from 'rxjs';
 import Message from '../../models/message';
 import { TrialDetails } from '../../models/trial-details';
+import { UserProfile } from '../../models/user-profile';
 import { MessageService } from '../../services/message.service';
 import { TrialService } from '../../services/trial.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-messages',
@@ -30,10 +32,17 @@ export class MessagesComponent implements OnDestroy {
   trial: TrialDetails | null;
   trialId: string;
   notifier$ = new Subject();
+  userProfile: UserProfile | null = null;
+
+  isCurrentUser(message: Message): boolean {
+    if (!this.userProfile || !message) return false;
+    return this.userProfile.userId == message.addedById;
+  }
 
   constructor(
-    private $MessagesService: MessageService,
-    private $TrialService: TrialService
+    private $MessageService: MessageService,
+    private $TrialService: TrialService,
+    private $UserService: UserService
   ) {
     this.$TrialService.trial$
       .pipe(takeUntil(this.notifier$))
@@ -44,7 +53,7 @@ export class MessagesComponent implements OnDestroy {
           if (!this.messagesLoaded) this.loadMessages();
         }
       });
-    this.$MessagesService.messages$
+    this.$MessageService.messages$
       .pipe(takeUntil(this.notifier$))
       .subscribe((message) => {
         if (
@@ -54,6 +63,9 @@ export class MessagesComponent implements OnDestroy {
           this.messages.push(message);
         }
       });
+    this.$UserService.user$
+      .pipe(takeUntil(this.notifier$))
+      .subscribe((userProfile) => (this.userProfile = userProfile));
   }
 
   ngOnDestroy(): void {
@@ -63,7 +75,7 @@ export class MessagesComponent implements OnDestroy {
 
   send() {
     if (this.trial) {
-      this.$MessagesService
+      this.$MessageService
         .sendMessage(crypto.randomUUID(), this.trial.id, this.message)
         .subscribe({ error: (err) => console.error(err) });
       this.message = '';
@@ -71,7 +83,7 @@ export class MessagesComponent implements OnDestroy {
   }
 
   loadMessages() {
-    this.$MessagesService.getMessages(this.trialId).subscribe({
+    this.$MessageService.getMessages(this.trialId).subscribe({
       next: (res) => {
         this.messages = res?.messages ?? [];
         this.messagesLoaded = true;

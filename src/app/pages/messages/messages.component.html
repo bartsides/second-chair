@@ -3,13 +3,19 @@
     @for (message of messages; track messages) {
     <div class="message">
       <div class="message-author-line">
-        <div class="author">{{ message.author }}</div>
-
+        <div
+          class="author"
+          [class.current-user-message]="isCurrentUser(message)"
+        >
+          {{ message.author }}
+        </div>
         <div class="date">
           : {{ message.addedDate | date : "M/dd/yy h:mm a" }}
         </div>
       </div>
-      <div class="message-content">{{ message.content }}</div>
+      <div class="message-content">
+        {{ message.content }}
+      </div>
     </div>
     }
   </div>

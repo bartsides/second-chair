@@ -48,6 +48,11 @@
   .error-text {
     color: mat.get-theme-color($theme, warn, default);
   }
+
+  .list-banner {
+    border-bottom: solid 1px mat.get-theme-color($theme, primary, default);
+    background-color: mat.get-theme-color($theme, primary, default);
+  }
 }
 
 @mixin theme($theme) {

@@ -58,12 +58,12 @@
     <button mat-icon-button [matMenuTriggerFor]="menu">
       <mat-icon>menu</mat-icon>
     </button>
-    <span>Second Chair</span>
+    <span class="app-title">Second Chair</span>
   </div>
   @if (currentStep?.current) {
   <div class="right">
     <mat-icon class="title-icon">{{ currentStep?.current?.icon }}</mat-icon>
-    <span>{{ currentStep?.current?.title }}</span>
+    <span class="step-title">{{ currentStep?.current?.title }}</span>
   </div>
   }
 </mat-toolbar>

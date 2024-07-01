@@ -1,14 +1,8 @@
 <div class="evidence-list-container">
-  <div class="evidence-list-title">
-    <button
-      mat-button
-      class="evidence-list-title-button"
-      (click)="addExhibit()"
-    >
-      <div class="evidence-list-title-button-icon">
-        <div class="mat-headline-2">{{ icon }}</div>
-        <div class="mat-headline-4">+</div>
-      </div>
+  <div class="list-banner">
+    <div class="list-banner-title">{{ icon }}</div>
+    <button class="list-banner-add-button" mat-button (click)="addExhibit()">
+      +
     </button>
   </div>
   <div class="evidence-list">

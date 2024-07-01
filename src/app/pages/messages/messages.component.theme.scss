@@ -5,6 +5,10 @@
     border: solid 1px mat.get-theme-color($theme, primary, default);
   }
 
+  .current-user-message {
+    color: mat.get-theme-color($theme, warn, 400);
+  }
+
   .message-form {
     border-top: solid 1px mat.get-theme-color($theme, primary, default);
   }

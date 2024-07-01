@@ -1,7 +1,7 @@
 import { FirmSummary } from './firm-summary';
 
 export class UserProfile {
-  id: string;
+  userId: string;
   firstName: string;
   lastName: string;
   firms: FirmSummary[];

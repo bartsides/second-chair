@@ -45,6 +45,7 @@ export class AppComponent implements OnDestroy {
 
   steps = Steps;
   currentStep: CurrentStep | undefined;
+  currentStepTitle = '';
   trial: TrialDetails | undefined | null;
   isAuthenticated = false;
   userProfile: UserProfile | null;
@@ -158,9 +159,10 @@ export class AppComponent implements OnDestroy {
     if (this.routerTitleSub) this.routerTitleSub.unsubscribe();
     this.routerTitleSub = route.title
       .pipe(takeUntil(this.notifier$))
-      .subscribe(
-        (title) => (this.currentStep = this.$StepService.getCurrentStep(title))
-      );
+      .subscribe((title) => {
+        this.currentStepTitle = title ?? '';
+        this.currentStep = this.$StepService.getCurrentStep(title);
+      });
   }
 
   getChild(activatedRoute: ActivatedRoute): ActivatedRoute {

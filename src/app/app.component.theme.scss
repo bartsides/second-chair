@@ -53,6 +53,10 @@
     border-bottom: solid 1px mat.get-theme-color($theme, primary, default);
     background-color: mat.get-theme-color($theme, primary, default);
   }
+
+  .current-step {
+    background-color: mat.get-theme-color($theme, primary, default);
+  }
 }
 
 @mixin theme($theme) {

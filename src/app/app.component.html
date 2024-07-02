@@ -1,18 +1,30 @@
 <mat-menu #menu="matMenu">
   @if (canAccessFirms) {
-  <button mat-menu-item routerLink="/firms">
+  <button
+    mat-menu-item
+    routerLink="/firms"
+    [class.current-step]="currentStepTitle == 'Firms'"
+  >
     <mat-icon>corporate_fare</mat-icon>
     <span>Firms</span>
   </button>
   @if (canAccessTrials) {
-  <button mat-menu-item routerLink="/trials">
+  <button
+    mat-menu-item
+    routerLink="/trials"
+    [class.current-step]="currentStepTitle == 'Trials'"
+  >
     <mat-icon>gavel</mat-icon>
     <span>Trials</span>
   </button>
   } @if (trial && trial.id) {
   <!---->
   @for (step of steps; track steps) {
-  <button mat-menu-item [routerLink]="'/trial/' + trial.id + step.route">
+  <button
+    mat-menu-item
+    [routerLink]="'/trial/' + trial.id + step.route"
+    [class.current-step]="currentStepTitle == step.title"
+  >
     <mat-icon>{{ step.icon }}</mat-icon>
     <span>{{ step.title }}</span>
   </button>

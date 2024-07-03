@@ -23,9 +23,7 @@ export class MessageService {
   }
 
   sendMessage(id: string, trialId: string, content: string) {
-    const payload = { id, trialId, content };
-    const url = `${environment.apiUrl}/trials/${trialId}/messages`;
-    return this.http.post(url, payload);
+    return this.hubConnection.invoke('SendTrialMessage', id, trialId, content);
   }
 
   async joinTrialChat(trialId: string): Promise<void> {
@@ -82,7 +80,7 @@ export class MessageService {
 
   private createConnection(token: string): signalR.HubConnection {
     return new signalR.HubConnectionBuilder()
-      .withUrl(`${environment.apiUrl}/messageshub`, {
+      .withUrl(`${environment.apiUrl}/hubs/messages`, {
         accessTokenFactory: () => token,
       })
       .withAutomaticReconnect()

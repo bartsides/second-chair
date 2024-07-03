@@ -74,10 +74,11 @@ export class MessagesComponent implements OnDestroy {
   }
 
   send() {
-    if (this.trial) {
+    if (this.trial && this.message) {
       this.$MessageService
         .sendMessage(crypto.randomUUID(), this.trial.id, this.message)
-        .subscribe({ error: (err) => console.error(err) });
+        .then()
+        .catch((err) => console.error(err));
       this.message = '';
     }
   }

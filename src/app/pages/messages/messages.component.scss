@@ -1,7 +1,9 @@
+@import "../../../variables";
+
 .messages-component-container {
-  max-height: calc(100vh - 64px - 20px * 2);
+  max-height: calc(100vh - 64px - $message-margin * 2);
   height: 100%;
-  margin: 20px;
+  margin: $message-margin;
   border-radius: 4px;
   display: flex;
   flex-direction: column;
@@ -14,14 +16,14 @@
   flex-direction: column;
   justify-content: flex-end;
   align-items: baseline;
-  margin-bottom: 20px;
+  margin-bottom: $message-margin;
   overflow-x: hidden;
   overflow-y: auto;
 }
 
 .message {
-  margin-left: 20px;
-  margin-top: 10px;
+  margin-left: $message-margin;
+  margin-top: $message-top-margin;
 
   .message-author-line {
     display: flex;

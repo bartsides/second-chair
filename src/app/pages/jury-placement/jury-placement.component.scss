@@ -13,8 +13,8 @@
 
 .dragable-juror {
   position: absolute;
-  max-width: var(--card-size);
-  max-height: var(--card-size);
+  max-width: $card-size;
+  max-height: $card-size;
 }
 
 .jury-placement-container {

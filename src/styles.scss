@@ -4,8 +4,6 @@
 @include mat.core();
 @import "variables";
 
-$banner-height: 56px;
-
 $dark-theme: mat.define-dark-theme(
   (
     color: (

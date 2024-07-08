@@ -4,7 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { LoadingComponent } from '../../components/loading/loading.component';
+import { SecondToolbarComponent } from '../../components/second-toolbar/second-toolbar.component';
 import Message from '../../models/message';
 import { TrialDetails } from '../../models/trial-details';
 import { UserProfile } from '../../models/user-profile';
@@ -18,9 +21,11 @@ import { UserService } from '../../services/user.service';
   imports: [
     CommonModule,
     FormsModule,
+    LoadingComponent,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    SecondToolbarComponent,
   ],
   templateUrl: './messages.component.html',
   styleUrl: './messages.component.scss',
@@ -28,6 +33,7 @@ import { UserService } from '../../services/user.service';
 export class MessagesComponent implements OnDestroy {
   message: string;
   messages: Message[] = [];
+  loading = true;
   messagesLoaded = false;
   trial: TrialDetails | null;
   trialId: string;
@@ -40,6 +46,7 @@ export class MessagesComponent implements OnDestroy {
   }
 
   constructor(
+    public activatedRoute: ActivatedRoute,
     private $MessageService: MessageService,
     private $TrialService: TrialService,
     private $UserService: UserService
@@ -90,11 +97,19 @@ export class MessagesComponent implements OnDestroy {
     this.$MessageService.getMessages(this.trialId).subscribe({
       next: (res) => {
         this.messages = res?.messages ?? [];
-
+        this.loading = false;
         setTimeout(this.scrollToBottom, 50);
       },
       error: (err) => console.error(err),
     });
+  }
+
+  isScrolledNearBottom(): boolean {
+    // console.log(
+    //   this.container?.nativeElement?.scrollTop,
+    //   this.container?.nativeElement?.scrollHeight
+    // );
+    return false;
   }
 
   private scrollToBottom() {

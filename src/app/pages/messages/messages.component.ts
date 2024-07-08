@@ -1,3 +1,4 @@
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -26,12 +27,13 @@ import { UserService } from '../../services/user.service';
     MatFormFieldModule,
     MatInputModule,
     SecondToolbarComponent,
+    ScrollingModule,
   ],
   templateUrl: './messages.component.html',
   styleUrl: './messages.component.scss',
 })
 export class MessagesComponent implements OnDestroy {
-  message: string;
+  messageContent: string;
   messages: Message[] = [];
   loading = true;
   messagesLoaded = false;
@@ -39,6 +41,10 @@ export class MessagesComponent implements OnDestroy {
   trialId: string;
   notifier$ = new Subject();
   userProfile: UserProfile | null = null;
+
+  get container(): Element | null {
+    return document.getElementsByClassName('messages').item(0);
+  }
 
   isCurrentUser(message: Message): boolean {
     if (!this.userProfile || !message) return false;
@@ -67,9 +73,13 @@ export class MessagesComponent implements OnDestroy {
           message.trialId == this.trialId &&
           this.messages.every((m) => m.id != message.id)
         ) {
-          // TODO: Check messages-container scroll value to see if this should scroll to bottom
           this.messages.push(message);
-          setTimeout(this.scrollToBottom, 50);
+          this.messages = [...this.messages];
+          if (this.isScrolledNearBottom()) {
+            // Only scroll down if already near bottom
+            // Otherwise user is scrolled up to read a message
+            setTimeout(this.scrollToBottom, 50);
+          }
         }
       });
     this.$UserService.user$
@@ -83,12 +93,12 @@ export class MessagesComponent implements OnDestroy {
   }
 
   send() {
-    if (this.trial && this.message) {
+    if (this.trial && this.messageContent) {
       this.$MessageService
-        .sendMessage(crypto.randomUUID(), this.trial.id, this.message)
+        .sendMessage(crypto.randomUUID(), this.trial.id, this.messageContent)
         .then()
         .catch((err) => console.error(err));
-      this.message = '';
+      this.messageContent = '';
     }
   }
 
@@ -105,18 +115,20 @@ export class MessagesComponent implements OnDestroy {
   }
 
   isScrolledNearBottom(): boolean {
-    // console.log(
-    //   this.container?.nativeElement?.scrollTop,
-    //   this.container?.nativeElement?.scrollHeight
-    // );
-    return false;
+    let container = this.container;
+    if (!container) return false;
+
+    let scrollHeight = container.scrollHeight - container.clientHeight;
+    return container.scrollTop - scrollHeight >= -20;
   }
 
   private scrollToBottom() {
-    let container = document
-      .getElementsByClassName('messages-container')
-      .item(0);
+    let container = this.container;
     if (!container) return;
     container.scrollTop = container.scrollHeight;
+  }
+
+  trackMessages(_: number, message: Message): string {
+    return message.id;
   }
 }

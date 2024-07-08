@@ -4,9 +4,11 @@
 </app-second-toolbar>
 
 <div class="messages-component-container border-primary">
-  <div class="messages-container">
-    <div class="messages">
-      @for (message of messages; track messages) {
+  <cdk-virtual-scroll-viewport itemSize="50" class="messages">
+    <div
+      *cdkVirtualFor="let message of messages; trackBy: trackMessages"
+      class="example-item"
+    >
       <div class="message">
         <div class="message-author-line">
           <div
@@ -23,22 +25,21 @@
           {{ message.content }}
         </div>
       </div>
-      }
     </div>
-  </div>
+  </cdk-virtual-scroll-viewport>
   <form class="message-form">
     <mat-form-field>
       <input
         matInput
         name="messageContent"
-        [(ngModel)]="message"
+        [(ngModel)]="messageContent"
         autocomplete="nope"
       />
     </mat-form-field>
     <button
       mat-flat-button
       (click)="send()"
-      [disabled]="!message"
+      [disabled]="!messageContent"
       color="primary"
     >
       Send

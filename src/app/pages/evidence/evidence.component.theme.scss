@@ -1,11 +1,6 @@
 @use "@angular/material" as mat;
 
 @mixin color($theme) {
-  .plaintiff-evidence-container,
-  .defendant-evidence-container {
-    border: solid 1px mat.get-theme-color($theme, primary, default);
-  }
-
   .evidence-title:not(:last-child) {
     border-bottom: solid 1px mat.get-theme-color($theme, primary, default);
   }

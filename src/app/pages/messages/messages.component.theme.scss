@@ -1,10 +1,6 @@
 @use "@angular/material" as mat;
 
 @mixin color($theme) {
-  .messages-component-container {
-    border: solid 1px mat.get-theme-color($theme, primary, default);
-  }
-
   .current-user-message {
     color: mat.get-theme-color($theme, warn, 400);
   }

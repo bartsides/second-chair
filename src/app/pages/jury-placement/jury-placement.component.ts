@@ -39,6 +39,7 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
 
   loadingTrial = false;
   loadingJurors = true;
+  loadedJurors = false;
   get loading(): boolean {
     return this.loadingTrial || this.loadingJurors;
   }
@@ -54,27 +55,35 @@ export class JuryPlacementComponent implements OnInit, OnDestroy {
     this.$TrialService.loadingTrial$
       .pipe(takeUntil(this.notifier$))
       .subscribe((loadingTrial) => (this.loadingTrial = loadingTrial));
+    this.$TrialService.trial$
+      .pipe(takeUntil(this.notifier$))
+      .subscribe((trial) => {
+        if (!this.loadedJurors && trial) this.loadJurors(trial.id);
+      });
     this.activatedRoute.params
       .pipe(takeUntil(this.notifier$))
-      .subscribe((params) => {
-        this.$JurorService.getJurorsOfTrial(params['trialId']).subscribe({
-          next: (res) => {
-            this.data = res.juryData;
-            let jurors: Juror[] = [];
-            for (let juror of this.data.selected) {
-              if (!juror.positionX || !juror.positionY) jurors.push(juror);
-            }
-            this.setJurorPositions(jurors);
-            this.loadingJurors = false;
-          },
-          error: (err) => console.error(err),
-        });
-      });
+      .subscribe((params) => {});
   }
 
   ngOnDestroy(): void {
     this.notifier$.next(undefined);
     this.notifier$.complete();
+  }
+
+  private loadJurors(trialId: string): void {
+    this.$JurorService.getJurorsOfTrial(trialId).subscribe({
+      next: (res) => {
+        this.data = res.juryData;
+        let jurors: Juror[] = [];
+        for (let juror of this.data.selected) {
+          if (!juror.positionX || !juror.positionY) jurors.push(juror);
+        }
+        this.setJurorPositions(jurors);
+        this.loadingJurors = false;
+        this.loadedJurors = true;
+      },
+      error: (err) => console.error(err),
+    });
   }
 
   setJurorPositions(jurors: Juror[]) {

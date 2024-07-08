@@ -1,10 +1,6 @@
 @use "@angular/material" as mat;
 
 @mixin color($theme) {
-  .jury-list {
-    border: solid 1px mat.get-theme-color($theme, primary, default);
-  }
-
   .strike-tracker-bar {
     border-bottom: solid 1px mat.get-theme-color($theme, primary, default);
   }

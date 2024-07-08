@@ -1,7 +1,7 @@
 @if (loading){<app-loading></app-loading>}
 <!---->
 @if (form) {
-<div class="user-profile-container">
+<div class="user-profile-container border-primary">
   <form [formGroup]="form" (ngSubmit)="save()">
     <div class="user-profile-card">
       <mat-form-field>

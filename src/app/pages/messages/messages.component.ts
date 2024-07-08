@@ -60,7 +60,9 @@ export class MessagesComponent implements OnDestroy {
           message.trialId == this.trialId &&
           this.messages.every((m) => m.id != message.id)
         ) {
+          // TODO: Check messages-container scroll value to see if this should scroll to bottom
           this.messages.push(message);
+          setTimeout(this.scrollToBottom, 50);
         }
       });
     this.$UserService.user$
@@ -84,12 +86,22 @@ export class MessagesComponent implements OnDestroy {
   }
 
   loadMessages() {
+    this.messagesLoaded = true;
     this.$MessageService.getMessages(this.trialId).subscribe({
       next: (res) => {
         this.messages = res?.messages ?? [];
-        this.messagesLoaded = true;
+
+        setTimeout(this.scrollToBottom, 50);
       },
       error: (err) => console.error(err),
     });
+  }
+
+  private scrollToBottom() {
+    let container = document
+      .getElementsByClassName('messages-container')
+      .item(0);
+    if (!container) return;
+    container.scrollTop = container.scrollHeight;
   }
 }

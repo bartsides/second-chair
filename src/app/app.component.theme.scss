@@ -12,6 +12,13 @@
 @use "pages/user-profile/user-profile.component.theme" as userProfile;
 
 @mixin color($theme) {
+  .mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--focused
+    .mdc-floating-label,
+  .mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--focused
+    .mdc-floating-label--float-above {
+    color: mat.get-theme-color($theme, accent, 300);
+  }
+
   ::-webkit-scrollbar {
     width: 4px;
     overflow-y: scroll;
@@ -47,6 +54,10 @@
 
   .error-text {
     color: mat.get-theme-color($theme, warn, default);
+  }
+
+  .border-primary {
+    border: solid 1px mat.get-theme-color($theme, primary, default);
   }
 
   .list-banner {

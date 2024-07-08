@@ -1,19 +1,6 @@
 @use "@angular/material" as mat;
 
 @mixin color($theme) {
-  .firms-container {
-    border: solid 1px mat.get-theme-color($theme, primary, default);
-  }
-
-  .firms-title-container {
-    border-bottom: solid 1px mat.get-theme-color($theme, primary, default);
-    background-color: mat.get-theme-color($theme, primary, default);
-  }
-
-  .firm-plus {
-    color: mat.get-theme-color($theme, accent, default);
-  }
-
   .firm-summary:not(:last-child) {
     border-bottom: solid 1px mat.get-theme-color($theme, primary, default);
   }

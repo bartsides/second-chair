@@ -1,10 +1,6 @@
 @use "@angular/material" as mat;
 
 @mixin color($theme) {
-  .trials-container {
-    border: solid 1px mat.get-theme-color($theme, primary, default);
-  }
-
   .trial-summary:not(:last-child) {
     border-bottom: solid 1px mat.get-theme-color($theme, primary, default);
   }

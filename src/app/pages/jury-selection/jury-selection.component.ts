@@ -53,6 +53,7 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
 
   loadingTrial = false;
   loadingJurors = true;
+  jurorsLoaded = false;
   get loading(): boolean {
     return this.loadingTrial || this.loadingJurors;
   }
@@ -69,27 +70,33 @@ export class JurySelectionComponent implements OnInit, OnDestroy {
     this.activatedRoute.params
       .pipe(takeUntil(this.notifier$))
       .subscribe((params) => {
-        let trialId = params['trialId'];
-        this.location.replaceState(`trial/${trialId}/jury-selection`);
-        this.$JurorService.getJurorsOfTrial(trialId).subscribe({
-          next: (res) => {
-            this.data = res.juryData;
-            this.loadingJurors = false;
-          },
-          error: (err) => console.error(err),
-        });
+        this.location.replaceState(`trial/${params['trialId']}/jury-selection`);
       });
     this.$TrialService.loadingTrial$
       .pipe(takeUntil(this.notifier$))
       .subscribe((loadingTrial) => (this.loadingTrial = loadingTrial));
     this.$TrialService.trial$
       .pipe(takeUntil(this.notifier$))
-      .subscribe((trial) => (this.trial = trial));
+      .subscribe((trial) => {
+        this.trial = trial;
+        if (this.trial && !this.jurorsLoaded) this.loadJurors();
+      });
   }
 
   ngOnDestroy(): void {
     this.notifier$.next(undefined);
     this.notifier$.complete();
+  }
+
+  private loadJurors() {
+    if (!this.trial) return;
+    this.$JurorService.getJurorsOfTrial(this.trial.id).subscribe({
+      next: (res) => {
+        this.data = res.juryData;
+        this.loadingJurors = false;
+      },
+      error: (err) => console.error(err),
+    });
   }
 
   private saveTrial() {

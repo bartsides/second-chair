@@ -1,9 +1,6 @@
 @use "@angular/material" as mat;
 
 @mixin color($theme) {
-  .trial-details-card {
-    border: solid 1px mat.get-theme-color($theme, primary, default);
-  }
 }
 
 @mixin theme($theme) {

@@ -1,10 +1,6 @@
 @use "@angular/material" as mat;
 
 @mixin color($theme) {
-  .evidence-list-container {
-    border: solid 1px mat.get-theme-color($theme, primary, default);
-  }
-
   .evidence-list-title {
     background-color: mat.get-theme-color($theme, primary, default);
   }

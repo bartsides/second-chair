@@ -1,22 +1,19 @@
 @import "/src/variables";
 
-$max-height: calc(100vh - 64px * 2 - $message-margin * 2);
+$max-height: calc(100vh - $toolbar-height * 2 - $message-margin * 2);
+$form-height: 78px;
 
 .messages-component-container {
   max-height: $max-height;
-  height: 100%;
+  height: $max-height;
   margin: $message-margin;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.messages {
+.messages-container {
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: baseline;
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -49,12 +46,18 @@ $max-height: calc(100vh - 64px * 2 - $message-margin * 2);
   margin-bottom: $message-margin;
 }
 
+.scroll-down-button {
+  position: absolute;
+  bottom: 0;
+  left: calc(50% - 85px);
+}
+
 .message-form {
   display: flex;
   align-items: baseline;
   justify-content: center;
   padding: 10px;
-  height: 78px;
+  height: $form-height;
 
   mat-form-field {
     flex-grow: 1;

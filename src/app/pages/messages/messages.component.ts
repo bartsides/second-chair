@@ -1,4 +1,3 @@
-import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -27,7 +26,6 @@ import { UserService } from '../../services/user.service';
     MatFormFieldModule,
     MatInputModule,
     SecondToolbarComponent,
-    ScrollingModule,
   ],
   templateUrl: './messages.component.html',
   styleUrl: './messages.component.scss',
@@ -41,10 +39,6 @@ export class MessagesComponent implements OnDestroy {
   trialId: string;
   notifier$ = new Subject();
   userProfile: UserProfile | null = null;
-
-  get container(): Element | null {
-    return document.getElementsByClassName('messages').item(0);
-  }
 
   isCurrentUser(message: Message): boolean {
     if (!this.userProfile || !message) return false;
@@ -115,15 +109,18 @@ export class MessagesComponent implements OnDestroy {
   }
 
   isScrolledNearBottom(): boolean {
-    let container = this.container;
+    let container = document
+      .getElementsByClassName('messages-container')
+      .item(0);
     if (!container) return false;
-
     let scrollHeight = container.scrollHeight - container.clientHeight;
     return container.scrollTop - scrollHeight >= -20;
   }
 
-  private scrollToBottom() {
-    let container = this.container;
+  scrollToBottom() {
+    let container = document
+      .getElementsByClassName('messages-container')
+      .item(0);
     if (!container) return;
     container.scrollTop = container.scrollHeight;
   }

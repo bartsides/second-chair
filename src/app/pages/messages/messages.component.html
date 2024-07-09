@@ -4,11 +4,9 @@
 </app-second-toolbar>
 
 <div class="messages-component-container border-primary">
-  <cdk-virtual-scroll-viewport itemSize="50" class="messages">
-    <div
-      *cdkVirtualFor="let message of messages; trackBy: trackMessages"
-      class="example-item"
-    >
+  <div class="messages-container">
+    <div class="messages">
+      @for (message of messages; track messages) {
       <div class="message">
         <div class="message-author-line">
           <div
@@ -25,8 +23,19 @@
           {{ message.content }}
         </div>
       </div>
+      }
     </div>
-  </cdk-virtual-scroll-viewport>
+  </div>
+  <!-- @if(isScrolledNearBottom()) {
+  <button
+    mat-flat-button
+    class="scroll-down-button"
+    color="primary"
+    (click)="scrollToBottom()"
+  >
+    Scroll Down
+  </button>
+  } -->
   <form class="message-form">
     <mat-form-field>
       <input

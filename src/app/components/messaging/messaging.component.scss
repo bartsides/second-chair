@@ -1,0 +1,71 @@
+@import "/src/variables";
+
+$form-height: 64px;
+
+.messages-component-container {
+  max-height: $max-chat-height;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.messages-container {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.message {
+  margin-left: $message-margin;
+  margin-right: calc($message-margin/2);
+  margin-top: $message-top-margin;
+
+  .message-author-line {
+    display: flex;
+    align-items: baseline;
+
+    .author {
+      font-weight: 500;
+    }
+
+    .date {
+      font-weight: 100;
+      font-size: 11px;
+    }
+  }
+
+  .message-content {
+    margin-top: 2px;
+  }
+}
+
+.message:last-child {
+  margin-bottom: $message-margin;
+}
+
+.scroll-down-button {
+  position: absolute;
+  bottom: 0;
+  left: calc(50% - 85px);
+}
+
+.message-form {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  padding: 10px;
+  height: $form-height;
+
+  mat-form-field {
+    flex-grow: 1;
+    margin: 0;
+  }
+
+  button {
+    margin-left: 10px;
+    height: 57px;
+    position: relative;
+    top: 3px;
+  }
+}

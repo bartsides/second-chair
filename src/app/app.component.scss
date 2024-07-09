@@ -59,3 +59,18 @@ mat-toolbar {
   margin-right: 16px;
   transform: scale(1.3);
 }
+
+.messages-icon {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+}
+
+.floating-messaging {
+  position: absolute;
+  left: 10px;
+  bottom: 75px;
+  height: 800px;
+  width: 500px;
+  background-color: var(--mat-app-background-color, transparent);
+}

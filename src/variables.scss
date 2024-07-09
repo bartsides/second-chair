@@ -6,3 +6,7 @@ $dark-mode-size: 30px;
 $message-margin: 20px;
 $message-top-margin: 10px;
 $toolbar-height: 64px;
+
+$max-chat-height: calc(
+  100vh - $toolbar-height * 2 - $message-margin * 2 - 60px
+);

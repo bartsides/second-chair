@@ -81,3 +81,13 @@
 </mat-toolbar>
 
 <router-outlet></router-outlet>
+
+@if (showMessagesIcon) {
+<button mat-fab class="messages-icon" (click)="toggleShowMessages()">
+  <mat-icon color="primary">mode_comment</mat-icon>
+</button>
+}
+<!---->
+@if (showMessages) {
+<app-messaging class="floating-messaging" containerId="2"></app-messaging>
+}

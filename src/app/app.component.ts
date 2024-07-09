@@ -14,6 +14,7 @@ import {
 } from '@angular/router';
 import { Subject, Subscription, takeUntil } from 'rxjs';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { MessagingComponent } from './components/messaging/messaging.component';
 import { Steps } from './config/steps';
 import { CurrentStep } from './models/current-step';
 import { TrialDetails } from './models/trial-details';
@@ -33,6 +34,7 @@ import { UserService } from './services/user.service';
     MatIconModule,
     MatMenuModule,
     MatToolbarModule,
+    MessagingComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
@@ -51,6 +53,9 @@ export class AppComponent implements OnDestroy {
   userProfile: UserProfile | null;
   connected = false;
   connectedTrial: string;
+
+  showMessagesIcon = false;
+  showMessages = false;
 
   get canAccessFirms(): boolean {
     return (
@@ -130,8 +135,11 @@ export class AppComponent implements OnDestroy {
     if (!this.connected || !this.trial?.id) return;
     this.$MessageService
       .joinTrialChat(this.trial.id)
-      .then()
-      .catch((err) => console.error('error joining trial chat', err));
+      .then(() => (this.showMessagesIcon = true))
+      .catch((err) => {
+        console.error('error joining trial chat', err);
+        this.showMessagesIcon = false;
+      });
   }
 
   handleActivationEnd(e: ActivationEnd) {
@@ -153,7 +161,7 @@ export class AppComponent implements OnDestroy {
       });
   }
 
-  handleNavigationEnd(e: NavigationEnd) {
+  handleNavigationEnd(_: NavigationEnd) {
     // Track changing steps
     let route = this.getChild(this.activatedRoute);
     if (this.routerTitleSub) this.routerTitleSub.unsubscribe();
@@ -200,5 +208,9 @@ export class AppComponent implements OnDestroy {
           this.$AuthService.logout();
         }
       });
+  }
+
+  toggleShowMessages() {
+    this.showMessages = !this.showMessages;
   }
 }

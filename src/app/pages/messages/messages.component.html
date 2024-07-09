@@ -1,57 +1,6 @@
-@if (loading){<app-loading></app-loading>}
-
 <app-second-toolbar [activatedRoute]="activatedRoute" [subject]="notifier$">
 </app-second-toolbar>
 
-<div class="messages-component-container border-primary">
-  <div class="messages-container">
-    <div class="messages">
-      @for (message of messages; track messages) {
-      <div class="message">
-        <div class="message-author-line">
-          <div
-            class="author"
-            [class.current-user-message]="isCurrentUser(message)"
-          >
-            {{ message.author }}
-          </div>
-          <div class="date">
-            : {{ message.addedDate | date : "M/dd/yy h:mm a" }}
-          </div>
-        </div>
-        <div class="message-content">
-          {{ message.content }}
-        </div>
-      </div>
-      }
-    </div>
-  </div>
-  <!-- @if(isScrolledNearBottom()) {
-  <button
-    mat-flat-button
-    class="scroll-down-button"
-    color="primary"
-    (click)="scrollToBottom()"
-  >
-    Scroll Down
-  </button>
-  } -->
-  <form class="message-form">
-    <mat-form-field>
-      <input
-        matInput
-        name="messageContent"
-        [(ngModel)]="messageContent"
-        autocomplete="nope"
-      />
-    </mat-form-field>
-    <button
-      mat-flat-button
-      (click)="send()"
-      [disabled]="!messageContent"
-      color="primary"
-    >
-      Send
-    </button>
-  </form>
+<div class="messaging-container">
+  <app-messaging containerId="1"></app-messaging>
 </div>

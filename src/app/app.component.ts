@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {
   ActivatedRoute,
@@ -34,6 +35,7 @@ import { UserService } from './services/user.service';
     MatIconModule,
     MatMenuModule,
     MatToolbarModule,
+    MatSidenavModule,
     MessagingComponent,
   ],
   templateUrl: './app.component.html',
@@ -132,6 +134,7 @@ export class AppComponent implements OnDestroy {
   }
 
   private joinTrialChat() {
+    // TODO: Hide trial chat button if not connected or already on messages page
     if (!this.connected || !this.trial?.id) return;
     this.$MessageService
       .joinTrialChat(this.trial.id)

@@ -1,10 +1,10 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnDestroy } from '@angular/core';
+import { Component, Inject, OnDestroy, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {
   ActivatedRoute,
@@ -42,6 +42,7 @@ import { UserService } from './services/user.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnDestroy {
+  @ViewChild('drawer') drawer: MatDrawer;
   themes: string[] = ['dark-theme', 'light-theme'];
   useDarkTheme = true;
   notifier$ = new Subject();
@@ -165,6 +166,7 @@ export class AppComponent implements OnDestroy {
   }
 
   handleNavigationEnd(_: NavigationEnd) {
+    this.drawer.close();
     // Track changing steps
     let route = this.getChild(this.activatedRoute);
     if (this.routerTitleSub) this.routerTitleSub.unsubscribe();

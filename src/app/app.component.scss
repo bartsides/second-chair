@@ -34,7 +34,6 @@ mat-toolbar {
 
   .app-title,
   .step-title {
-    font-family: Roboto;
     font-weight: 500;
     font-size: 24px;
     line-height: 32px;
@@ -85,10 +84,6 @@ mat-drawer {
 .trial-step-container {
   display: flex;
   flex-direction: row;
-}
-
-.trial-step {
-  background-color: var(--mat-toolbar-container-background-color);
 }
 
 .light-mode-button,

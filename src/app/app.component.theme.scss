@@ -68,6 +68,10 @@
   .current-step {
     background-color: mat.get-theme-color($theme, primary, default) !important;
   }
+
+  .top-spacer {
+    background-color: mat.get-theme-color($theme, primary, default) !important;
+  }
 }
 
 @mixin theme($theme) {

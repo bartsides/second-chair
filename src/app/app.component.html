@@ -1,6 +1,14 @@
 <mat-drawer-container [hasBackdrop]="true">
-  <mat-drawer #drawer mode="push">
+  <mat-drawer #drawer mode="over">
     <div class="top-nav-options">
+      <mat-toolbar class="primary-toolbar">
+        <div class="left">
+          <button mat-icon-button (click)="drawer.toggle()">
+            <mat-icon>menu</mat-icon>
+          </button>
+          <span class="app-title">Second Chair</span>
+        </div>
+      </mat-toolbar>
       @if (canAccessFirms) {
       <button
         mat-button
